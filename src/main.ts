@@ -3,6 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { config } from 'dotenv'
 import { AppModeConstant } from './shared/constants/appMode.constant';
+import { ConfigService, NoInferType } from '@nestjs/config';
 config()
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,9 +17,13 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
 
-  if (process.env.NODE_ENV == AppModeConstant.DEVELOPMENT)
+  const configService = app.get(ConfigService);
+
+  if (configService.get<AppModeConstant>('mode') === AppModeConstant.DEVELOPMENT)
     SwaggerModule.setup('api', app, document);//It only works on development mode
 
-  await app.listen(3000);
+
+  const port: number = configService.get<number>('port')
+  await app.listen(port);
 }
 bootstrap();
