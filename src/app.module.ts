@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from "@nestjs/mongoose";
 import configuration from "./config/configuration";
 
 @Module({
@@ -8,6 +9,7 @@ import configuration from "./config/configuration";
             load: [configuration],
             isGlobal: true
         }),
+        MongooseModule.forRoot(configuration().DATABASE_URL)
     ],
 })
 export class AppModule { }
