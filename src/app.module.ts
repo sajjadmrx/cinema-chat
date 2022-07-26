@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from "@nestjs/mongoose";
 import configuration from "./config/configuration";
+import { PrismaModule } from './modules/prisma/prisma.module';
 
 @Module({
     imports: [
@@ -9,7 +10,7 @@ import configuration from "./config/configuration";
             load: [configuration],
             isGlobal: true
         }),
-        MongooseModule.forRoot(configuration().DATABASE_URL)
+        PrismaModule
     ],
 })
 export class AppModule { }

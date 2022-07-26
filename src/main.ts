@@ -3,6 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { AppModeConstant } from './shared/constants/appMode.constant';
 import { ConfigService, NoInferType } from '@nestjs/config';
+import { PrismaClient } from '@prisma/client';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
