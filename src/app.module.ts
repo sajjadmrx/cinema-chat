@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from "@nestjs/mongoose";
 import configuration from "./config/configuration";
 import { PrismaModule } from './modules/prisma/prisma.module';
+import { UsersModule } from "./modules/users/users.module";
 
 @Module({
     imports: [
@@ -10,7 +11,7 @@ import { PrismaModule } from './modules/prisma/prisma.module';
             load: [configuration],
             isGlobal: true
         }),
-        PrismaModule
+        PrismaModule,
     ],
 })
 export class AppModule { }
