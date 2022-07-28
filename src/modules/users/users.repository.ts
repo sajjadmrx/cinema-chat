@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User, UserCraeteInput } from '../../shared/interfaces/user.interface';
+import { getRandomNumber } from '../../shared/utils/uuid.util';
 
 @Injectable()
 export class UsersRepository {
@@ -10,9 +11,12 @@ export class UsersRepository {
     return this.db.user.findMany();
   }
 
-  async insert(input: UserCraeteInput): Promise<User> {
+  async insert(input: Omit<UserCraeteInput, 'userId'>): Promise<User> {
     return this.db.user.create({
-      data: input,
+      data: {
+        userId: getRandomNumber(12),
+        ...input,
+      },
     });
   }
 
@@ -28,6 +32,14 @@ export class UsersRepository {
     return this.db.user.findUnique({
       where: {
         username,
+      },
+    });
+  }
+
+  findByEmailOrUsername(email: string, username: string): Promise<User | null> {
+    return this.db.user.findFirst({
+      where: {
+        OR: [{ email, username }],
       },
     });
   }

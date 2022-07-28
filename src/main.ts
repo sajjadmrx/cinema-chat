@@ -14,19 +14,17 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
 
-
   const document = SwaggerModule.createDocument(app, config);
 
   const configService = app.get(ConfigService);
 
-  if (configService.get<AppModeConstant>('mode') === AppModeConstant.PRODUCTION)
-    SwaggerModule.setup('api', app, document);//It only works on development mode
+  if (
+    configService.get<AppModeConstant>('mode') === AppModeConstant.DEVELOPMENT
+  )
+    SwaggerModule.setup('api', app, document); //It only works on development mode
 
-
-  const port: number = configService.get<number>('port')
+  const port: number = configService.get<number>('port');
   await app.listen(port);
-  console.log(`App Running On ${port}`)
-
-
+  console.log(`App Running On ${port}`);
 }
 bootstrap();
