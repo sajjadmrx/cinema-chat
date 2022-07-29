@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtConstant } from '../../shared/constants/jwt.constant';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
+import { UsersModule } from '../users/users.module';
 
 const importsAndExport = [
   JwtModule.register({
@@ -12,9 +13,9 @@ const importsAndExport = [
 ];
 
 @Module({
-  imports: [...importsAndExport],
-  providers: [AuthService],
+  imports: [...importsAndExport, UsersModule],
   controllers: [AuthController],
+  providers: [AuthService],
   exports: [...importsAndExport],
 })
 export class AuthModule {}

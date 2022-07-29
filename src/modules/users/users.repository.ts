@@ -36,10 +36,15 @@ export class UsersRepository {
     });
   }
 
-  findByEmailOrUsername(email: string, username: string): Promise<User | null> {
-    return this.db.user.findFirst({
+  findByEmailOrUsername(email: string, username: string): Promise<User[]> {
+    return this.db.user.findMany({
       where: {
-        OR: [{ email, username }],
+        OR: [
+          {
+            email,
+          },
+          { username },
+        ],
       },
     });
   }
