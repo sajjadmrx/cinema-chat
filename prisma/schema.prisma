@@ -19,4 +19,17 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Rooms     Room[]
+}
+
+model Room {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  roomId    Int      @unique
+  owner     User     @relation(fields: [ownerId], references: [userId])
+  ownerId   Int      @unique
+  name      String
+  isPublic  Boolean  @default(true)
+  avatar    String   @default("DEFAULT_AVATAR")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
