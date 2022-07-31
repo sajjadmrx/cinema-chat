@@ -20,6 +20,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Rooms     Room[]
+  Invites   Invite[]
 }
 
 model Room {
@@ -32,4 +33,19 @@ model Room {
   avatar    String?  @default("DEFAULT_AVATAR")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Invites   Invite[]
+}
+
+model Invite {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  inviteId   Int      @unique
+  slug       String   @unique
+  room       Room     @relation(fields: [roomId], references: [roomId])
+  roomId     Int
+  inviter    User     @relation(fields: [inviterId], references: [userId])
+  inviterId  Int
+  expires_at DateTime
+  isForEver  Boolean  @default(false)
+  max_use    Int //0 == no limit
+  uses       Int      @default(0)
 }
