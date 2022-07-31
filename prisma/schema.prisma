@@ -26,10 +26,10 @@ model Room {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   roomId    Int      @unique
   owner     User     @relation(fields: [ownerId], references: [userId])
-  ownerId   Int      @unique
+  ownerId   Int
   name      String
   isPublic  Boolean  @default(true)
-  avatar    String   @default("DEFAULT_AVATAR")
+  avatar    String?  @default("DEFAULT_AVATAR")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
