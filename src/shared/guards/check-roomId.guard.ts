@@ -2,6 +2,7 @@ import { BadRequestException, CanActivate, ExecutionContext, Injectable } from "
 import { Request } from "express";
 import { Observable } from "rxjs";
 import { RoomsRepository } from "src/modules/rooms/rooms.repository";
+import { ResponseMessages } from 'src/shared/constants/response-messages.constant';
 
 @Injectable()
 export class CheckRoomId implements CanActivate {
@@ -22,7 +23,7 @@ export class CheckRoomId implements CanActivate {
             //TODO: Add To Request | Ex: request.currentRoom
             return true
         } catch (error) {
-            throw new BadRequestException("ROOM_NOT_FOUND")
+            throw new BadRequestException(ResponseMessages.ROOM_NOT_FOUND)
         }
     }
 }

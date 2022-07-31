@@ -4,6 +4,7 @@ import { User } from "src/shared/interfaces/user.interface";
 import { RoomCreateDto } from "./dto/create.dto";
 import { RoomsRepository } from './rooms.repository';
 import { RoomUpdateDto } from './dto/update.dto';
+import { ResponseMessages } from "src/shared/constants/response-messages.constant";
 
 @Injectable()
 export class RoomsService {
@@ -23,7 +24,7 @@ export class RoomsService {
     async update(roomId: number, userId: number, data: RoomUpdateDto) {
         try {
             await this.roomsRepository.updateById(roomId, { name: data.name, avatar: data.avatar, isPublic: data.isPublic })
-            return "SUCCESS"
+            return ResponseMessages.SUCCESS
         } catch (error: any) {
             throw new InternalServerErrorException()
         }
