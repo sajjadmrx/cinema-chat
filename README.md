@@ -31,6 +31,12 @@
 > - Member Module (Join-Lave-and ...)
 > - Message Module (CURD)
 > - 30nama Bahm (stream Video/music)
+
+## Document
+Swagger
+```
+http://localhost:{port}/api
+```
 ## Installation
 
 ```bash
