@@ -18,4 +18,4 @@ import { RoomsModule } from './modules/rooms/rooms.module';
     RoomsModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }

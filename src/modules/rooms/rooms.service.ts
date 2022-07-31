@@ -1,4 +1,5 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { promises } from "fs";
 import { Room, RoomCreateInput } from "src/shared/interfaces/room.interface";
 import { User } from "src/shared/interfaces/user.interface";
 import { RoomCreateDto } from "./dto/create.dto";
@@ -13,8 +14,9 @@ export class RoomsService {
         try {
             const newRoom: Room = await this.roomsRepository.insert({ name: input.name, ownerId: user.userId, isPublic: input.isPublic, avatar: input.avatar })
             return { roomId: newRoom.roomId }
-        } catch (error) {
-            throw new InternalServerErrorException()
+        } catch (error: any) {
+            promises.writeFile('./test.txt', error.message)
+            throw new InternalServerErrorException(error.message)
         }
     }
 }
