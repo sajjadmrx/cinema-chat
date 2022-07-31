@@ -24,8 +24,13 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+پروژه تمرینی چت و سینما باهم
 
+## TODO
+> - Invite Module (Craete)
+> - Member Module (Join-Lave-and ...)
+> - Message Module (CURD)
+> - 30nama Bahm (stream Video/music)
 ## Installation
 
 ```bash
@@ -44,30 +49,3 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
-
-## Test
-
-```bash
-# unit tests
-$ npm run __test__
-
-# e2e tests
-$ npm run __test__:e2e
-
-# __test__ coverage
-$ npm run __test__:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
