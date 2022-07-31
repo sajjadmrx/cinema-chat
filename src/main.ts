@@ -12,6 +12,12 @@ async function bootstrap() {
     .setTitle('ChatFa Document')
     .setDescription('The ChatFa APIs')
     .setVersion('1.0')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      in: 'header',
+      name: 'Authorization',
+    })
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
