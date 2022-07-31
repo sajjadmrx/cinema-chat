@@ -4,6 +4,7 @@ import { JwtConstant } from '../../shared/constants/jwt.constant';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
+import { JwtStrategy } from './strategists/jwt.strategy';
 
 const importsAndExport = [
   JwtModule.register({
@@ -15,7 +16,7 @@ const importsAndExport = [
 @Module({
   imports: [...importsAndExport, UsersModule],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy],
   exports: [...importsAndExport],
 })
-export class AuthModule {}
+export class AuthModule { }
