@@ -1,9 +1,9 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { promises } from "fs";
 import { Room, RoomCreateInput } from "src/shared/interfaces/room.interface";
 import { User } from "src/shared/interfaces/user.interface";
 import { RoomCreateDto } from "./dto/create.dto";
 import { RoomsRepository } from './rooms.repository';
+import { RoomUpdateDto } from './dto/update.dto';
 
 @Injectable()
 export class RoomsService {
@@ -15,8 +15,17 @@ export class RoomsService {
             const newRoom: Room = await this.roomsRepository.insert({ name: input.name, ownerId: user.userId, isPublic: input.isPublic, avatar: input.avatar })
             return { roomId: newRoom.roomId }
         } catch (error: any) {
-            promises.writeFile('./test.txt', error.message)
-            throw new InternalServerErrorException(error.message)
+            throw new InternalServerErrorException()
+        }
+    }
+
+
+    async update(roomId: number, userId: number, data: RoomUpdateDto) {
+        try {
+            await this.roomsRepository.updateById(roomId, { name: data.name, avatar: data.avatar, isPublic: data.isPublic })
+            return "SUCCESS"
+        } catch (error: any) {
+            throw new InternalServerErrorException()
         }
     }
 }
