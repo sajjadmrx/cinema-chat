@@ -44,14 +44,14 @@ export class InvitesService {
 
             if (invite.max_use != 0)
                 if (invite.max_use == invite.uses || invite.max_use < invite.uses)
-                    throw new BadRequestException(ResponseMessages.INVALID_INVITE);//TODO: Change Message
+                    throw new BadRequestException(ResponseMessages.USED_MAXIMUM);
 
             if (!invite.isForEver) {
                 if (moment(invite.expires_at).isBefore())
                     throw new BadRequestException(ResponseMessages.EXPIRED_TIME);
             }
 
-            //TODO: update Use
+            await this.invitesRepo.updateUsesById(invite.inviteId)
 
             return invite.room.roomId
         } catch (error) {

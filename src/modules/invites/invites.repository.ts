@@ -42,4 +42,17 @@ export class InvitesRepository {
         })
     }
 
+    async updateUsesById(id: number): Promise<Invite> {
+        return this.db.invite.update({
+            where: {
+                inviteId: id
+            },
+            data: {
+                uses: {
+                    increment: 1
+                }
+            }
+        })
+    }
+
 }
