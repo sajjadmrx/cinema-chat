@@ -3,7 +3,7 @@ import { IsBoolean, IsDate, IsDateString, IsNumber } from "class-validator"
 
 export class InviteCreateDto {
     @ApiProperty({
-        description: 'Expire after',
+        description: 'Expire Time',
         required: true,
         type: Date
     })
