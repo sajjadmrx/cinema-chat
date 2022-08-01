@@ -42,7 +42,8 @@ http://localhost:{port}/api
 ```bash
 $ npm install
 ```
-
+## Contributors
+> https://discord.gg/zM3vQZHN
 ## Running the app
 
 ```bash
