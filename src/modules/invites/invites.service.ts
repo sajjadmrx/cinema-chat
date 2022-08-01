@@ -5,6 +5,7 @@ import { RoomsRepository } from '../rooms/rooms.repository';
 import { ResponseMessages } from '../../shared/constants/response-messages.constant';
 import { Room } from 'src/shared/interfaces/room.interface';
 import { Invite, InviteWithRoom } from 'src/shared/interfaces/invite.interface';
+import * as moment from 'moment';
 
 @Injectable()
 export class InvitesService {
@@ -41,6 +42,16 @@ export class InvitesService {
             if (!invite.room)
                 throw new NotFoundException(ResponseMessages.ROOM_NOT_FOUND);
 
+            if (invite.max_use != 0)
+                if (invite.max_use == invite.uses || invite.max_use < invite.uses)
+                    throw new BadRequestException(ResponseMessages.INVALID_INVITE);//TODO: Change Message
+
+            if (!invite.isForEver) {
+                if (moment(invite.expires_at).isBefore())
+                    throw new BadRequestException(ResponseMessages.EXPIRED_TIME);
+            }
+
+            //TODO: update Use
 
             return invite.room.roomId
         } catch (error) {
