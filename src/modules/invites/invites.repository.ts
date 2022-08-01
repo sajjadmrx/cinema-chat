@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Invite, InviteCreateInput } from 'src/shared/interfaces/invite.interface';
+import { Invite, InviteCreateInput, InviteWithRoom } from 'src/shared/interfaces/invite.interface';
 import { PrismaService } from '../prisma/prisma.service';
 import { getRandomNumber, getRandomString } from '../../shared/utils/uuid.util';
+import { Room } from 'src/shared/interfaces/room.interface';
 
 @Injectable()
 export class InvitesRepository {
@@ -21,12 +22,16 @@ export class InvitesRepository {
         })
     }
 
-    async getBySlug(slug: string): Promise<Invite | null> {
+    async getBySlug(slug: string): Promise<InviteWithRoom | null> {
         return this.db.invite.findUnique({
             where: {
                 slug
-            }
+            },
+            include: {
+                room: true,
+            },
         })
+
     }
 
     async getById(id: number): Promise<Invite | null> {
