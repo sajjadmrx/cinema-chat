@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, UseGuards, UseInterceptors } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { InvitesService } from "./invites.service";
 import { ResponseInterceptor } from '../../shared/interceptors/response.interceptor';
 import { InviteCreateDto } from './dtos/create.dto';
@@ -56,6 +56,16 @@ export class InvitesController {
             example: {
                 statusCode: 404,
                 message: "INVALID_INVITE"
+            }
+        }
+    })
+    @ApiBadRequestResponse({
+        status: 400,
+        description: 'When the Expire time expired',
+        schema: {
+            example: {
+                statusCode: 400,
+                message: "EXPIRED_TIME"
             }
         }
     })
