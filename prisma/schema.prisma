@@ -48,4 +48,6 @@ model Invite {
   isForEver  Boolean  @default(false)
   max_use    Int //0 == no limit
   uses       Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
