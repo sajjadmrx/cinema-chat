@@ -27,7 +27,7 @@
 پروژه تمرینی چت و سینما باهم
 
 ## TODO
-> - Invite Module (Craete)
+> - ~~Invite Module (Craete - find roomId By Slug)~~ ✔️
 > - Member Module (Join-Lave-and ...)
 > - Message Module (CURD)
 > - 30nama Bahm (stream Video/music)
