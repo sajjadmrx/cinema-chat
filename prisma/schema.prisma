@@ -61,8 +61,8 @@ model Member {
   roomId      Int
   user        User          @relation(fields: [userId], references: [userId])
   userId      Int //member id or userId
-  invite      Invite        @relation(fields: [inviteId], references: [inviteId])
-  inviteId    Int
+  invite      Invite?       @relation(fields: [inviteId], references: [inviteId])
+  inviteId    Int?
   permissions Permissions[] @default([DEFAULT])
   nickname    String?
   createdAt   DateTime      @default(now())
