@@ -20,7 +20,6 @@ export class RoomsService {
       });
       return { roomId: newRoom.roomId };
     } catch (error: any) {
-      console.log(error);
       throw new InternalServerErrorException();
     }
   }
