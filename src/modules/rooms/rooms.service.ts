@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  LoggerService,
+} from '@nestjs/common';
 import { Room, RoomCreateInput } from 'src/shared/interfaces/room.interface';
 import { User } from 'src/shared/interfaces/user.interface';
 import { RoomCreateDto } from './dto/create.dto';
@@ -8,6 +13,7 @@ import { ResponseMessages } from 'src/shared/constants/response-messages.constan
 
 @Injectable()
 export class RoomsService {
+  private readonly logger = new Logger(RoomsService.name);
   constructor(private roomsRepository: RoomsRepository) {}
 
   async create(input: RoomCreateDto, user: User): Promise<any> {
@@ -20,6 +26,7 @@ export class RoomsService {
       });
       return { roomId: newRoom.roomId };
     } catch (error: any) {
+      this.logger.error(error.message, error.stack);
       throw new InternalServerErrorException();
     }
   }
@@ -33,6 +40,7 @@ export class RoomsService {
       });
       return ResponseMessages.SUCCESS;
     } catch (error: any) {
+      this.logger.error(error.message, error.stack);
       throw new InternalServerErrorException();
     }
   }
