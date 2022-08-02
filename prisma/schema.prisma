@@ -21,6 +21,7 @@ model User {
   updatedAt DateTime @updatedAt
   Rooms     Room[]
   Invites   Invite[]
+  Members   Member[]
 }
 
 model Room {
@@ -34,6 +35,7 @@ model Room {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Invites   Invite[]
+  Members   Member[]
 }
 
 model Invite {
@@ -50,4 +52,27 @@ model Invite {
   uses       Int      @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  Members    Member[]
+}
+
+model Member {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  room        Room          @relation(fields: [roomId], references: [roomId])
+  roomId      Int
+  user        User          @relation(fields: [userId], references: [userId])
+  userId      Int //member id or userId
+  invite      Invite        @relation(fields: [inviteId], references: [inviteId])
+  inviteId    Int
+  permissions Permissions[] @default([DEFAULT])
+  nickname    String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+enum Permissions {
+  ADMINISTRATOR //All Perm
+  MANAGE_ROOM
+  MANAGE_INVITE
+  MANAGE_STREAM
+  DEFAULT
 }
