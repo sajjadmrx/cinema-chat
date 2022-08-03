@@ -1,4 +1,8 @@
-import { Member as _Member, Prisma } from '@prisma/client';
+import {
+  Member as _Member,
+  Prisma,
+  MemberPermissions as _MemberPermissions,
+} from '@prisma/client';
 import { Room } from 'src/shared/interfaces/room.interface';
 
 export interface Member extends _Member {}
@@ -13,3 +17,5 @@ export interface MemberCreateInput
   userId: number;
   inviteId?: number | null;
 }
+
+export const MemberPermissions = _MemberPermissions;

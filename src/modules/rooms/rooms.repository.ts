@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { MemberPermissions } from 'src/shared/interfaces/member.interface';
 import {
   Room,
   RoomCreateInput,
@@ -20,6 +21,7 @@ export class RoomsRepository {
           create: [
             {
               userId: input.ownerId,
+              permissions: [MemberPermissions.ADMINISTRATOR],
             },
           ],
         },

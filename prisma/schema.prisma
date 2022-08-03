@@ -56,20 +56,20 @@ model Invite {
 }
 
 model Member {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
-  room        Room          @relation(fields: [roomId], references: [roomId])
+  id          String              @id @default(auto()) @map("_id") @db.ObjectId
+  room        Room                @relation(fields: [roomId], references: [roomId])
   roomId      Int
-  user        User          @relation(fields: [userId], references: [userId])
+  user        User                @relation(fields: [userId], references: [userId])
   userId      Int //member id or userId
-  invite      Invite?       @relation(fields: [inviteId], references: [inviteId])
+  invite      Invite?             @relation(fields: [inviteId], references: [inviteId])
   inviteId    Int?
-  permissions Permissions[] @default([DEFAULT])
+  permissions MemberPermissions[] @default([DEFAULT])
   nickname    String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
 }
 
-enum Permissions {
+enum MemberPermissions {
   ADMINISTRATOR //All Perm
   MANAGE_ROOM
   MANAGE_INVITE
