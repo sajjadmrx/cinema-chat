@@ -27,7 +27,7 @@ export class RoomsService {
       return { roomId: newRoom.roomId };
     } catch (error: any) {
       this.logger.error(error.message, error.stack);
-      throw new InternalServerErrorException();
+      throw error;
     }
   }
 
@@ -41,7 +41,7 @@ export class RoomsService {
       return ResponseMessages.SUCCESS;
     } catch (error: any) {
       this.logger.error(error.message, error.stack);
-      throw new InternalServerErrorException();
+      throw error;
     }
   }
 }

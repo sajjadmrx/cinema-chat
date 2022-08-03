@@ -38,7 +38,7 @@ export class AuthService {
       return this.jwtSignUserId(createdUser.userId);
     } catch (error: any) {
       this.logger.error(error.message, error.stack);
-      throw new InternalServerErrorException();
+      throw error;
     }
   }
 
@@ -59,7 +59,7 @@ export class AuthService {
       throw new BadRequestException(ResponseMessages.INVALID_USERNAME_PASSWORD);
     } catch (error: any) {
       this.logger.error(error.message, error.stack);
-      throw new InternalServerErrorException();
+      throw error;
     }
   }
 

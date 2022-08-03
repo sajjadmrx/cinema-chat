@@ -41,7 +41,7 @@ export class InvitesService {
       return invite.slug;
     } catch (error: any) {
       this.logger.error(error.message, error.stack);
-      throw new InternalServerErrorException();
+      throw error;
     }
   }
 
@@ -69,7 +69,7 @@ export class InvitesService {
       return invite.room.roomId;
     } catch (error: any) {
       this.logger.error(error.message, error.stack);
-      throw new InternalServerErrorException();
+      throw error;
     }
   }
 }
