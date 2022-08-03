@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
-import { MemebersRepository } from './members.repository';
+import { RoomsModule } from '../rooms/rooms.module';
+import { MembersController } from './members.controller';
+import { MembersRepository } from './members.repository';
+import { MembersService } from './members.service';
 
-
-
-const providersAndExports = [MemebersRepository]
+const providersAndExports = [MembersRepository];
 
 @Module({
-    imports: [],
-    providers: [...providersAndExports],
-    exports: [...providersAndExports]
+  imports: [RoomsModule],
+  controllers: [MembersController],
+  providers: [...providersAndExports, MembersService],
+  exports: [...providersAndExports],
 })
-export class MembersModule { }
+export class MembersModule {}

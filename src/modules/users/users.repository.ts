@@ -5,7 +5,7 @@ import { getRandomNumber } from '../../shared/utils/uuid.util';
 
 @Injectable()
 export class UsersRepository {
-  constructor(private db: PrismaService) { }
+  constructor(private db: PrismaService) {}
 
   async findAll(): Promise<Array<User>> {
     return this.db.user.findMany();
