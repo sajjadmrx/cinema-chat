@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   Logger,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InvitesRepository } from './invites.repository';
 import { InviteCreateDto } from './dtos/create.dto';
@@ -12,6 +13,8 @@ import { ResponseMessages } from '../../shared/constants/response-messages.const
 import { Room } from 'src/shared/interfaces/room.interface';
 import { Invite, InviteWithRoom } from 'src/shared/interfaces/invite.interface';
 import * as moment from 'moment';
+import { MembersRepository } from '../members/members.repository';
+import { Member } from 'src/shared/interfaces/member.interface';
 
 @Injectable()
 export class InvitesService {
@@ -20,6 +23,7 @@ export class InvitesService {
   constructor(
     private invitesRepo: InvitesRepository,
     private roomsRepository: RoomsRepository,
+    private membersRepository: MembersRepository,
   ) {}
 
   async create(input: InviteCreateDto, userId: number): Promise<string> {
@@ -28,7 +32,12 @@ export class InvitesService {
         input.roomId,
       );
       if (!room) throw new BadRequestException(ResponseMessages.ROOM_NOT_FOUND);
-      //Todo: Check Member
+
+      const member: Member | null =
+        await this.membersRepository.getByRoomIdAndUserId(room.roomId, userId);
+
+      if (!member)
+        throw new NotFoundException(ResponseMessages.MEMBER_NOT_FOUND);
 
       const invite: Invite = await this.invitesRepo.create({
         inviterId: userId,

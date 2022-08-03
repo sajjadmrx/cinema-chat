@@ -3,13 +3,13 @@ import { InvitesRepository } from './invites.repository';
 import { InvitesService } from './invites.service';
 import { InvitesController } from './invites.controller';
 import { RoomsModule } from '../rooms/rooms.module';
+import { MembersModule } from '../members/members.module';
 
-
-const providersAndExports = [InvitesRepository]
+const providersAndExports = [InvitesRepository];
 @Module({
-  imports: [RoomsModule],
+  imports: [RoomsModule, MembersModule],
   controllers: [InvitesController],
   providers: [InvitesService, ...providersAndExports],
-  exports: [...providersAndExports]
+  exports: [...providersAndExports],
 })
-export class InvitesModule { }
+export class InvitesModule {}
