@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Put,
@@ -43,4 +44,12 @@ export class MembersController {
       user,
     );
   }
+
+  @ApiOperation({ summary: 'lave Current user from room' })
+  @Delete('/lave')
+  async lave(@Param('roomId') roomId: string, @getUser() user: User) {
+    return this.membersService.laveRoom(Number(roomId), user);
+  }
+
+  //TODO: Kick Member
 }

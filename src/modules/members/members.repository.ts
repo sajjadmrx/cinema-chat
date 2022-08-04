@@ -23,4 +23,18 @@ export class MembersRepository {
       include: { room: true },
     });
   }
+
+  async deleteByRoomIdAndUserId(
+    roomId: number,
+    userId: number,
+  ): Promise<boolean> {
+    try {
+      const result = await this.db.member.deleteMany({
+        where: { roomId, userId },
+      });
+      return result.count > 0;
+    } catch (e) {
+      throw e;
+    }
+  }
 }
