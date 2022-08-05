@@ -20,6 +20,16 @@ export class MembersService {
 
   constructor(private membersRep: MembersRepository) {}
 
+  async find(page: number, limit: number) {
+    const maxLimit: number = 10;
+    if (!page || !limit || Number(page) < 1 || Number(limit) < 1) {
+      page = 1;
+      limit = maxLimit;
+    }
+    if (limit > maxLimit) limit = maxLimit;
+    return this.membersRep.find(page, limit);
+  }
+
   async joinRoom(
     roomId: number,
     inviteId: number | null,

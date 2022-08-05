@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Put,
+  Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -13,6 +14,7 @@ import {
   ApiBearerAuth,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { getUser } from 'src/shared/decorators/user.decorator';
@@ -26,13 +28,35 @@ import { CheckMemberPermissions } from '../../shared/guards/permissions.guard';
 import { KickDto } from './dtos/kick.dto';
 
 @ApiBearerAuth()
-@ApiTags('member')
+@ApiTags('members')
 @UseInterceptors(ResponseInterceptor)
 @UseGuards(AuthGuard('jwt'))
 @UseGuards(CheckRoomId)
 @Controller('rooms/:roomId/members')
 export class MembersController {
   constructor(private membersService: MembersService) {}
+
+  @ApiQuery({
+    name: 'limit',
+    type: String,
+    required: false,
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'page',
+    type: String,
+    required: false,
+    example: 1,
+  })
+  @ApiOperation({ summary: 'Get Members' })
+  @UseGuards(CheckCurrentMember)
+  @Get()
+  getAll(
+    @Param('roomId') roomId: string,
+    @Query() query: { page: string; limit: string },
+  ) {
+    return this.membersService.find(Number(query.page), Number(query.limit));
+  }
 
   @ApiOperation({ summary: 'Add Current user to room' })
   @Put()

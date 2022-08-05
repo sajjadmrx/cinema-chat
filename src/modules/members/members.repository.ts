@@ -5,6 +5,7 @@ import {
   MemberWithRoom,
 } from 'src/shared/interfaces/member.interface';
 import { PrismaService } from '../prisma/prisma.service';
+import { User } from '../../shared/interfaces/user.interface';
 
 @Injectable()
 export class MembersRepository {
@@ -12,6 +13,30 @@ export class MembersRepository {
 
   async create(input: MemberCreateInput): Promise<Member> {
     return this.db.member.create({ data: input });
+  }
+
+  async find(page: number, limit: number): Promise<unknown[]> {
+    //TODO: ADD TYPE
+    return this.db.member.findMany({
+      take: limit,
+      skip: (page - 1) * limit,
+      select: {
+        id: false, //mongoId
+        permissions: true,
+        nickname: true,
+        userId: true,
+        roomId: true,
+        user: {
+          select: {
+            id: false,
+            password: false,
+            username: true,
+            userId: true,
+          },
+        },
+        invite: false,
+      },
+    });
   }
 
   async getByRoomIdAndUserId(
