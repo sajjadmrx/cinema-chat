@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   Member,
   MemberCreateInput,
+  MemberUpdateInput,
   MemberWithRoom,
 } from 'src/shared/interfaces/member.interface';
 import { PrismaService } from '../prisma/prisma.service';
@@ -56,6 +57,28 @@ export class MembersRepository {
     try {
       const result = await this.db.member.deleteMany({
         where: { roomId, userId },
+      });
+      return result.count > 0;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async updateOne(
+    roomId: number,
+    userId: number,
+    input: MemberUpdateInput,
+  ): Promise<boolean> {
+    try {
+      const result = await this.db.member.updateMany({
+        where: {
+          userId,
+          roomId,
+        },
+        data: {
+          nickname: input.nickname,
+          permissions: input.permissions,
+        },
       });
       return result.count > 0;
     } catch (e) {

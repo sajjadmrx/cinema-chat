@@ -18,5 +18,7 @@ export interface MemberCreateInput
   inviteId?: number | null;
 }
 
-export type MemberPermissionsType = _MemberPermissions;
-export const MemberPermissions = _MemberPermissions;
+export interface MemberUpdateInput extends Prisma.MemberUpdateInput {}
+
+export type MemberPermissionType = _MemberPermissions;
+export const MemberPermission = _MemberPermissions;

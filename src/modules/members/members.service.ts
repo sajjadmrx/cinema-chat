@@ -1,18 +1,22 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   Logger,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ResponseMessages } from 'src/shared/constants/response-messages.constant';
 import {
   Member,
-  MemberPermissions,
+  MemberPermissionType,
+  MemberPermission,
   MemberWithRoom,
 } from 'src/shared/interfaces/member.interface';
 import { User } from 'src/shared/interfaces/user.interface';
 import { MembersRepository } from './members.repository';
 import { Room } from '../../shared/interfaces/room.interface';
+import { UpdateCurrentMemberDto } from './dtos/update.dto';
 
 @Injectable()
 export class MembersService {
@@ -110,6 +114,61 @@ export class MembersService {
       if (!isDeleted) throw new InternalServerErrorException();
 
       //TODO: SEND KICK MESSAGE
+      return ResponseMessages.SUCCESS;
+    } catch (e: any) {
+      this.logger.error(e, e.stack);
+      throw e;
+    }
+  }
+
+  async updateMember(
+    memberId: number, //target
+    requester: MemberWithRoom, // requester
+    input: UpdateCurrentMemberDto,
+  ) {
+    try {
+      let member: MemberWithRoom | null =
+        memberId == requester.userId
+          ? requester
+          : await this.membersRep.getByRoomIdAndUserId(
+              requester.roomId,
+              memberId,
+            );
+      if (!member)
+        throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
+
+      const oldPerms = member.permissions;
+      const newPerms = input.permissions;
+
+      const permissions: MemberPermissionType[] = [...new Set([...newPerms])];
+
+      const validate: Array<boolean> = permissions.map((a) =>
+        Object.keys(MemberPermission).includes(a),
+      );
+      if (validate.includes(false))
+        throw new BadRequestException(ResponseMessages.INVALID_PERMISSION);
+
+      const room: Room = requester.room;
+
+      let hasAdministrator: boolean =
+        requester.permissions.includes('ADMINISTRATOR');
+
+      if (!hasAdministrator && oldPerms.toString() != newPerms.toString())
+        throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
+
+      if (
+        !permissions.includes('ADMINISTRATOR') &&
+        member.userId == room.ownerId
+      )
+        throw new BadRequestException(); //TODO: better message
+      if (memberId == requester.userId && oldPerms.includes('ADMINISTRATOR')) {
+        if (!permissions.includes('ADMINISTRATOR'))
+          throw new BadRequestException('can not take Administrator your self'); //TODO: better Message
+      }
+
+      input.permissions = permissions;
+
+      await this.membersRep.updateOne(member.roomId, member.userId, input);
       return ResponseMessages.SUCCESS;
     } catch (e: any) {
       this.logger.error(e, e.stack);

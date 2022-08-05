@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Put,
   Query,
   UseGuards,
@@ -26,12 +27,18 @@ import { MembersService } from './members.service';
 import { CheckCurrentMember } from '../../shared/guards/member.guard';
 import { CheckMemberPermissions } from '../../shared/guards/permissions.guard';
 import { KickDto } from './dtos/kick.dto';
+import { UpdateCurrentMemberDto } from './dtos/update.dto';
+import { getMember } from '../../shared/decorators/member.decorator';
+import {
+  Member,
+  MemberWithRoom,
+} from '../../shared/interfaces/member.interface';
 
 @ApiBearerAuth()
 @ApiTags('members')
 @UseInterceptors(ResponseInterceptor)
-@UseGuards(AuthGuard('jwt'))
 @UseGuards(CheckRoomId)
+@UseGuards(AuthGuard('jwt'))
 @Controller('rooms/:roomId/members')
 export class MembersController {
   constructor(private membersService: MembersService) {}
@@ -96,4 +103,20 @@ export class MembersController {
       user,
     );
   }
+
+  @ApiOperation({ summary: 'update current member' })
+  @UseGuards(CheckCurrentMember)
+  @Patch()
+  async updateCurrentMember(
+    @Param('roomId') roomId: string,
+    @Body() input: UpdateCurrentMemberDto,
+    @getMember<Member>() member: MemberWithRoom,
+  ) {
+    return this.membersService.updateMember(member.userId, member, input);
+  }
+
+  //TODO:
+  // @ApiOperation({ summary: 'update a member' })
+  // @Patch(':memberId')
+  // async updateMember() {}
 }

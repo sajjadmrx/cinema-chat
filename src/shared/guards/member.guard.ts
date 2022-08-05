@@ -8,7 +8,7 @@ import { Request } from 'express';
 import { User } from '../interfaces/user.interface';
 import { Room } from '../interfaces/room.interface';
 import { MembersRepository } from '../../modules/members/members.repository';
-import { Member } from '../interfaces/member.interface';
+import { Member, MemberWithRoom } from '../interfaces/member.interface';
 import { ResponseMessages } from '../constants/response-messages.constant';
 
 @Injectable()
@@ -20,10 +20,8 @@ export class CheckCurrentMember implements CanActivate {
       const request: Request = context.switchToHttp().getRequest();
       const user: User = request.user;
       const room: Room = request.currentRoom;
-      const member: Member | null = await this.membersRepo.getByRoomIdAndUserId(
-        room.roomId,
-        user.userId,
-      );
+      const member: MemberWithRoom | null =
+        await this.membersRepo.getByRoomIdAndUserId(room.roomId, user.userId);
       if (!member)
         throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
 

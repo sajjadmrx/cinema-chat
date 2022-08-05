@@ -1,7 +1,7 @@
 import {
   Member,
-  MemberPermissions,
-  MemberPermissionsType,
+  MemberPermission,
+  MemberPermissionType,
 } from '../interfaces/member.interface';
 import { Request } from 'express';
 import {
@@ -13,7 +13,7 @@ import { User } from '../interfaces/user.interface';
 import { ResponseMessages } from '../constants/response-messages.constant';
 
 export function CheckMemberPermissions(
-  perms: Array<MemberPermissionsType>,
+  perms: Array<MemberPermissionType>,
 ): any {
   class _checkMemberPermissions implements CanActivate {
     canActivate(context: ExecutionContext): boolean {
