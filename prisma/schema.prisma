@@ -71,6 +71,7 @@ model Member {
 
 enum MemberPermissions {
   ADMINISTRATOR //All Perm
+  MANAGE_MEMBERS
   MANAGE_ROOM
   MANAGE_INVITE
   MANAGE_STREAM
