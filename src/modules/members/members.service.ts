@@ -4,7 +4,6 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { ResponseMessages } from 'src/shared/constants/response-messages.constant';
 import {

@@ -7,7 +7,7 @@ import { Request } from 'express';
 import {
   CanActivate,
   ExecutionContext,
-  UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { User } from '../interfaces/user.interface';
 import { ResponseMessages } from '../constants/response-messages.constant';
@@ -26,7 +26,7 @@ export function CheckMemberPermissions(
 
       if (hasPerm.includes(true)) return true;
 
-      throw new UnauthorizedException(ResponseMessages.PERMISSION_DENIED);
+      throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
     }
   }
 

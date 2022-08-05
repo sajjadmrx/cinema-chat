@@ -26,6 +26,8 @@ import { User } from 'src/shared/interfaces/user.interface';
 import { ResponseInterceptor } from 'src/shared/interceptors/response.interceptor';
 import { RoomUpdateDto } from './dto/update.dto';
 import { CheckRoomId } from 'src/shared/guards/check-roomId.guard';
+import { CheckCurrentMember } from '../../shared/guards/member.guard';
+import { CheckMemberPermissions } from '../../shared/guards/permissions.guard';
 
 @UseInterceptors(ResponseInterceptor)
 @ApiTags('rooms')
@@ -66,12 +68,14 @@ export class RoomsController {
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'update room',
-    description: 'update a room by roomId',
+    description:
+      'update a room by roomId,required Permissions:"ADMINISTRATOR" or "MANAGE_ROOM"',
   })
   @ApiParam({ name: 'roomId', type: 'string', example: '12345' })
-  @UseGuards(AuthGuard('jwt'))
-  //TODO: Check Permission
+  @UseGuards(CheckMemberPermissions(['ADMINISTRATOR', 'MANAGE_ROOM']))
+  @UseGuards(CheckCurrentMember)
   @UseGuards(CheckRoomId)
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':roomId')
   async update(
     @Body() data: RoomUpdateDto,

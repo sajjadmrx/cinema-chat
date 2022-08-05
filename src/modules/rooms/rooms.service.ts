@@ -1,10 +1,5 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-  LoggerService,
-} from '@nestjs/common';
-import { Room, RoomCreateInput } from 'src/shared/interfaces/room.interface';
+import { Injectable, Logger } from '@nestjs/common';
+import { Room } from 'src/shared/interfaces/room.interface';
 import { User } from 'src/shared/interfaces/user.interface';
 import { RoomCreateDto } from './dto/create.dto';
 import { RoomsRepository } from './rooms.repository';
@@ -14,6 +9,7 @@ import { ResponseMessages } from 'src/shared/constants/response-messages.constan
 @Injectable()
 export class RoomsService {
   private readonly logger = new Logger(RoomsService.name);
+
   constructor(private roomsRepository: RoomsRepository) {}
 
   async create(input: RoomCreateDto, user: User): Promise<any> {
