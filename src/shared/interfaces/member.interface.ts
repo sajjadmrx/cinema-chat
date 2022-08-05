@@ -18,4 +18,5 @@ export interface MemberCreateInput
   inviteId?: number | null;
 }
 
+export type MemberPermissionsType = _MemberPermissions;
 export const MemberPermissions = _MemberPermissions;
