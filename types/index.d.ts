@@ -1,6 +1,6 @@
 import { User as _User } from 'src/shared/interfaces/user.interface';
 import { Room } from 'src/shared/interfaces/room.interface';
-import { Member } from 'src/shared/interfaces/member.interface';
+import { Member, MemberWithRoom } from 'src/shared/interfaces/member.interface';
 
 declare global {
   namespace Express {
@@ -8,7 +8,7 @@ declare global {
 
     interface Request {
       currentRoom: Room;
-      currentMember: Member;
+      currentMember: MemberWithRoom;
     }
   }
 }
