@@ -56,9 +56,9 @@ export class MembersController {
 
   @ApiOperation({
     summary: 'delete a member',
-    description: "required permissions: 'ADMINISTRATOR' or 'MANAGE_ROOM'",
+    description: "required permissions: 'ADMINISTRATOR' or 'MANAGE_MEMBERS'",
   })
-  @UseGuards(CheckMemberPermissions(['ADMINISTRATOR', 'MANAGE_ROOM']))
+  @UseGuards(CheckMemberPermissions(['ADMINISTRATOR', 'MANAGE_MEMBERS']))
   @UseGuards(CheckCurrentMember)
   @Delete()
   async kick(
