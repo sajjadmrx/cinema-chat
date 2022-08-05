@@ -21,6 +21,9 @@ import { ResponseInterceptor } from 'src/shared/interceptors/response.intercepto
 import { User } from 'src/shared/interfaces/user.interface';
 import { MemberCreateDto } from './dtos/create.dto';
 import { MembersService } from './members.service';
+import { CheckCurrentMember } from '../../shared/guards/member.guard';
+import { CheckMemberPermissions } from '../../shared/guards/permissions.guard';
+import { KickDto } from './dtos/kick.dto';
 
 @ApiBearerAuth()
 @ApiTags('member')
@@ -51,5 +54,22 @@ export class MembersController {
     return this.membersService.laveRoom(Number(roomId), user);
   }
 
-  //TODO: Kick Member
+  @ApiOperation({
+    summary: 'delete a member',
+    description: "required permissions: 'ADMINISTRATOR' or 'MANAGE_ROOM'",
+  })
+  @UseGuards(CheckMemberPermissions(['ADMINISTRATOR', 'MANAGE_ROOM']))
+  @UseGuards(CheckCurrentMember)
+  @Delete()
+  async kick(
+    @Param('roomId') roomId: string,
+    @Body() input: KickDto,
+    @getUser() user: User,
+  ) {
+    return this.membersService.delete(
+      Number(roomId),
+      Number(input.memberId),
+      user,
+    );
+  }
 }

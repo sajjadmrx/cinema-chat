@@ -5,7 +5,11 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ResponseMessages } from 'src/shared/constants/response-messages.constant';
-import { Member, MemberWithRoom } from 'src/shared/interfaces/member.interface';
+import {
+  Member,
+  MemberPermissions,
+  MemberWithRoom,
+} from 'src/shared/interfaces/member.interface';
 import { User } from 'src/shared/interfaces/user.interface';
 import { MembersRepository } from './members.repository';
 import { Room } from '../../shared/interfaces/room.interface';
@@ -69,6 +73,37 @@ export class MembersService {
     } catch (error: any) {
       this.logger.error(error.message, error.stack);
       throw error;
+    }
+  }
+
+  async delete(roomId: number, memberId: number, currentUser: User) {
+    try {
+      const member: MemberWithRoom | null =
+        await this.membersRep.getByRoomIdAndUserId(roomId, memberId);
+      if (!member)
+        throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
+
+      const room: Room = member.room;
+
+      if (currentUser.userId == member.userId) {
+        throw new BadRequestException(ResponseMessages.CANNOT_KICK_SELF);
+      }
+
+      if (room.ownerId == member.userId) {
+        throw new BadRequestException(ResponseMessages.CANNOT_KICK_OWNER);
+      }
+
+      const isDeleted = await this.membersRep.deleteByRoomIdAndUserId(
+        roomId,
+        memberId,
+      );
+      if (!isDeleted) throw new InternalServerErrorException();
+
+      //TODO: SEND KICK MESSAGE
+      return ResponseMessages.SUCCESS;
+    } catch (e: any) {
+      this.logger.error(e, e.stack);
+      throw e;
     }
   }
 }

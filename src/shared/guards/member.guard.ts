@@ -2,6 +2,7 @@ import {
   BadRequestException,
   CanActivate,
   ExecutionContext,
+  Injectable,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { User } from '../interfaces/user.interface';
@@ -10,6 +11,7 @@ import { MembersRepository } from '../../modules/members/members.repository';
 import { Member } from '../interfaces/member.interface';
 import { ResponseMessages } from '../constants/response-messages.constant';
 
+@Injectable()
 export class CheckCurrentMember implements CanActivate {
   constructor(private membersRepo: MembersRepository) {}
 
