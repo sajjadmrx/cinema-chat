@@ -167,7 +167,6 @@ export class MembersService {
       }
 
       input.permissions = permissions;
-
       await this.membersRep.updateOne(member.roomId, member.userId, input);
       return ResponseMessages.SUCCESS;
     } catch (e: any) {

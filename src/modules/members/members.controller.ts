@@ -110,13 +110,20 @@ export class MembersController {
   async updateCurrentMember(
     @Param('roomId') roomId: string,
     @Body() input: UpdateCurrentMemberDto,
-    @getMember<Member>() member: MemberWithRoom,
+    @getMember<Member>() requester: MemberWithRoom,
   ) {
-    return this.membersService.updateMember(member.userId, member, input);
+    return this.membersService.updateMember(requester.userId, requester, input);
   }
 
-  //TODO:
-  // @ApiOperation({ summary: 'update a member' })
-  // @Patch(':memberId')
-  // async updateMember() {}
+  @ApiOperation({ summary: 'update a member' })
+  @UseGuards(CheckCurrentMember)
+  @Patch(':memberId')
+  async updateMember(
+    @Param('roomId') roomId: string,
+    @Param('memberId') memberId: string,
+    @Body() input: UpdateCurrentMemberDto,
+    @getMember<Member>() requester: MemberWithRoom,
+  ) {
+    return this.membersService.updateMember(Number(memberId), requester, input);
+  }
 }
