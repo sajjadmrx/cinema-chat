@@ -3,6 +3,7 @@
 </p>
 
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
   <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
@@ -27,23 +28,30 @@
 پروژه تمرینی چت و سینما باهم
 
 ## TODO
+
 > - ~~Invite Module (Craete - find roomId By Slug)~~ ✔️
-> - Member Module (Join-Lave-and ...)
+> - ~~Member Module (Join-Lave-and ...)~~ ✔️
 > - Message Module (CURD)
 > - 30nama Bahm (stream Video/music)
 
 ## Document
+
 Swagger
+
 ```
 http://localhost:{port}/api
 ```
+
 ## Installation
 
 ```bash
 $ npm install
 ```
+
 ## Contributors
+
 > https://discord.gg/zM3vQZHN
+
 ## Running the app
 
 ```bash
