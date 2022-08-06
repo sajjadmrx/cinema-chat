@@ -12,30 +12,32 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    Int      @unique
-  email     String   @unique
-  username  String   @unique
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId    Int       @unique
+  email     String    @unique
+  username  String    @unique
   password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   Rooms     Room[]
   Invites   Invite[]
   Members   Member[]
+  Messages  Message[]
 }
 
 model Room {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  roomId    Int      @unique
-  owner     User     @relation(fields: [ownerId], references: [userId])
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  roomId    Int       @unique
+  owner     User      @relation(fields: [ownerId], references: [userId])
   ownerId   Int
   name      String
-  isPublic  Boolean  @default(true)
-  avatar    String?  @default("DEFAULT_AVATAR")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isPublic  Boolean   @default(true)
+  avatar    String?   @default("DEFAULT_AVATAR")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   Invites   Invite[]
   Members   Member[]
+  Messages  Message[]
 }
 
 model Invite {
@@ -69,6 +71,19 @@ model Member {
   updatedAt   DateTime            @updatedAt
 }
 
+model Message {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  messageId Int         @unique
+  author    User        @relation(fields: [authorId], references: [userId])
+  authorId  Int
+  room      Room        @relation(fields: [roomId], references: [roomId])
+  roomId    Int
+  content   String?
+  type      messageType @default(TEXT)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
 enum MemberPermissions {
   ADMINISTRATOR //All Perm
   MANAGE_MEMBERS
@@ -76,4 +91,8 @@ enum MemberPermissions {
   MANAGE_INVITE
   MANAGE_STREAM
   DEFAULT
+}
+
+enum messageType {
+  TEXT
 }

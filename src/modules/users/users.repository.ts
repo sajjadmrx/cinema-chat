@@ -21,6 +21,7 @@ export class UsersRepository {
   }
 
   async getById(userId: number): Promise<User | null> {
+    //Todo: add Selector
     return this.db.user.findFirst({
       where: {
         userId,

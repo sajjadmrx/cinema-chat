@@ -11,12 +11,14 @@ const importsAndExport = [
     secret: JwtConstant.SECRET,
     signOptions: JwtConstant.signOptions,
   }),
+
 ];
 
 @Module({
   imports: [...importsAndExport, UsersModule],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
-  exports: [...importsAndExport],
+  exports: [...importsAndExport, AuthService],
 })
-export class AuthModule { }
+export class AuthModule {
+}

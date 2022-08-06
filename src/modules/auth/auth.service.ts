@@ -66,4 +66,8 @@ export class AuthService {
   private jwtSignUserId(userId: number): string {
     return this.jwtService.sign({ userId });
   }
+
+  jwtVerify(token: string) {
+    return this.jwtService.verify(token);
+  }
 }
