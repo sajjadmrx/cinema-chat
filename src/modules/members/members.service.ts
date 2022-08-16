@@ -87,7 +87,13 @@ export class MembersService {
         member.userId,
       );
       if (isDeleted) {
-        //TODO: Send Lave Message
+        delete member.id;
+        delete member.room;
+        const memberOnly: Member = member;
+        this.chatGateway.server
+          .to(roomId.toString())
+          .emit(EmitKeysConstant.LAVE, memberOnly);
+        //TODO Disconnect from room
         return ResponseMessages.SUCCESS;
       } else throw new InternalServerErrorException();
     } catch (error: any) {
