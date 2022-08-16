@@ -50,12 +50,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const userId = result.userId;
       const rooms = await this.roomsRepository.findByUserId(userId);
       rooms.map((r) => client.join(r.roomId.toString()));
-      console.log(rooms);
       client.data.userId = userId;
     } catch (e) {
       this.disconnect(client);
     }
-    // this.onlineUsers.set(userId, client.id);
   }
 
   handleDisconnect(client: Socket): any {
