@@ -4,6 +4,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { ResponseMessages } from 'src/shared/constants/response-messages.constant';
 import {
@@ -18,6 +19,7 @@ import { Room } from '../../shared/interfaces/room.interface';
 import { UpdateCurrentMemberDto } from './dtos/update.dto';
 import { ChatGateway } from '../chat/chat.gateway';
 import { EmitKeysConstant } from '../../shared/constants/event-keys.constant';
+import { InvitesRepository } from '../invites/invites.repository';
 
 @Injectable()
 export class MembersService {
@@ -26,6 +28,7 @@ export class MembersService {
   constructor(
     private membersRep: MembersRepository,
     private chatGateway: ChatGateway,
+    private invitesRepository: InvitesRepository,
   ) {}
 
   async find(page: number, limit: number) {
@@ -44,7 +47,13 @@ export class MembersService {
     user: User,
   ): Promise<any> {
     try {
-      //TODO: check Invite Id
+      if (Number(inviteId)) {
+        const invite = await this.invitesRepository.getById(inviteId);
+        if (!invite)
+          throw new NotFoundException(ResponseMessages.INVALID_INVITE);
+        if (invite.roomId != roomId)
+          throw new BadRequestException(ResponseMessages.INVALID_INVITE);
+      }
 
       const memberWithRoom: MemberWithRoom | null =
         await this.membersRep.getByRoomIdAndUserId(roomId, user.userId);
