@@ -16,12 +16,17 @@ import { User } from 'src/shared/interfaces/user.interface';
 import { MembersRepository } from './members.repository';
 import { Room } from '../../shared/interfaces/room.interface';
 import { UpdateCurrentMemberDto } from './dtos/update.dto';
+import { ChatGateway } from '../chat/chat.gateway';
+import { EmitKeysConstant } from '../../shared/constants/event-keys.constant';
 
 @Injectable()
 export class MembersService {
   private logger = new Logger(MembersRepository.name);
 
-  constructor(private membersRep: MembersRepository) {}
+  constructor(
+    private membersRep: MembersRepository,
+    private chatGateway: ChatGateway,
+  ) {}
 
   async find(page: number, limit: number) {
     const maxLimit: number = 10;
@@ -53,8 +58,10 @@ export class MembersService {
         inviteId,
       });
 
-      //TODO: Send Welcome Message or Add To Queue
-
+      delete member.id;
+      this.chatGateway.server
+        .to(roomId.toString())
+        .emit(EmitKeysConstant.NEW_MEMBER, member); //TODO: or send Message system!
       return ResponseMessages.OK;
     } catch (error: any) {
       this.logger.error(error, error.satck);
