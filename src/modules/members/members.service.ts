@@ -26,7 +26,8 @@ export class MembersService {
   constructor(
     private membersRep: MembersRepository,
     private chatGateway: ChatGateway,
-  ) {}
+  ) {
+  }
 
   async find(page: number, limit: number) {
     const maxLimit: number = 10;
@@ -59,6 +60,13 @@ export class MembersService {
       });
 
       delete member.id;
+
+      //TODO add to ChatService
+      const sockets = await this.chatGateway.server.sockets.fetchSockets();
+      const socket = sockets.find((so) => so.data.userId == user.userId);
+      if (socket) socket.join(roomId.toString());
+      //end
+
       this.chatGateway.server
         .to(roomId.toString())
         .emit(EmitKeysConstant.NEW_MEMBER, member); //TODO: or send Message system!
@@ -164,9 +172,9 @@ export class MembersService {
         memberId == requester.userId
           ? requester
           : await this.membersRep.getByRoomIdAndUserId(
-              requester.roomId,
-              memberId,
-            );
+            requester.roomId,
+            memberId,
+          );
       if (!member)
         throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
 
