@@ -2,6 +2,8 @@ import {
   BadRequestException,
   CanActivate,
   ExecutionContext,
+  forwardRef,
+  Inject,
   Injectable,
 } from '@nestjs/common';
 import { Request } from 'express';
@@ -13,7 +15,10 @@ import { ResponseMessages } from '../constants/response-messages.constant';
 
 @Injectable()
 export class CheckCurrentMember implements CanActivate {
-  constructor(private membersRepo: MembersRepository) {}
+  constructor(
+    @Inject(forwardRef(() => MembersRepository))
+    private membersRepo: MembersRepository,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {

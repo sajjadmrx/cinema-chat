@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   ForbiddenException,
+  forwardRef,
+  Inject,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -28,6 +30,7 @@ export class MembersService {
   constructor(
     private membersRep: MembersRepository,
     private chatGateway: ChatGateway,
+    @Inject(forwardRef(() => InvitesRepository))
     private invitesRepository: InvitesRepository,
   ) {}
 
