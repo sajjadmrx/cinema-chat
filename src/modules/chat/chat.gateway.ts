@@ -10,7 +10,7 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { MessagesService } from './messages.service';
+import { ChatService } from './chat.service';
 import {
   Injectable,
   Logger,
@@ -32,17 +32,15 @@ import { Room } from '../../shared/interfaces/room.interface';
 @WebSocketGateway(81, {
   transports: ['websocket'],
 })
-export class MessagesGateway
-  implements OnGatewayConnection, OnGatewayDisconnect
-{
-  private logger: Logger = new Logger(MessagesGateway.name);
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  private logger: Logger = new Logger(ChatGateway.name);
   @WebSocketServer()
   server: Server;
 
   public onlineUsers = new Map();
 
   constructor(
-    private readonly messagesService: MessagesService,
+    private readonly messagesService: ChatService,
     private authService: AuthService,
     private usersRepository: UsersRepository,
   ) {}

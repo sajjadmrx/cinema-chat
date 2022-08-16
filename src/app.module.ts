@@ -7,7 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { RoomsModule } from './modules/rooms/rooms.module';
 import { InvitesModule } from './modules/invites/invites.module';
 import { MembersModule } from './modules/members/members.module';
-import { MessagesModule } from './modules/messages/messages.module';
+import { ChatModule } from './modules/chat/chat.module';
 
 @Module({
   imports: [
@@ -21,7 +21,7 @@ import { MessagesModule } from './modules/messages/messages.module';
     RoomsModule,
     InvitesModule,
     MembersModule,
-    MessagesModule,
+    ChatModule,
   ],
 })
 export class AppModule {}
