@@ -26,8 +26,7 @@ export class MembersService {
   constructor(
     private membersRep: MembersRepository,
     private chatGateway: ChatGateway,
-  ) {
-  }
+  ) {}
 
   async find(page: number, limit: number) {
     const maxLimit: number = 10;
@@ -47,10 +46,10 @@ export class MembersService {
     try {
       //TODO: check Invite Id
 
-      const memberExists: MemberWithRoom | null =
+      const memberWithRoom: MemberWithRoom | null =
         await this.membersRep.getByRoomIdAndUserId(roomId, user.userId);
 
-      if (memberExists)
+      if (memberWithRoom)
         throw new BadRequestException(ResponseMessages.MEMBER_EXISTS);
 
       const member: Member = await this.membersRep.create({
@@ -79,34 +78,34 @@ export class MembersService {
 
   async laveRoom(roomId: number, user: User) {
     try {
-      const member: MemberWithRoom | null =
+      const memberWithRoom: MemberWithRoom | null =
         await this.membersRep.getByRoomIdAndUserId(roomId, user.userId);
-      if (!member)
+      if (!memberWithRoom)
         throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
 
-      const room: Room = member.room;
-      if (room.ownerId == member.userId) {
+      const room: Room = memberWithRoom.room;
+      if (room.ownerId == memberWithRoom.userId) {
         //TODO: no idea :D
         throw new BadRequestException('Soon');
       }
 
       const isDeleted: boolean = await this.membersRep.deleteByRoomIdAndUserId(
         roomId,
-        member.userId,
+        memberWithRoom.userId,
       );
       if (isDeleted) {
-        delete member.id;
-        delete member.room;
-        const memberOnly: Member = member;
+        delete memberWithRoom.id;
+        delete memberWithRoom.room;
+        const member: Member = memberWithRoom;
 
         //TODO Add to Queue
         const socketsOnRoom =
           await this.chatGateway.server.sockets.fetchSockets();
         const socket = socketsOnRoom.find((s) => s.data.userId == user.userId);
-        socket.leave(member.roomId.toString());
+        if (socket) socket.leave(memberWithRoom.roomId.toString());
         this.chatGateway.server
           .to(roomId.toString())
-          .emit(EmitKeysConstant.LAVE, memberOnly);
+          .emit(EmitKeysConstant.LAVE, member);
 
         return ResponseMessages.SUCCESS;
       } else throw new InternalServerErrorException();
@@ -118,36 +117,36 @@ export class MembersService {
 
   async delete(roomId: number, memberId: number, requester: User) {
     try {
-      const member: MemberWithRoom | null =
+      const memberWithRoom: MemberWithRoom | null =
         await this.membersRep.getByRoomIdAndUserId(roomId, memberId);
-      if (!member)
+      if (!memberWithRoom)
         throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
 
-      const room: Room = member.room;
+      const room: Room = memberWithRoom.room;
 
-      if (requester.userId == member.userId) {
+      if (requester.userId == memberWithRoom.userId) {
         throw new BadRequestException(ResponseMessages.CANNOT_KICK_SELF);
       }
 
-      if (room.ownerId == member.userId) {
+      if (room.ownerId == memberWithRoom.userId) {
         throw new BadRequestException(ResponseMessages.CANNOT_KICK_OWNER);
       }
 
       const isDeleted = await this.membersRep.deleteByRoomIdAndUserId(
         roomId,
-        memberId,
+        memberWithRoom.userId,
       );
       if (!isDeleted) throw new InternalServerErrorException();
-
-      this.chatGateway.server
-        .to(roomId.toString())
-        .emit(EmitKeysConstant.KICK_MEMBER, memberId);
 
       //TODO add To Queue
       const socketsOnRoom =
         await this.chatGateway.server.sockets.fetchSockets();
       const socket = socketsOnRoom.find((s) => s.data.userId == memberId);
-      socket.leave(member.roomId.toString());
+      if (socket) socket.leave(memberWithRoom.roomId.toString());
+
+      delete memberWithRoom.room;
+      const member: Member = memberWithRoom;
+      delete member.id;
       this.chatGateway.server
         .to(roomId.toString())
         .emit(EmitKeysConstant.KICK_MEMBER, {
@@ -168,17 +167,17 @@ export class MembersService {
     input: UpdateCurrentMemberDto,
   ) {
     try {
-      let member: MemberWithRoom | null =
+      let memberWithRoom: MemberWithRoom | null =
         memberId == requester.userId
           ? requester
           : await this.membersRep.getByRoomIdAndUserId(
-            requester.roomId,
-            memberId,
-          );
-      if (!member)
+              requester.roomId,
+              memberId,
+            );
+      if (!memberWithRoom)
         throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
 
-      const oldPerms = member.permissions;
+      const oldPerms = memberWithRoom.permissions;
       const newPerms = input.permissions;
 
       const permissions: MemberPermissionType[] = [...new Set([...newPerms])];
@@ -199,7 +198,7 @@ export class MembersService {
 
       if (
         !permissions.includes('ADMINISTRATOR') &&
-        member.userId == room.ownerId
+        memberWithRoom.userId == room.ownerId
       )
         throw new BadRequestException(); //TODO: better message
       if (memberId == requester.userId && oldPerms.includes('ADMINISTRATOR')) {
@@ -208,12 +207,17 @@ export class MembersService {
       }
 
       input.permissions = permissions;
-      await this.membersRep.updateOne(member.roomId, member.userId, input);
+      await this.membersRep.updateOne(
+        memberWithRoom.roomId,
+        memberWithRoom.userId,
+        input,
+      );
       this.chatGateway.server
         .to(room.roomId.toString())
         .emit(EmitKeysConstant.UPDATE_MEMBER, {
           ...input,
-          userId: member.userId,
+          userId: memberWithRoom.userId,
+          by: requester.userId,
         });
       return ResponseMessages.SUCCESS;
     } catch (e: any) {
