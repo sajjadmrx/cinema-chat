@@ -95,12 +95,12 @@ export class MembersController {
   async kick(
     @Param('roomId') roomId: string,
     @Body() input: KickDto,
-    @getUser() user: User,
+    @getUser() requester: User,
   ) {
     return this.membersService.delete(
       Number(roomId),
       Number(input.memberId),
-      user,
+      requester,
     );
   }
 

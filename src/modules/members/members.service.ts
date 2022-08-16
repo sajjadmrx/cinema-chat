@@ -26,8 +26,7 @@ export class MembersService {
   constructor(
     private membersRep: MembersRepository,
     private chatGateway: ChatGateway,
-  ) {
-  }
+  ) {}
 
   async find(page: number, limit: number) {
     const maxLimit: number = 10;
@@ -91,10 +90,16 @@ export class MembersService {
         delete member.id;
         delete member.room;
         const memberOnly: Member = member;
+
+        //TODO Add to Queue
+        const socketsOnRoom =
+          await this.chatGateway.server.sockets.fetchSockets();
+        const socket = socketsOnRoom.find((s) => s.data.userId == user.userId);
+        socket.leave(member.roomId.toString());
         this.chatGateway.server
           .to(roomId.toString())
           .emit(EmitKeysConstant.LAVE, memberOnly);
-        //TODO Disconnect from Room (Queue)
+
         return ResponseMessages.SUCCESS;
       } else throw new InternalServerErrorException();
     } catch (error: any) {
@@ -103,7 +108,7 @@ export class MembersService {
     }
   }
 
-  async delete(roomId: number, memberId: number, currentUser: User) {
+  async delete(roomId: number, memberId: number, requester: User) {
     try {
       const member: MemberWithRoom | null =
         await this.membersRep.getByRoomIdAndUserId(roomId, memberId);
@@ -112,7 +117,7 @@ export class MembersService {
 
       const room: Room = member.room;
 
-      if (currentUser.userId == member.userId) {
+      if (requester.userId == member.userId) {
         throw new BadRequestException(ResponseMessages.CANNOT_KICK_SELF);
       }
 
@@ -130,7 +135,18 @@ export class MembersService {
         .to(roomId.toString())
         .emit(EmitKeysConstant.KICK_MEMBER, memberId);
 
-      //TODO Disconnect from Room (Queue)
+      //TODO add To Queue
+      const socketsOnRoom =
+        await this.chatGateway.server.sockets.fetchSockets();
+      const socket = socketsOnRoom.find((s) => s.data.userId == memberId);
+      socket.leave(member.roomId.toString());
+      this.chatGateway.server
+        .to(roomId.toString())
+        .emit(EmitKeysConstant.KICK_MEMBER, {
+          member: member,
+          by: requester.userId,
+        });
+
       return ResponseMessages.SUCCESS;
     } catch (e: any) {
       this.logger.error(e, e.stack);
@@ -148,9 +164,9 @@ export class MembersService {
         memberId == requester.userId
           ? requester
           : await this.membersRep.getByRoomIdAndUserId(
-            requester.roomId,
-            memberId,
-          );
+              requester.roomId,
+              memberId,
+            );
       if (!member)
         throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
 
