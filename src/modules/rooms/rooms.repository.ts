@@ -37,6 +37,14 @@ export class RoomsRepository {
     });
   }
 
+  async findByUserId(userId: number): Promise<Room[]> {
+    return this.db.room.findMany({
+      where: {
+        Members: { some: { userId } },
+      },
+    });
+  }
+
   async updateById(id: number, input: RoomUpdateInput): Promise<Room> {
     return this.db.room.update({
       where: {

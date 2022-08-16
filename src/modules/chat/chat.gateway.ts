@@ -12,20 +12,15 @@ import {
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 import {
-  Injectable,
   Logger,
   UnauthorizedException,
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { WsJwtGuardGuard } from '../../shared/guards/WsJwtGuard.guard';
 import { WebsocketExceptionsFilter } from '../../shared/filters/WebsocketExceptions.filter';
-import { User } from '../../shared/interfaces/user.interface';
-import { Client } from 'socket.io/dist/client';
 import { AuthService } from '../auth/auth.service';
-import { UsersRepository } from '../users/users.repository';
-import { Room } from '../../shared/interfaces/room.interface';
+import { RoomsRepository } from '../rooms/rooms.repository';
 
 @UseGuards(WsJwtGuardGuard)
 @UseFilters(WebsocketExceptionsFilter)
@@ -42,7 +37,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly messagesService: ChatService,
     private authService: AuthService,
-    private usersRepository: UsersRepository,
+    private roomsRepository: RoomsRepository,
   ) {}
 
   async handleConnection(client: Socket) {
@@ -53,12 +48,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       let token: string | null = authorization.split(' ')[1];
       const result = this.authService.jwtVerify(token);
       const userId = result.userId;
-      const user = await this.usersRepository.getAndRoomsById(userId);
-      user.Rooms.map((r) => client.join(r.roomId.toString()));
-      if (!user) throw new Error();
-
-      delete user.password;
-      client.data.user = user;
+      const rooms = await this.roomsRepository.findByUserId(userId);
+      rooms.map((r) => client.join(r.roomId.toString()));
+      console.log(rooms);
+      client.data.userId = userId;
     } catch (e) {
       this.disconnect(client);
     }
