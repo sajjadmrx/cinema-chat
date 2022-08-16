@@ -16,8 +16,7 @@ export class WsJwtGuardGuard implements CanActivate {
   constructor(
     private authService: AuthService,
     private userRepository: UsersRepository,
-  ) {
-  }
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
@@ -29,12 +28,12 @@ export class WsJwtGuardGuard implements CanActivate {
       if (!token) throw new UnauthorizedException();
 
       const result = this.authService.jwtVerify(token);
-      const user: User | null = await this.userRepository.getById(
-        result.userId,
-      );
-      if (!user) throw new UnauthorizedException();
+      // const user: User | null = await this.userRepository.getById(
+      //   result.userId,
+      // );
+      if (!result.userId) throw new UnauthorizedException();
 
-      context.switchToWs().getData().user = user;
+      context.switchToWs().getData().userId = result.userId;
       return true;
     } catch (e) {
       throw e;

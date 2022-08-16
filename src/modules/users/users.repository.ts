@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { User, UserCraeteInput } from '../../shared/interfaces/user.interface';
+import {
+  User,
+  UserCraeteInput,
+  UserWithRooms,
+} from '../../shared/interfaces/user.interface';
 import { getRandomNumber } from '../../shared/utils/uuid.util';
+import { Member } from '../../shared/interfaces/member.interface';
+import { Room } from '../../shared/interfaces/room.interface';
 
 @Injectable()
 export class UsersRepository {
@@ -26,6 +32,13 @@ export class UsersRepository {
       where: {
         userId,
       },
+    });
+  }
+
+  async getAndRoomsById(userId: number): Promise<UserWithRooms> {
+    return this.db.user.findFirst({
+      where: { userId },
+      include: { Rooms: true },
     });
   }
 

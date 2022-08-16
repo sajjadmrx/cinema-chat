@@ -7,5 +7,6 @@ import { UsersModule } from '../users/users.module';
 @Module({
   imports: [AuthModule, UsersModule],
   providers: [MessagesGateway, MessagesService],
+  exports: [MessagesGateway],
 })
 export class MessagesModule {}
