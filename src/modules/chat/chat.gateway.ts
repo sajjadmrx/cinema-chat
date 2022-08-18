@@ -1,17 +1,13 @@
 import {
-  ConnectedSocket,
-  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  OnGatewayInit,
-  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 import {
+  Injectable,
   Logger,
   UnauthorizedException,
   UseFilters,
@@ -35,7 +31,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   public onlineUsers = new Map();
 
   constructor(
-    private readonly messagesService: ChatService,
     private authService: AuthService,
     private roomsRepository: RoomsRepository,
   ) {}
@@ -48,8 +43,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       let token: string | null = authorization.split(' ')[1];
       const result = this.authService.jwtVerify(token);
       const userId = result.userId;
-      const rooms = await this.roomsRepository.findByUserId(userId);
+
+      const rooms: { roomId: number }[] =
+        await this.roomsRepository.getRoomsIdByUserId(userId);
+
       rooms.map((r) => client.join(r.roomId.toString()));
+
       client.data.userId = userId;
     } catch (e) {
       this.disconnect(client);
