@@ -22,6 +22,7 @@ import { UpdateCurrentMemberDto } from './dtos/update.dto';
 import { ChatGateway } from '../chat/chat.gateway';
 import { EmitKeysConstant } from '../../shared/constants/event-keys.constant';
 import { InvitesRepository } from '../invites/invites.repository';
+import { ChatService } from '../chat/chat.service';
 
 @Injectable()
 export class MembersService {
@@ -32,6 +33,7 @@ export class MembersService {
     private chatGateway: ChatGateway,
     @Inject(forwardRef(() => InvitesRepository))
     private invitesRepository: InvitesRepository,
+    private chatService: ChatService,
   ) {}
 
   async find(page: number, limit: number) {
@@ -72,11 +74,11 @@ export class MembersService {
 
       delete member.id;
 
-      //TODO add to ChatService
-      const sockets = await this.chatGateway.server.sockets.fetchSockets();
-      const socket = sockets.find((so) => so.data.userId == user.userId);
-      if (socket) socket.join(roomId.toString());
-      //end
+      //Todo Maybe add to queue
+      await this.chatService.findSocketByUserIdAndJoinToRoom(
+        user.userId,
+        roomId,
+      );
 
       this.chatGateway.server
         .to(roomId.toString())
@@ -111,10 +113,10 @@ export class MembersService {
         const member: Member = memberWithRoom;
 
         //TODO Add to Queue
-        const socketsOnRoom =
-          await this.chatGateway.server.sockets.fetchSockets();
-        const socket = socketsOnRoom.find((s) => s.data.userId == user.userId);
-        if (socket) socket.leave(memberWithRoom.roomId.toString());
+        await this.chatService.findSocketByUserIdAndLaveFromRoom(
+          user.userId,
+          roomId,
+        );
         this.chatGateway.server
           .to(roomId.toString())
           .emit(EmitKeysConstant.LAVE, member);
@@ -150,11 +152,10 @@ export class MembersService {
       );
       if (!isDeleted) throw new InternalServerErrorException();
 
-      //TODO add To Queue
-      const socketsOnRoom =
-        await this.chatGateway.server.sockets.fetchSockets();
-      const socket = socketsOnRoom.find((s) => s.data.userId == memberId);
-      if (socket) socket.leave(memberWithRoom.roomId.toString());
+      await this.chatService.findSocketByUserIdAndLaveFromRoom(
+        memberId,
+        roomId,
+      );
 
       delete memberWithRoom.room;
       const member: Member = memberWithRoom;
