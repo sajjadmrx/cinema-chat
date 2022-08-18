@@ -6,6 +6,8 @@ import {
 } from 'nestjs-asyncapi';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+const brandName: string = 'cinema-chat';
+
 export class DocumentConfig {
   constructor(
     private app: INestApplication,
@@ -24,17 +26,16 @@ export class DocumentConfig {
         security: [{ 'user-password': [] }],
         variables: {
           port: {
-            description:
-              'Secure connection (TLS) is available through port 443.',
-            default: '443',
+            description: `Secure connection (TLS) is available through port ${socketServerPort}.`,
+            default: '81',
           },
         },
         bindings: {},
       };
 
       const asyncApiOptions = new AsyncApiDocumentBuilder()
-        .setTitle('cinema SocketIO')
-        .setDescription('Cats SocketIO description here')
+        .setTitle(brandName + ' SocketIO')
+        .setDescription(brandName + ' SocketIO description here')
         .setVersion('1.0')
         .setDefaultContentType('application/json')
         .addSecurity('user-password', { type: 'userPassword' })
@@ -52,9 +53,9 @@ export class DocumentConfig {
 
   setupSwagger(): this {
     const config = new DocumentBuilder()
-      .setTitle('Cinema Document')
+      .setTitle(`${brandName} Document`)
       .setDescription(
-        `The Cinema APIs, Response Format : \n
+        `The ${brandName} APIs, Response Format : \n
        \n
         {
             statusCode: int,
