@@ -10,7 +10,15 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('ChatFa Document')
-    .setDescription('The ChatFa APIs')
+    .setDescription(
+      `The ChatFa APIs, Response Format : \n
+       \n
+        {
+            statusCode: int,
+            data : any
+        }
+    `,
+    )
     .setVersion('1.0')
     .addBearerAuth({
       type: 'http',
@@ -34,4 +42,5 @@ async function bootstrap() {
   await app.listen(port);
   console.log(`App Running On ${port}`);
 }
+
 bootstrap();

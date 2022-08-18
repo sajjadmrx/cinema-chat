@@ -1,6 +1,6 @@
 import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SignUpDto } from './dtos/signup.dto';
 import { SignInDto } from './dtos/signin.dto';
 import { ResponseInterceptor } from '../../shared/interceptors/response.interceptor';
@@ -14,6 +14,13 @@ export class AuthController {
   @ApiOperation({
     summary: 'signup',
     description: 'create User And get Jwt Token',
+  })
+  @ApiCreatedResponse({
+    schema: {
+      example: {
+        data: 'tokenString-------',
+      },
+    },
   })
   @Post('signup')
   async signup(@Body() data: SignUpDto): Promise<any> {
