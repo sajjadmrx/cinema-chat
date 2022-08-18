@@ -39,6 +39,7 @@
     "moment": "^2.29.4",
     "mongoose": "^6.4.6",
     "nanoid": "^3.0.0",
+    "nestjs-asyncapi": "^0.3.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",

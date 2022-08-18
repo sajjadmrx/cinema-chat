@@ -17,7 +17,9 @@ import { WsJwtGuardGuard } from '../../shared/guards/WsJwtGuard.guard';
 import { WebsocketExceptionsFilter } from '../../shared/filters/WebsocketExceptions.filter';
 import { AuthService } from '../auth/auth.service';
 import { RoomsRepository } from '../rooms/rooms.repository';
+import { AsyncApiPub, AsyncApiService } from 'nestjs-asyncapi';
 
+@AsyncApiService()
 @UseGuards(WsJwtGuardGuard)
 @UseFilters(WebsocketExceptionsFilter)
 @WebSocketGateway(81, {
