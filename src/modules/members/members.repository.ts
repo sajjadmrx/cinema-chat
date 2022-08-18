@@ -16,26 +16,12 @@ export class MembersRepository {
     return this.db.member.create({ data: input });
   }
 
-  async find(page: number, limit: number): Promise<unknown[]> {
-    //TODO: ADD TYPE
+  async find(roomId: number, page: number, limit: number): Promise<Member[]> {
     return this.db.member.findMany({
       take: limit,
       skip: (page - 1) * limit,
-      select: {
-        id: false, //mongoId
-        permissions: true,
-        nickname: true,
-        userId: true,
-        roomId: true,
-        user: {
-          select: {
-            id: false,
-            password: false,
-            username: true,
-            userId: true,
-          },
-        },
-        invite: false,
+      where: {
+        roomId,
       },
     });
   }

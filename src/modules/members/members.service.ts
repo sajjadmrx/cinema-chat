@@ -36,14 +36,16 @@ export class MembersService {
     private chatService: ChatService,
   ) {}
 
-  async find(page: number, limit: number) {
+  async find(roomId: number, page: number, limit: number): Promise<Member[]> {
     const maxLimit: number = 10;
     if (!page || !limit || Number(page) < 1 || Number(limit) < 1) {
       page = 1;
       limit = maxLimit;
     }
     if (limit > maxLimit) limit = maxLimit;
-    return this.membersRep.find(page, limit);
+    if (!Number(roomId)) return [];
+    const members: Member[] = await this.membersRep.find(roomId, page, limit);
+    return members;
   }
 
   async joinRoom(

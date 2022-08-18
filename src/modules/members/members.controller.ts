@@ -62,7 +62,11 @@ export class MembersController {
     @Param('roomId') roomId: string,
     @Query() query: { page: string; limit: string },
   ) {
-    return this.membersService.find(Number(query.page), Number(query.limit));
+    return this.membersService.find(
+      Number(roomId),
+      Number(query.page),
+      Number(query.limit),
+    );
   }
 
   @ApiOperation({ summary: 'Add Current user to room' })
