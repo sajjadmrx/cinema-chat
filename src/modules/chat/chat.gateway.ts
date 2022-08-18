@@ -2,28 +2,28 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   WebSocketGateway,
-  WebSocketServer,
-} from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
-import { ChatService } from './chat.service';
+  WebSocketServer
+} from "@nestjs/websockets";
+import { Server, Socket } from "socket.io";
+import { ChatService } from "./chat.service";
 import {
   Injectable,
   Logger,
   UnauthorizedException,
   UseFilters,
-  UseGuards,
-} from '@nestjs/common';
-import { WsJwtGuardGuard } from '../../shared/guards/WsJwtGuard.guard';
-import { WebsocketExceptionsFilter } from '../../shared/filters/WebsocketExceptions.filter';
-import { AuthService } from '../auth/auth.service';
-import { RoomsRepository } from '../rooms/rooms.repository';
-import { AsyncApiPub, AsyncApiService } from 'nestjs-asyncapi';
+  UseGuards
+} from "@nestjs/common";
+import { WsJwtGuardGuard } from "../../shared/guards/WsJwtGuard.guard";
+import { WebsocketExceptionsFilter } from "../../shared/filters/WebsocketExceptions.filter";
+import { AuthService } from "../auth/auth.service";
+import { RoomsRepository } from "../rooms/rooms.repository";
+import { AsyncApiPub, AsyncApiService, AsyncApiSub } from "nestjs-asyncapi";
 
 @AsyncApiService()
 @UseGuards(WsJwtGuardGuard)
 @UseFilters(WebsocketExceptionsFilter)
 @WebSocketGateway(81, {
-  transports: ['websocket'],
+  transports: ["websocket"]
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger(ChatGateway.name);
@@ -34,15 +34,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(
     private authService: AuthService,
-    private roomsRepository: RoomsRepository,
-  ) {}
+    private roomsRepository: RoomsRepository
+  ) {
+  }
 
   async handleConnection(client: Socket) {
     try {
       const authorization: string | null =
-        client.handshake.headers['authorization'];
+        client.handshake.headers["authorization"];
       if (!authorization) throw new UnauthorizedException();
-      let token: string | null = authorization.split(' ')[1];
+      let token: string | null = authorization.split(" ")[1];
       const result = this.authService.jwtVerify(token);
       const userId = result.userId;
 
@@ -62,7 +63,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   private disconnect(socket: Socket) {
-    socket.emit('error', new UnauthorizedException());
+    socket.emit("error", new UnauthorizedException());
     socket.disconnect();
   }
 }
