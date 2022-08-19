@@ -5,11 +5,12 @@ import { AuthModule } from "../auth/auth.module";
 import { UsersModule } from "../users/users.module";
 import { RoomsModule } from "../rooms/rooms.module";
 import { ChatEmits } from "./chat.emits";
+import { MessagesModule } from "../messages/messages.module";
 
 const providersAndExports = [ChatService, ChatGateway, ChatEmits];
 
 @Module({
-  imports: [AuthModule, forwardRef(() => RoomsModule), UsersModule],
+  imports: [AuthModule, forwardRef(() => RoomsModule), UsersModule, MessagesModule],
   providers: [...providersAndExports],
   exports: [...providersAndExports]
 })

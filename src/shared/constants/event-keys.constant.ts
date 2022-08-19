@@ -1,9 +1,11 @@
 export enum EmitKeysConstant {
-  NEW_MEMBER = 'NEW_MEMBER',
-  LAVE = 'LAVE_MEMBER',
-  UPDATE_MEMBER = 'UPDATE_MEMBER',
-  KICK_MEMBER = 'KICK_MEMBER',
-  MESSAGE = 'MESSAGE',
+  NEW_MEMBER = "NEW_MEMBER",
+  LAVE = "LAVE_MEMBER",
+  UPDATE_MEMBER = "UPDATE_MEMBER",
+  KICK_MEMBER = "KICK_MEMBER",
+  CREATE_MESSAGE = "CREATE_MESSAGE",
 }
 
-export enum EventKeysConstant {}
+export enum EventKeysConstant {
+  CREATE_MESSAGE = "CREATE_MESSAGE"
+}

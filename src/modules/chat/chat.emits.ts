@@ -8,6 +8,7 @@ import {
   LaveMemberExa,
   UpdateMemberExa
 } from "../../shared/examples/socket/member.example";
+import { Message } from "../../shared/interfaces/message.interface";
 
 
 @AsyncApiService()
@@ -71,5 +72,13 @@ export class ChatEmits {
         memberId: member.userId,
         by: requesterId
       });
+  }
+
+
+  createMessage(message: Message) {
+    console.log(message.roomId.toString());
+    this.chatGateway.server
+      .to(message.roomId.toString())
+      .emit(EmitKeysConstant.CREATE_MESSAGE, message);
   }
 }

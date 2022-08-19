@@ -1,13 +1,25 @@
-import { Injectable } from '@nestjs/common';
-import { ChatGateway } from './chat.gateway';
+import { forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { ChatGateway } from "./chat.gateway";
+import { MessageCreateDto } from "../messages/dtos/creates.dto";
+import { ResponseMessages } from "../../shared/constants/response-messages.constant";
+import { Socket } from "socket.io";
+import { MessagesService } from "../messages/messages.service";
+import { ChatEmits } from "./chat.emits";
+import { Message } from "../../shared/interfaces/message.interface";
 
 @Injectable()
 export class ChatService {
-  constructor(private chatGateway: ChatGateway) {}
+  constructor(
+    @Inject(forwardRef(() => ChatGateway))
+    private chatGateway: ChatGateway,
+    private messageService: MessagesService,
+    private chatEmits: ChatEmits
+  ) {
+  }
 
   async findSocketByUserIdAndJoinToRoom(
     userId: number,
-    roomId: number,
+    roomId: number
   ): Promise<void> {
     try {
       const sockets = await this.chatGateway.server.sockets.fetchSockets();
@@ -21,7 +33,7 @@ export class ChatService {
 
   async findSocketByUserIdAndLaveFromRoom(
     userId: number,
-    roomId: number,
+    roomId: number
   ): Promise<void> {
     try {
       const socketsOnRoom =
@@ -31,6 +43,20 @@ export class ChatService {
         userSockets.map((socket) => socket.leave(roomId.toString()));
     } catch (e) {
       //error
+    }
+  }
+
+  async sendMessageRoom(data: MessageCreateDto, socket: Socket) {
+    try {
+      const roomId: number = data.roomId;
+      if (!socket.rooms.has(roomId.toString()))
+        throw new NotFoundException(ResponseMessages.ROOM_NOT_FOUND);
+      const memberId: number = socket.data.userId;
+      const message: Message = await this.messageService.create(roomId, memberId, data);
+
+      this.chatEmits.createMessage(message);
+    } catch (e) {
+      throw e;
     }
   }
 }
