@@ -8,58 +8,76 @@ import {
   Post,
   UseGuards,
   UseInterceptors,
-  BadRequestException,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+  BadRequestException, Query
+} from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
 import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
+  ApiParam, ApiQuery,
   ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
-import { RoomsService } from './rooms.service';
-import { RoomCreateDto } from './dto/create.dto';
-import { getUser } from 'src/shared/decorators/user.decorator';
-import { User } from 'src/shared/interfaces/user.interface';
-import { ResponseInterceptor } from 'src/shared/interceptors/response.interceptor';
-import { RoomUpdateDto } from './dto/update.dto';
-import { CheckRoomId } from 'src/shared/guards/check-roomId.guard';
-import { CheckCurrentMember } from '../../shared/guards/member.guard';
-import { CheckMemberPermissions } from '../../shared/guards/permissions.guard';
+  ApiTags
+} from "@nestjs/swagger";
+import { RoomsService } from "./rooms.service";
+import { RoomCreateDto } from "./dto/create.dto";
+import { getUser } from "src/shared/decorators/user.decorator";
+import { User } from "src/shared/interfaces/user.interface";
+import { ResponseInterceptor } from "src/shared/interceptors/response.interceptor";
+import { RoomUpdateDto } from "./dto/update.dto";
+import { CheckRoomId } from "src/shared/guards/check-roomId.guard";
+import { CheckCurrentMember } from "../../shared/guards/member.guard";
+import { CheckMemberPermissions } from "../../shared/guards/permissions.guard";
 
 @UseInterceptors(ResponseInterceptor)
-@ApiTags('rooms')
-@Controller('rooms')
+@ApiTags("rooms")
+@Controller("rooms")
 export class RoomsController {
-  constructor(private roomsService: RoomsService) {}
-
-  @Get()
-  async getRooms() {
-    return [];
+  constructor(private roomsService: RoomsService) {
   }
 
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'create a room',
+    summary: "get current User Rooms"
+  })
+  @ApiQuery({
+    name: "limit",
+    type: String,
+    required: false,
+    example: 10
+  })
+  @ApiQuery({
+    name: "page",
+    type: String,
+    required: false,
+    example: 1
+  })
+  @UseGuards(AuthGuard("jwt"))
+  @Get()
+  async getRooms(@Query() query: any, @getUser() user: User) {
+    return this.roomsService.getUserRooms(user.userId, Number(query.page), Number(query.limit));
+  }
+
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: "create a room"
   })
   @ApiResponse({
     status: 201,
     schema: {
-      example: { statusCode: 201, data: { roomId: 57635829 } },
-    },
+      example: { statusCode: 201, data: { roomId: 57635829 } }
+    }
   })
   @ApiResponse({
     status: 500,
     schema: {
       example: {
         statusCode: 500,
-        message: 'Internal Server Error',
-      },
-    },
+        message: "Internal Server Error"
+      }
+    }
   })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard("jwt"))
   @Post()
   async create(@Body() data: RoomCreateDto, @getUser() user: User) {
     return this.roomsService.create(data, user);
@@ -67,20 +85,20 @@ export class RoomsController {
 
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'update room',
+    summary: "update room",
     description:
-      'update a room by roomId,required Permissions:"ADMINISTRATOR" or "MANAGE_ROOM"',
+      "update a room by roomId,required Permissions:\"ADMINISTRATOR\" or \"MANAGE_ROOM\""
   })
-  @ApiParam({ name: 'roomId', type: 'string', example: '12345' })
-  @UseGuards(CheckMemberPermissions(['ADMINISTRATOR', 'MANAGE_ROOM']))
+  @ApiParam({ name: "roomId", type: "string", example: "12345" })
+  @UseGuards(CheckMemberPermissions(["ADMINISTRATOR", "MANAGE_ROOM"]))
   @UseGuards(CheckCurrentMember)
   @UseGuards(CheckRoomId)
-  @UseGuards(AuthGuard('jwt'))
-  @Patch(':roomId')
+  @UseGuards(AuthGuard("jwt"))
+  @Patch(":roomId")
   async update(
     @Body() data: RoomUpdateDto,
-    @Param('roomId') roomId: string,
-    @getUser('userId') userId: number,
+    @Param("roomId") roomId: string,
+    @getUser("userId") userId: number
   ) {
     return this.roomsService.update(Number(roomId), userId, data);
   }
