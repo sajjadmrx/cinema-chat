@@ -56,12 +56,13 @@ export class DocumentConfig {
     const config = new DocumentBuilder()
       .setTitle(`${brandName} Document`)
       .setDescription(
-        `The ${brandName} APIs, Response Format : \n
+        `The ${brandName} APIs, please ignore 'id', \n\t Response Format : \n
        \n
         {
             statusCode: int,
             data : any
         }
+
     `
       )
       .setVersion("1.0")
