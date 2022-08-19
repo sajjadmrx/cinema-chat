@@ -79,6 +79,7 @@ model Message {
   room      Room        @relation(fields: [roomId], references: [roomId])
   roomId    Int
   content   String?
+  replyId   Int?
   type      messageType @default(TEXT)
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
