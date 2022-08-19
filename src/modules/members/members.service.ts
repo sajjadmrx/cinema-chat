@@ -19,24 +19,20 @@ import { User } from "src/shared/interfaces/user.interface";
 import { MembersRepository } from "./members.repository";
 import { Room } from "../../shared/interfaces/room.interface";
 import { UpdateCurrentMemberDto } from "./dtos/update.dto";
-import { ChatGateway } from "../chat/chat.gateway";
-import { EmitKeysConstant } from "../../shared/constants/event-keys.constant";
 import { InvitesRepository } from "../invites/invites.repository";
 import { ChatService } from "../chat/chat.service";
-import { AsyncApiPub, AsyncApiService, AsyncApiSub } from "nestjs-asyncapi";
-import { JoinMemberExa, KickMemberExa, LaveMemberExa } from "../../shared/examples/socket/member.example";
+import { ChatEmits } from "../chat/chat.emits";
 
-@AsyncApiService()
 @Injectable()
 export class MembersService {
   private logger = new Logger(MembersRepository.name);
 
   constructor(
     private membersRep: MembersRepository,
-    private chatGateway: ChatGateway,
     @Inject(forwardRef(() => InvitesRepository))
     private invitesRepository: InvitesRepository,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private chatEmits: ChatEmits
   ) {
   }
 
@@ -52,12 +48,7 @@ export class MembersService {
     return members;
   }
 
-  @AsyncApiSub({
-    channel: EmitKeysConstant.NEW_MEMBER,
-    description: "listen event Join a member",
-    message: { name: "member", payload: { type: JoinMemberExa } },
-    tags: [{ name: "member", description: "member a room" }]
-  })
+
   async joinRoom(
     roomId: number,
     inviteId: number | null,
@@ -92,9 +83,8 @@ export class MembersService {
         roomId
       );
 
-      this.chatGateway.server
-        .to(roomId.toString())
-        .emit(EmitKeysConstant.NEW_MEMBER, member); //TODO: or send Message system!
+      this.chatEmits.newMember(String(roomId), member); //TODO: or send Message system!
+
       return ResponseMessages.OK;
     } catch (error: any) {
       this.logger.error(error, error.satck);
@@ -103,12 +93,6 @@ export class MembersService {
   }
 
 
-  @AsyncApiSub({
-    channel: EmitKeysConstant.LAVE,
-    description: "listen event Lave a member",
-    message: { name: "member", payload: { type: LaveMemberExa } },
-    tags: [{ name: "member", description: "member a room" }]
-  })
   async laveRoom(roomId: number, user: User) {
     try {
       const memberWithRoom: MemberWithRoom | null =
@@ -136,9 +120,8 @@ export class MembersService {
           user.userId,
           roomId
         );
-        this.chatGateway.server
-          .to(roomId.toString())
-          .emit(EmitKeysConstant.LAVE, member);
+
+        this.chatEmits.laveMember(String(roomId), member);
 
         return ResponseMessages.SUCCESS;
       } else throw new InternalServerErrorException();
@@ -149,12 +132,6 @@ export class MembersService {
   }
 
 
-  @AsyncApiSub({
-    channel: EmitKeysConstant.KICK_MEMBER,
-    description: "listen event Kick a Member",
-    message: { name: "member", payload: { type: KickMemberExa } },
-    tags: [{ name: "member", description: "member a room" }]
-  })
   async delete(roomId: number, memberId: number, requester: User) {
     try {
       const memberWithRoom: MemberWithRoom | null =
@@ -186,12 +163,8 @@ export class MembersService {
       delete memberWithRoom.room;
       const member: Member = memberWithRoom;
       delete member.id;
-      this.chatGateway.server
-        .to(roomId.toString())
-        .emit(EmitKeysConstant.KICK_MEMBER, {
-          member: member,
-          by: requester.userId
-        });
+
+      this.chatEmits.kickMember(String(roomId), member, requester.userId);
 
       return ResponseMessages.SUCCESS;
     } catch (e: any) {
@@ -251,13 +224,7 @@ export class MembersService {
         memberWithRoom.userId,
         input
       );
-      this.chatGateway.server
-        .to(room.roomId.toString())
-        .emit(EmitKeysConstant.UPDATE_MEMBER, {
-          ...input,
-          userId: memberWithRoom.userId,
-          by: requester.userId
-        });
+      this.chatEmits.updateMember(String(room.roomId), memberWithRoom, requester.userId, input);
       return ResponseMessages.SUCCESS;
     } catch (e: any) {
       this.logger.error(e, e.stack);
