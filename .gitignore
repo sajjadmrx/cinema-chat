@@ -37,3 +37,4 @@ lerna-debug.log*
 pnpm-lock.yaml
 
 .env
+data

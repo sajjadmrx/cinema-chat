@@ -9,6 +9,7 @@ import {
   UpdateMemberExa
 } from "../../shared/examples/socket/member.example";
 import { Message } from "../../shared/interfaces/message.interface";
+import { MessageCreateDto } from "../messages/dtos/creates.dto";
 
 
 @AsyncApiService()
@@ -74,9 +75,13 @@ export class ChatEmits {
       });
   }
 
-
+  @AsyncApiSub({
+    channel: EmitKeysConstant.CREATE_MESSAGE,
+    description: "listen event create Message(send Message)",
+    message: { name: "message", payload: { type: MessageCreateDto } },
+    tags: [{ name: "message" }]
+  })
   createMessage(message: Message) {
-    console.log(message.roomId.toString());
     this.chatGateway.server
       .to(message.roomId.toString())
       .emit(EmitKeysConstant.CREATE_MESSAGE, message);
