@@ -228,4 +228,19 @@ export class MembersService {
       throw e;
     }
   }
+
+  async getMember(roomId: number, memberId: number): Promise<Member> {
+    try {
+      if (!Number(roomId) || !Number(memberId))
+        throw new BadRequestException();
+
+      const member: Member | null = await this.membersRep.getByRoomIdAndUserId(roomId, memberId);
+      if (!member)
+        throw new NotFoundException(ResponseMessages.MEMBER_NOT_FOUND);
+      
+      return member;
+    } catch (e) {
+      throw e;
+    }
+  }
 }
