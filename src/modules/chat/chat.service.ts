@@ -5,7 +5,8 @@ import { ResponseMessages } from "../../shared/constants/response-messages.const
 import { Socket } from "socket.io";
 import { MessagesService } from "../messages/messages.service";
 import { ChatEmits } from "./chat.emits";
-import { Message } from "../../shared/interfaces/message.interface";
+import { Message, MessageUpdateResult } from "../../shared/interfaces/message.interface";
+import { MessageUpdateDto } from "../messages/dtos/update.dto";
 
 @Injectable()
 export class ChatService {
@@ -55,6 +56,22 @@ export class ChatService {
       const message: Message = await this.messageService.create(roomId, memberId, data);
 
       this.chatEmits.createMessage(message);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async updateMessageRoom(data: MessageUpdateDto, socket: Socket) {
+    try {
+      const roomId: number = data.roomId;
+      if (!socket.rooms.has(roomId.toString()))
+        throw new NotFoundException(ResponseMessages.ROOM_NOT_FOUND);
+      const memberId: number = socket.data.userId;
+      const {
+        oldMessage,
+        newMessage
+      }: MessageUpdateResult = await this.messageService.update(roomId, memberId, data.messageId, data);
+      this.chatEmits.updateMessage(roomId, oldMessage, newMessage);
     } catch (e) {
       throw e;
     }

@@ -10,6 +10,8 @@ import {
 } from "../../shared/examples/socket/member.example";
 import { Message } from "../../shared/interfaces/message.interface";
 import { MessageCreateDto } from "../messages/dtos/creates.dto";
+import { MessageUpdateDto } from "../messages/dtos/update.dto";
+import { MessageUpdateExa } from "../../shared/examples/socket/message.example";
 
 
 @AsyncApiService()
@@ -85,5 +87,17 @@ export class ChatEmits {
     this.chatGateway.server
       .to(message.roomId.toString())
       .emit(EmitKeysConstant.CREATE_MESSAGE, message);
+  }
+
+  @AsyncApiSub({
+    channel: EmitKeysConstant.UPDATE_MESSAGE,
+    description: "listen event update Message",
+    message: { name: EmitKeysConstant.UPDATE_MESSAGE, payload: { type: MessageUpdateExa } },
+    tags: [{ name: "message" }]
+  })
+  updateMessage(roomId: number, oldMessage: Message, newMessage: Message) {
+    this.chatGateway.server
+      .to(roomId.toString())
+      .emit(EmitKeysConstant.UPDATE_MESSAGE, { roomId: roomId, oldMessage, newMessage });
   }
 }

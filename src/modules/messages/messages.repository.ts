@@ -1,5 +1,5 @@
 import { PrismaService } from "../prisma/prisma.service";
-import { Message, MessageCreateInput } from "../../shared/interfaces/message.interface";
+import { Message, MessageCreateInput, MessageUpdateInput } from "../../shared/interfaces/message.interface";
 import { getRandomNumber } from "../../shared/utils/uuid.util";
 import { Injectable } from "@nestjs/common";
 
@@ -21,7 +21,15 @@ export class MessagesRepository {
   }
 
   getById(messageId: number): Promise<Message | null> {
-    return this.db.message.findUnique({ where: { messageId } })
+    return this.db.message.findUnique({ where: { messageId } });
   }
 
+
+  update(messageId: number, data: MessageUpdateInput): Promise<Message> {
+    return this.db.message
+      .update({
+        where: { messageId },
+        data: data
+      });
+  }
 }

@@ -27,6 +27,7 @@ import { MessageCreateDto } from "../messages/dtos/creates.dto";
 import { ResponseMessages } from "../../shared/constants/response-messages.constant";
 import { MembersRepository } from "../members/members.repository";
 import { Member } from "../../shared/interfaces/member.interface";
+import { MessageUpdateDto } from "../messages/dtos/update.dto";
 
 @AsyncApiService()
 @UsePipes(new ValidationPipe())
@@ -85,6 +86,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return this.chatService.sendMessageRoom(data, socket);
   }
 
+  @AsyncApiPub({
+    channel: EventKeysConstant.UPDATE_MESSAGE,
+    message: { name: "UPDATE_MESSAGE", payload: { type: MessageUpdateDto } },
+    tags: [{ name: "message" }]
+  })
+  @SubscribeMessage(EventKeysConstant.UPDATE_MESSAGE)
+  onUpdateMessage(@MessageBody() data: MessageUpdateDto, @ConnectedSocket() socket: Socket) {
+    return this.chatService.updateMessageRoom(data, socket);
+  }
 
   private disconnect(socket: Socket) {
     socket.emit("error", new UnauthorizedException());

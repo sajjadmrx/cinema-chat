@@ -8,5 +8,10 @@ export interface MessageCreateInput extends Prisma.MessageCreateInput {
   authorId: number;
 }
 
-export interface MessageUpdateInput extends MessageCreateInput {
+export interface MessageUpdateInput extends Partial<MessageCreateInput> {
+}
+
+export interface MessageUpdateResult {
+  oldMessage: Message;
+  newMessage: Message;
 }

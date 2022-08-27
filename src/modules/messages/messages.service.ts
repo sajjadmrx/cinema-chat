@@ -1,12 +1,15 @@
 import { MessagesRepository } from "./messages.repository";
-import { Message, MessageCreateInput } from "../../shared/interfaces/message.interface";
+import { Message, MessageCreateInput, MessageUpdateResult } from "../../shared/interfaces/message.interface";
 import { MessageCreateDto } from "./dtos/creates.dto";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { ResponseMessages } from "../../shared/constants/response-messages.constant";
+import { MessageUpdateDto } from "./dtos/update.dto";
+import { Room } from "../../shared/interfaces/room.interface";
+import { RoomsRepository } from "../rooms/rooms.repository";
 
 @Injectable()
 export class MessagesService {
-  constructor(private messagesRepository: MessagesRepository) {
+  constructor(private messagesRepository: MessagesRepository, private roomsRepository: RoomsRepository) {
   }
 
 
@@ -30,6 +33,30 @@ export class MessagesService {
       });
       return message;
 
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async update(roomId: number, memberId: number, messageId: number, input: MessageUpdateDto): Promise<MessageUpdateResult> {
+    try {
+      const oldMessage: Message | null = await this.messagesRepository.getById(messageId);
+
+      if (!oldMessage)
+        throw new NotFoundException(ResponseMessages.MESSAGE_NOT_FOUND);
+      if (memberId != oldMessage.authorId)
+        throw new BadRequestException();//TODO Better Message;
+
+      const room: Room | null = await this.roomsRepository.getById(roomId);
+      if (!room)
+        throw new BadRequestException(ResponseMessages.ROOM_NOT_FOUND);
+
+      const newMessage: Message = await this.messagesRepository.update(messageId, {
+        roomId: room.roomId,
+        content: input.content
+      });
+
+      return { oldMessage, newMessage };
     } catch (e) {
       throw e;
     }
