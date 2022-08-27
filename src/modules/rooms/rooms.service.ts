@@ -5,12 +5,15 @@ import { RoomCreateDto } from "./dto/create.dto";
 import { RoomsRepository } from "./rooms.repository";
 import { RoomUpdateDto } from "./dto/update.dto";
 import { ResponseMessages } from "src/shared/constants/response-messages.constant";
+import { MembersRepository } from "../members/members.repository";
+import { getRandomNumber } from "../../shared/utils/uuid.util";
+import { MemberPermission } from "../../shared/interfaces/member.interface";
 
 @Injectable()
 export class RoomsService {
   private readonly logger = new Logger(RoomsService.name);
 
-  constructor(private roomsRepository: RoomsRepository) {
+  constructor(private roomsRepository: RoomsRepository, private membersRepository: MembersRepository) {
   }
 
   async create(input: RoomCreateDto, user: User): Promise<any> {
@@ -20,6 +23,12 @@ export class RoomsService {
         ownerId: user.userId,
         isPublic: input.isPublic,
         avatar: input.avatar
+      });
+      await this.membersRepository.create({
+        roomId: newRoom.roomId,
+        userId: user.userId,
+        inviteId: null,
+        permissions: [MemberPermission.ADMINISTRATOR]
       });
       return { roomId: newRoom.roomId };
     } catch (error: any) {
@@ -49,6 +58,6 @@ export class RoomsService {
       limit = maxLimit;
     }
     if (limit > maxLimit) limit = maxLimit;
-    return this.roomsRepository.findByUserId(userId, page, limit);
+    return this.roomsRepository.getUserRooms(userId, page, limit);
   }
 }

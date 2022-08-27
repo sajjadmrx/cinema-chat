@@ -22,6 +22,7 @@ import { UpdateCurrentMemberDto } from "./dtos/update.dto";
 import { InvitesRepository } from "../invites/invites.repository";
 import { ChatService } from "../chat/chat.service";
 import { ChatEmits } from "../chat/chat.emits";
+import { RoomsRepository } from "../rooms/rooms.repository";
 
 @Injectable()
 export class MembersService {
@@ -32,7 +33,8 @@ export class MembersService {
     @Inject(forwardRef(() => InvitesRepository))
     private invitesRepository: InvitesRepository,
     private chatService: ChatService,
-    private chatEmits: ChatEmits
+    private chatEmits: ChatEmits,
+    private roomsRep: RoomsRepository
   ) {
   }
 
@@ -63,10 +65,10 @@ export class MembersService {
           throw new BadRequestException(ResponseMessages.INVALID_INVITE);
       }
 
-      const memberWithRoom: MemberWithRoom | null =
+      const hasMember: Member | null =
         await this.membersRep.getByRoomIdAndUserId(roomId, user.userId);
 
-      if (memberWithRoom)
+      if (hasMember)
         throw new BadRequestException(ResponseMessages.MEMBER_EXISTS);
 
       const member: Member = await this.membersRep.create({
@@ -77,7 +79,7 @@ export class MembersService {
 
       delete member.id;
 
-      //Todo Maybe add to queue
+
       await this.chatService.findSocketByUserIdAndJoinToRoom(
         user.userId,
         roomId
@@ -95,36 +97,31 @@ export class MembersService {
 
   async laveRoom(roomId: number, user: User) {
     try {
-      const memberWithRoom: MemberWithRoom | null =
+      const member: Member | null =
         await this.membersRep.getByRoomIdAndUserId(roomId, user.userId);
-      if (!memberWithRoom)
+      if (!member)
         throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
 
-      const room: Room = memberWithRoom.room;
-      if (room.ownerId == memberWithRoom.userId) {
-        //TODO: no idea :D
+      const room: Room = await this.roomsRep.getById(roomId);
+      if (room.ownerId == member.userId) {
+        //    TODO: no idea :D
         throw new BadRequestException("Soon");
       }
 
       const isDeleted: boolean = await this.membersRep.deleteByRoomIdAndUserId(
         roomId,
-        memberWithRoom.userId
+        member.userId
       );
       if (isDeleted) {
-        delete memberWithRoom.id;
-        delete memberWithRoom.room;
-        const member: Member = memberWithRoom;
-
-        //TODO Add to Queue
         await this.chatService.findSocketByUserIdAndLaveFromRoom(
           user.userId,
           roomId
         );
-
         this.chatEmits.laveMember(String(roomId), member);
-
         return ResponseMessages.SUCCESS;
-      } else throw new InternalServerErrorException();
+      } else {
+        throw new InternalServerErrorException();
+      }
     } catch (error: any) {
       this.logger.error(error.message, error.stack);
       throw error;
@@ -134,37 +131,37 @@ export class MembersService {
 
   async delete(roomId: number, memberId: number, requester: User) {
     try {
-      const memberWithRoom: MemberWithRoom | null =
+      const hasMember: Member | null =
         await this.membersRep.getByRoomIdAndUserId(roomId, memberId);
-      if (!memberWithRoom)
+      if (!hasMember)
         throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
 
-      const room: Room = memberWithRoom.room;
+      //   const room: Room = hasMember.room;
 
-      if (requester.userId == memberWithRoom.userId) {
+      if (requester.userId == hasMember.userId) {
         throw new BadRequestException(ResponseMessages.CANNOT_KICK_SELF);
       }
 
-      if (room.ownerId == memberWithRoom.userId) {
-        throw new BadRequestException(ResponseMessages.CANNOT_KICK_OWNER);
-      }
-
-      const isDeleted = await this.membersRep.deleteByRoomIdAndUserId(
-        roomId,
-        memberWithRoom.userId
-      );
-      if (!isDeleted) throw new InternalServerErrorException();
+      // if (room.ownerId == memberWithRoom.userId) {
+      //   throw new BadRequestException(ResponseMessages.CANNOT_KICK_OWNER);
+      // }
+      //
+      // const isDeleted = await this.membersRep.deleteByRoomIdAndUserId(
+      //   roomId,
+      // //  memberWithRoom.userId
+      // );
+      // if (!isDeleted) throw new InternalServerErrorException();
 
       await this.chatService.findSocketByUserIdAndLaveFromRoom(
         memberId,
         roomId
       );
 
-      delete memberWithRoom.room;
-      const member: Member = memberWithRoom;
-      delete member.id;
-
-      this.chatEmits.kickMember(String(roomId), member, requester.userId);
+      // delete memberWithRoom.room;
+      // const member: Member = memberWithRoom;
+      // delete member.id;
+      //
+      // this.chatEmits.kickMember(String(roomId), member, requester.userId);
 
       return ResponseMessages.SUCCESS;
     } catch (e: any) {
@@ -179,17 +176,17 @@ export class MembersService {
     input: UpdateCurrentMemberDto
   ) {
     try {
-      let memberWithRoom: MemberWithRoom | null =
+      let member: Member | null =
         memberId == requester.userId
           ? requester
           : await this.membersRep.getByRoomIdAndUserId(
             requester.roomId,
             memberId
           );
-      if (!memberWithRoom)
+      if (!member)
         throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
 
-      const oldPerms = memberWithRoom.permissions;
+      const oldPerms = member.permissions;
       const newPerms = input.permissions;
 
       const permissions: MemberPermissionType[] = [...new Set([...newPerms])];
@@ -210,7 +207,7 @@ export class MembersService {
 
       if (
         !permissions.includes("ADMINISTRATOR") &&
-        memberWithRoom.userId == room.ownerId
+        member.userId == room.ownerId
       )
         throw new BadRequestException(); //TODO: better message
       if (memberId == requester.userId && oldPerms.includes("ADMINISTRATOR")) {
@@ -220,11 +217,11 @@ export class MembersService {
 
       input.permissions = permissions;
       await this.membersRep.updateOne(
-        memberWithRoom.roomId,
-        memberWithRoom.userId,
+        member.roomId,
+        member.userId,
         input
       );
-      this.chatEmits.updateMember(String(room.roomId), memberWithRoom, requester.userId, input);
+      this.chatEmits.updateMember(String(room.roomId), member, requester.userId, input);
       return ResponseMessages.SUCCESS;
     } catch (e: any) {
       this.logger.error(e, e.stack);

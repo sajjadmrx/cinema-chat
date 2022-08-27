@@ -17,15 +17,7 @@ export class RoomsRepository {
     return this.db.room.create({
       data: {
         ...input,
-        roomId: getRandomNumber(8),
-        Members: {
-          create: [
-            {
-              userId: input.ownerId,
-              permissions: [MemberPermission.ADMINISTRATOR]
-            }
-          ]
-        }
+        roomId: getRandomNumber(8)
       }
     });
   }
@@ -38,24 +30,15 @@ export class RoomsRepository {
     });
   }
 
-  async findByUserId(userId: number, page: number, limit: number): Promise<Room[]> {
+  async getUserRooms(userId: number, page: number, limit: number) {
     return this.db.room.findMany({
       where: {
-        Members: { some: { userId } }
+        members: {
+          some: { userId }
+        }
       },
       take: limit,
       skip: (page - 1) * limit
-    });
-  }
-
-  async getRoomsIdByUserId(userId: number): Promise<Array<{ roomId: number }>> {
-    return this.db.room.findMany({
-      where: {
-        Members: { some: { userId } }
-      },
-      select: {
-        roomId: true
-      }
     });
   }
 

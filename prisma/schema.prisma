@@ -12,41 +12,32 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId    Int       @unique
-  email     String    @unique
-  username  String    @unique
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    Int      @unique
+  email     String   @unique
+  username  String   @unique
   password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Rooms     Room[]
-  Invites   Invite[]
-  Members   Member[]
-  Messages  Message[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Room {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  roomId    Int       @unique
-  owner     User      @relation(fields: [ownerId], references: [userId])
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  roomId    Int      @unique
   ownerId   Int
   name      String
-  isPublic  Boolean   @default(true)
-  avatar    String?   @default("DEFAULT_AVATAR")
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Invites   Invite[]
-  Members   Member[]
-  Messages  Message[]
+  isPublic  Boolean  @default(true)
+  avatar    String?  @default("DEFAULT_AVATAR")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  members   Member[]
 }
 
 model Invite {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   inviteId   Int      @unique
   slug       String   @unique
-  room       Room     @relation(fields: [roomId], references: [roomId])
   roomId     Int
-  inviter    User     @relation(fields: [inviterId], references: [userId])
   inviterId  Int
   expires_at DateTime
   isForEver  Boolean  @default(false)
@@ -54,16 +45,13 @@ model Invite {
   uses       Int      @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  Members    Member[]
 }
 
 model Member {
   id          String              @id @default(auto()) @map("_id") @db.ObjectId
   room        Room                @relation(fields: [roomId], references: [roomId])
   roomId      Int
-  user        User                @relation(fields: [userId], references: [userId])
   userId      Int //member id or userId
-  invite      Invite?             @relation(fields: [inviteId], references: [inviteId])
   inviteId    Int?
   permissions MemberPermissions[] @default([DEFAULT])
   nickname    String?
@@ -74,9 +62,7 @@ model Member {
 model Message {
   id        String      @id @default(auto()) @map("_id") @db.ObjectId
   messageId Int         @unique
-  author    User        @relation(fields: [authorId], references: [userId])
   authorId  Int
-  room      Room        @relation(fields: [roomId], references: [roomId])
   roomId    Int
   content   String?
   replyId   Int?

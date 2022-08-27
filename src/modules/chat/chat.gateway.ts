@@ -25,6 +25,8 @@ import { AsyncApiPub, AsyncApiService, AsyncApiSub } from "nestjs-asyncapi";
 import { EventKeysConstant } from "../../shared/constants/event-keys.constant";
 import { MessageCreateDto } from "../messages/dtos/creates.dto";
 import { ResponseMessages } from "../../shared/constants/response-messages.constant";
+import { MembersRepository } from "../members/members.repository";
+import { Member } from "../../shared/interfaces/member.interface";
 
 @AsyncApiService()
 @UsePipes(new ValidationPipe())
@@ -44,7 +46,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private authService: AuthService,
     private roomsRepository: RoomsRepository,
     @Inject(forwardRef(() => ChatService))
-    private chatService: ChatService
+    private chatService: ChatService,
+    private membersRepo: MembersRepository
   ) {
   }
 
@@ -57,10 +60,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const result = this.authService.jwtVerify(token);
       const userId = result.userId;
 
-      const rooms: { roomId: number }[] =
-        await this.roomsRepository.getRoomsIdByUserId(userId);
+      const members: Member[] =
+        await this.membersRepo.findByUserId(userId);
 
-      rooms.map((r) => client.join(r.roomId.toString()));
+      members.map((member: Member) => client.join(member.roomId.toString()));
 
       client.data.userId = userId;
     } catch (e) {
