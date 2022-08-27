@@ -32,4 +32,14 @@ export class MessagesRepository {
         data: data
       });
   }
+
+  findByRoomId(roomId: number, page: number, limit: number): Promise<Message[]> {
+    return this.db.message.findMany({
+      where: {
+        roomId
+      },
+      take: limit,
+      skip: (page - 1) * limit
+    });
+  }
 }

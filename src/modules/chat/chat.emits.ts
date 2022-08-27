@@ -91,7 +91,7 @@ export class ChatEmits {
 
   @AsyncApiSub({
     channel: EmitKeysConstant.UPDATE_MESSAGE,
-    description: "listen event update Message",
+    description: "listen event update Message ",
     message: { name: EmitKeysConstant.UPDATE_MESSAGE, payload: { type: MessageUpdateExa } },
     tags: [{ name: "message" }]
   })

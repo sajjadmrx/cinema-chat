@@ -13,6 +13,33 @@ export class MessagesService {
   }
 
 
+  async getRoomMessages(roomId: number, page: number, limit: number) {
+    try {
+      if (!Number(roomId))
+        throw new BadRequestException();
+
+      const maxLimit: number = 10;
+      if (!page || !limit || Number(page) < 1 || Number(limit) < 1) {
+        page = 1;
+        limit = maxLimit;
+      }
+      if (limit > maxLimit) limit = maxLimit;
+
+      const messages: Message[] = await this.messagesRepository.findByRoomId(roomId, page, limit);
+      return messages
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getByMessageId(messageId: number) {
+    if (!Number(messageId))
+      throw new BadRequestException();
+
+    const message = await this.messagesRepository.getById(messageId)
+    return message
+  }
+
   async create(roomId: number, memberId: number, input: MessageCreateDto): Promise<Message> {
 
     try {
