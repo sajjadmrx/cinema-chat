@@ -25,16 +25,16 @@
 
 ## Description
 
-پروژه تمرینی چت و سینما باهم
+Chat & streaming movies
 
-## TODO
+## 📝 TODO
 
 > - ~~Invite Module (Craete - find roomId By Slug)~~ ✔️
 > - ~~Member Module (Join-Lave-and ...)~~ ✔️
-> - Message Module (CURD)
-> - 30nama Bahm (stream Video/music)
+> - ~~Message Module (CURD)~~ ✔️
+> - streaming movies
 
-## Document
+## 🗒️ Documents
 
 Swagger
 
@@ -42,15 +42,31 @@ Swagger
 http://localhost:{port}/api
 ```
 
+Socket
+
+```
+http://localhost:${port}/socket
+```
+
+## ⚗️technologies
+
+<ul>
+    <li> 🟦 TypeScript </li>
+    <li> 😺 NestJS </li>
+    <li> 📨 Socket.io </li>
+    <li> 📤 Prisma.io </li>
+    <li> 🗃️ MonogoDB </li>
+    <li> 📒 Swagger </li>
+    <li> 👤 JWT </li>
+    <li> 🐬 Docker </li>
+    <li> 📦 Docker-Compose </li>
+</ul>
+
 ## Installation
 
 ```bash
 $ npm install
 ```
-
-## Contributors
-
-> https://discord.gg/zM3vQZHN
 
 ## Running the app
 
@@ -64,3 +80,5 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
+<img src="./github/cinema-chat-documents.png">

@@ -14,7 +14,7 @@ async function bootstrap() {
   const isDevelopmentMode =
     configService.get<AppModeConstant>("mode") === AppModeConstant.DEVELOPMENT;
 
-  const documentConfig = new DocumentConfig(app, port, "async-api");
+  const documentConfig = new DocumentConfig(app, port, "socket");
   if (isDevelopmentMode) {
     await documentConfig.setupSwagger().async_api(81);
   }
@@ -25,7 +25,7 @@ async function bootstrap() {
   console.log(`App Running On ${port}`);
 
   isDevelopmentMode &&
-  console.log(`AsyncApi at http://localhost:${port}/async-api`);
+  console.log(`AsyncApi at http://localhost:${port}/socket`);
 }
 
 bootstrap();
