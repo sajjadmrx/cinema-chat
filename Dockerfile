@@ -6,7 +6,9 @@ WORKDIR /usr/cinema
 COPY . .
 
 
-RUN npm install
+RUN npm install pnpm -g; \
+    pnpm install; \
+    npx prisma generate
 
 
 EXPOSE 4000

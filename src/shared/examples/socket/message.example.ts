@@ -11,3 +11,20 @@ export class MessageUpdateExa {
   @ApiProperty()
   newMessage: Message;
 }
+
+export class MessageDeleteExa {
+  @ApiProperty({
+    example: 123456789,
+    description: "room id"
+  })
+  roomId: number;
+
+  @ApiProperty({
+    example: 123456,
+    description: "message id"
+  })
+  messageId: number;
+
+  @ApiProperty({ example: 12345678, description: "member id" })
+  byId: number;
+}

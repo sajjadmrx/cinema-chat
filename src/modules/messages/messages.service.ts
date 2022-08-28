@@ -1,15 +1,28 @@
 import { MessagesRepository } from "./messages.repository";
 import { Message, MessageCreateInput, MessageUpdateResult } from "../../shared/interfaces/message.interface";
 import { MessageCreateDto } from "./dtos/creates.dto";
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException
+} from "@nestjs/common";
 import { ResponseMessages } from "../../shared/constants/response-messages.constant";
 import { MessageUpdateDto } from "./dtos/update.dto";
 import { Room } from "../../shared/interfaces/room.interface";
 import { RoomsRepository } from "../rooms/rooms.repository";
+import { MembersRepository } from "../members/members.repository";
+import { ChatEmits } from "../chat/chat.emits";
+
 
 @Injectable()
 export class MessagesService {
-  constructor(private messagesRepository: MessagesRepository, private roomsRepository: RoomsRepository) {
+  constructor(
+    private messagesRepository: MessagesRepository,
+    private roomsRepository: RoomsRepository,
+    private membersRepository: MembersRepository,
+    private chatEmits: ChatEmits
+  ) {
   }
 
 
@@ -26,7 +39,7 @@ export class MessagesService {
       if (limit > maxLimit) limit = maxLimit;
 
       const messages: Message[] = await this.messagesRepository.findByRoomId(roomId, page, limit);
-      return messages
+      return messages;
     } catch (e) {
       throw e;
     }
@@ -36,8 +49,8 @@ export class MessagesService {
     if (!Number(messageId))
       throw new BadRequestException();
 
-    const message = await this.messagesRepository.getById(messageId)
-    return message
+    const message = await this.messagesRepository.getById(messageId);
+    return message;
   }
 
   async create(roomId: number, memberId: number, input: MessageCreateDto): Promise<Message> {
@@ -84,6 +97,32 @@ export class MessagesService {
       });
 
       return { oldMessage, newMessage };
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async deleteRoomMessage(roomId: number, memberId: number, messageId: number) {
+    try {
+      if (!Number(roomId) || !Number(messageId))
+        throw new BadRequestException();
+
+      const message: Message | null = await this.messagesRepository.getById(messageId);
+      if (!message)
+        throw new NotFoundException(ResponseMessages.MESSAGE_NOT_FOUND);
+      if (message.roomId != roomId)
+        throw new BadRequestException(ResponseMessages.INVALID_ROOM);
+
+      if (message.authorId != memberId) {
+        const member = await this.membersRepository.getByRoomIdAndUserId(roomId, memberId);
+        const hasPerm: boolean = member.permissions.includes("ADMINISTRATOR"); //TODO Add MANAGE_MESSAGES Permission
+        if (!hasPerm)
+          throw new ForbiddenException(ResponseMessages.INVALID_PERMISSION);
+      }
+
+      const deletedMessage: Message = await this.messagesRepository.deleteById(messageId);
+      this.chatEmits.deleteMessage(roomId, memberId, messageId);
+      return deletedMessage.messageId;
     } catch (e) {
       throw e;
     }

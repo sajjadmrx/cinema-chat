@@ -1,12 +1,16 @@
-import { Controller, Get, Param, Query, Req, UseGuards } from "@nestjs/common";
+import { Controller, Delete, Get, Param, Query, Req, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
 import { MessagesService } from "./messages.service";
 import { CheckRoomId } from "../../shared/guards/check-roomId.guard";
 import { CheckCurrentMember } from "../../shared/guards/member.guard";
+import { getUser } from "../../shared/decorators/user.decorator";
+import { CheckMemberPermissions } from "../../shared/guards/permissions.guard";
+import { ResponseInterceptor } from "../../shared/interceptors/response.interceptor";
 
 @ApiBearerAuth()
 @ApiTags("Room Messages")
+@UseInterceptors(ResponseInterceptor)
 @UseGuards(CheckCurrentMember)
 @UseGuards(CheckRoomId)
 @UseGuards(AuthGuard("jwt"))
@@ -43,5 +47,16 @@ export class RoomMessagesController {
   @Get(":messageId")
   getMessage(@Param("roomId") roomId: string, @Param("messageId") messageId: string) {
     return this.messagesService.getByMessageId(Number(messageId));
+  }
+
+  // @UseGuards(CheckMemberPermissions(["ADMINISTRATOR",""])
+  @ApiOperation({ summary: "delete message By MessageId" })
+  @Delete(":messageId")
+  delete(
+    @Param("roomId") roomId: string,
+    @Param("messageId") messageId: string,
+    @getUser("userId") userId: number
+  ) {
+    return this.messagesService.deleteRoomMessage(Number(roomId), userId, Number(messageId));
   }
 }

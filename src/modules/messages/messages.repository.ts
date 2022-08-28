@@ -42,4 +42,8 @@ export class MessagesRepository {
       skip: (page - 1) * limit
     });
   }
+
+  deleteById(messageId: number): Promise<Message> {
+    return this.db.message.delete({ where: { messageId } });
+  }
 }

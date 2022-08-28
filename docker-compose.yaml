@@ -6,9 +6,8 @@ services:
     expose:
       - 6379
 
-  mongo1:
+  mongodb_1:
     image: mongo:4.2
-    container_name: mongo1
     command:
       [
         "--replSet",
@@ -26,9 +25,8 @@ services:
       interval: 10s
       start_period: 30s
 
-  mongo2:
+  mongodb_2:
     image: mongo:4.2
-    container_name: mongo2
     command:
       [
         "--replSet",
@@ -42,9 +40,8 @@ services:
     ports:
       - 30002:30002
 
-  mongo3:
+  mongodb_3:
     image: mongo:4.2
-    container_name: mongo3
     command:
       [
         "--replSet",
@@ -67,20 +64,21 @@ services:
       - "81:81"
     depends_on:
       - redis
-      - mongo1
-      - mongo2
-      - mongo3
+      - mongodb_1
+      - mongodb_2
+      - mongodb_3
     links:
       - redis
-      - mongo1
-      - mongo2
-      - mongo3
+      - mongodb_1
+      - mongodb_2
+      - mongodb_3
     environment:
       - PORT=4000
       - REDIS_URL=redis
-      - DATABASE_URL=mongodb://mongo1:30001,mongo2:30002,mongo3:30003/?replicaSet=my-replica-set
+      - DATABASE_URL=mongodb://mongodb_1:30001,mongodb_2:30002,mongodb_3:30003/?replicaSet=my-replica-set
       - JWT_SECRET=helloworld
-
+    env_file:
+      - .env
 #    volumes:
 #      - ./avatars:/usr/cinema/avatar
 

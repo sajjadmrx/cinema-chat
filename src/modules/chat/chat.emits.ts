@@ -11,7 +11,7 @@ import {
 import { Message } from "../../shared/interfaces/message.interface";
 import { MessageCreateDto } from "../messages/dtos/creates.dto";
 import { MessageUpdateDto } from "../messages/dtos/update.dto";
-import { MessageUpdateExa } from "../../shared/examples/socket/message.example";
+import { MessageDeleteExa, MessageUpdateExa } from "../../shared/examples/socket/message.example";
 
 
 @AsyncApiService()
@@ -99,5 +99,17 @@ export class ChatEmits {
     this.chatGateway.server
       .to(roomId.toString())
       .emit(EmitKeysConstant.UPDATE_MESSAGE, { roomId: roomId, oldMessage, newMessage });
+  }
+
+  @AsyncApiSub({
+    channel: EmitKeysConstant.DELETE_MESSAGE,
+    tags: [{ name: "message" }],
+    description: "listen for delete message",
+    message: { name: EmitKeysConstant.DELETE_MESSAGE, payload: { type: MessageDeleteExa } }
+  })
+  deleteMessage(roomId: number, memberId: number, messageId: number) {
+    this.chatGateway.server
+      .to(roomId.toString())
+      .emit(EmitKeysConstant.DELETE_MESSAGE, { roomId, messageId, byId: memberId });
   }
 }
