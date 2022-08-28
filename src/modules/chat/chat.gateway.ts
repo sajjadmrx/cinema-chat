@@ -98,7 +98,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @AsyncApiPub({
     channel: EventKeysConstant.CREATE_MESSAGE,
     message: { name: "test", payload: { type: MessageCreateDto } },
-    tags: [{ name: "message", description: "Messages on room" }]
+    tags: [{ name: "message", description: "Messages on room" }],
+    description: "call event create Message"
   })
   @SubscribeMessage(EventKeysConstant.CREATE_MESSAGE)
   onCreateMessage(@MessageBody() data: MessageCreateDto, @ConnectedSocket() socket: Socket) {

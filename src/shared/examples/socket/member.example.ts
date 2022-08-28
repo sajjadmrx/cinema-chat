@@ -5,6 +5,9 @@ import { MemberStatusConstant } from "../../constants/member.constant";
 export class JoinMemberExa {
   @ApiProperty({})
   readonly member: Member;
+
+  @ApiProperty({})
+  readonly roomId: number;
 }
 
 export class LaveMemberExa extends JoinMemberExa {
@@ -18,24 +21,24 @@ export class KickMemberExa extends JoinMemberExa {
 
 export class UpdateMemberExa {
   @ApiProperty()
-  data: any;
+  readonly roomId: number;
   @ApiProperty()
-  memberId: number;
-
+  readonly data: any;
   @ApiProperty()
-  by: number;
-
+  readonly memberId: number;
+  @ApiProperty()
+  readonly by: number;
 }
 
 export class UpdateMemberStatusExa {
   @ApiProperty()
-  roomId: 44117771;
+  readonly roomId: 44117771;
   @ApiProperty()
-  memberId: number;
+  readonly memberId: number;
 
   @ApiProperty({
     enum: MemberStatusConstant,
     name: "MemberStatus"
   })
-  status: "OFFLINE";
+  readonly status: "OFFLINE";
 }

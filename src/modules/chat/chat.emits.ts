@@ -29,10 +29,10 @@ export class ChatEmits {
     message: { name: "member", payload: { type: JoinMemberExa } },
     tags: [{ name: "member", description: "member a room" }]
   })
-  newMember(roomId: string, member: Member) {
+  newMember(roomId: number, member: Member) {
     this.chatGateway.server
       .to(roomId.toString())
-      .emit(EmitKeysConstant.NEW_MEMBER, member);
+      .emit(EmitKeysConstant.NEW_MEMBER, { roomId, member });
   }
 
   @AsyncApiSub({
@@ -41,10 +41,10 @@ export class ChatEmits {
     message: { name: "member", payload: { type: LaveMemberExa } },
     tags: [{ name: "member", description: "member a room" }]
   })
-  laveMember(roomId: string, member: Member) {
+  laveMember(roomId: number, member: Member) {
     this.chatGateway.server
       .to(roomId.toString())
-      .emit(EmitKeysConstant.LAVE, member);
+      .emit(EmitKeysConstant.LAVE, { roomId, member });
   }
 
   @AsyncApiSub({
@@ -53,10 +53,11 @@ export class ChatEmits {
     message: { name: "member", payload: { type: KickMemberExa } },
     tags: [{ name: "member", description: "member a room" }]
   })
-  kickMember(roomId: string, member: Member, requesterId: number) {
+  kickMember(roomId: number, member: Member, requesterId: number) {
     this.chatGateway.server
       .to(roomId.toString())
       .emit(EmitKeysConstant.KICK_MEMBER, {
+        roomId: roomId,
         member: member,
         by: requesterId
       });
@@ -75,6 +76,7 @@ export class ChatEmits {
       .to(roomId)
       .emit(EmitKeysConstant.UPDATE_MEMBER, {
         data: newData,
+        roomId: roomId,
         memberId: member.userId,
         by: requesterId
       });

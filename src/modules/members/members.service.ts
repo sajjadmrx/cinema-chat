@@ -85,7 +85,7 @@ export class MembersService {
         roomId
       );
 
-      this.chatEmits.newMember(String(roomId), member); //TODO: or send Message system!
+      this.chatEmits.newMember(roomId, member); //TODO: or send Message system!
 
       return ResponseMessages.OK;
     } catch (error: any) {
@@ -117,7 +117,7 @@ export class MembersService {
           user.userId,
           roomId
         );
-        this.chatEmits.laveMember(String(roomId), member);
+        this.chatEmits.laveMember(roomId, member);
         return ResponseMessages.SUCCESS;
       } else {
         throw new InternalServerErrorException();
@@ -237,7 +237,7 @@ export class MembersService {
       const member: Member | null = await this.membersRep.getByRoomIdAndUserId(roomId, memberId);
       if (!member)
         throw new NotFoundException(ResponseMessages.MEMBER_NOT_FOUND);
-      
+
       return member;
     } catch (e) {
       throw e;
