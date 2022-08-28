@@ -2,7 +2,8 @@ import {
   ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
-  OnGatewayDisconnect, SubscribeMessage,
+  OnGatewayDisconnect,
+  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer
 } from "@nestjs/websockets";
@@ -11,23 +12,26 @@ import { ChatService } from "./chat.service";
 import {
   forwardRef,
   Inject,
-  Injectable,
-  Logger, NotFoundException,
+  Logger,
   UnauthorizedException,
   UseFilters,
-  UseGuards, UsePipes, ValidationPipe
+  UseGuards,
+  UsePipes,
+  ValidationPipe
 } from "@nestjs/common";
 import { WsJwtGuardGuard } from "../../shared/guards/WsJwtGuard.guard";
 import { WebsocketExceptionsFilter } from "../../shared/filters/WebsocketExceptions.filter";
 import { AuthService } from "../auth/auth.service";
 import { RoomsRepository } from "../rooms/rooms.repository";
-import { AsyncApiPub, AsyncApiService, AsyncApiSub } from "nestjs-asyncapi";
+import { AsyncApiPub, AsyncApiService } from "nestjs-asyncapi";
 import { EventKeysConstant } from "../../shared/constants/event-keys.constant";
 import { MessageCreateDto } from "../messages/dtos/creates.dto";
-import { ResponseMessages } from "../../shared/constants/response-messages.constant";
 import { MembersRepository } from "../members/members.repository";
 import { Member } from "../../shared/interfaces/member.interface";
 import { MessageUpdateDto } from "../messages/dtos/update.dto";
+import { ChatEmits } from "./chat.emits";
+import { MemberStatusConstant } from "../../shared/constants/member.constant";
+import { addWaitHandler } from "pactum/src/exports/handler";
 
 @AsyncApiService()
 @UsePipes(new ValidationPipe())
@@ -48,7 +52,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private roomsRepository: RoomsRepository,
     @Inject(forwardRef(() => ChatService))
     private chatService: ChatService,
-    private membersRepo: MembersRepository
+    private membersRepo: MembersRepository,
+    @Inject(forwardRef(() => ChatEmits))
+    private chatEmits: ChatEmits
   ) {
   }
 
@@ -64,7 +70,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const members: Member[] =
         await this.membersRepo.findByUserId(userId);
 
-      members.map((member: Member) => client.join(member.roomId.toString()));
+      members.map((member: Member) => {
+        client.join(member.roomId.toString());
+        // update User Status
+        this.chatEmits.updateMemberStatus(member.roomId, member.userId, MemberStatusConstant.ONLINE);
+      });
 
       client.data.userId = userId;
     } catch (e) {
@@ -72,8 +82,17 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  handleDisconnect(client: Socket): any {
+  async handleDisconnect(client: Socket): Promise<void> {
     this.logger.log(`IOClient disconnected: ${client.id}`);
+    const userId: number = client.data.userId;
+    const members: Member[] =
+      await this.membersRepo.findByUserId(userId);
+
+    members.map((member: Member) => {
+      client.join(member.roomId.toString());
+      // update User Status
+      this.chatEmits.updateMemberStatus(member.roomId, member.userId, MemberStatusConstant.OFFLINE);
+    });
   }
 
   @AsyncApiPub({

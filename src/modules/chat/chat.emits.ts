@@ -6,17 +6,20 @@ import {
   JoinMemberExa,
   KickMemberExa,
   LaveMemberExa,
-  UpdateMemberExa
+  UpdateMemberExa, UpdateMemberStatusExa
 } from "../../shared/examples/socket/member.example";
 import { Message } from "../../shared/interfaces/message.interface";
 import { MessageCreateDto } from "../messages/dtos/creates.dto";
-import { MessageUpdateDto } from "../messages/dtos/update.dto";
 import { MessageDeleteExa, MessageUpdateExa } from "../../shared/examples/socket/message.example";
+import { MemberStatusConstant } from "../../shared/constants/member.constant";
+import { forwardRef, Inject } from "@nestjs/common";
 
 
 @AsyncApiService()
 export class ChatEmits {
-  constructor(private chatGateway: ChatGateway) {
+  constructor(
+    @Inject(forwardRef(() => ChatGateway)) private chatGateway: ChatGateway
+  ) {
   }
 
 
@@ -111,5 +114,17 @@ export class ChatEmits {
     this.chatGateway.server
       .to(roomId.toString())
       .emit(EmitKeysConstant.DELETE_MESSAGE, { roomId, messageId, byId: memberId });
+  }
+
+  @AsyncApiSub({
+    channel: EmitKeysConstant.UPDATE_MEMBER_STATUS,
+    tags: [{ name: "Member" }],
+    message: { name: EmitKeysConstant.UPDATE_MEMBER_STATUS, payload: { type: UpdateMemberStatusExa } },
+    description: "listen event Update Member Status"
+  })
+  updateMemberStatus(roomId: number, memberId: number, status: MemberStatusConstant) {
+    this.chatGateway.server
+      .to(roomId.toString())
+      .emit(EmitKeysConstant.UPDATE_MEMBER_STATUS, { roomId, memberId, status });
   }
 }

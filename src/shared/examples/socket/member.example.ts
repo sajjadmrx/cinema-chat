@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Member } from "../../interfaces/member.interface";
+import { MemberStatusConstant } from "../../constants/member.constant";
 
 export class JoinMemberExa {
   @ApiProperty({})
@@ -24,4 +25,17 @@ export class UpdateMemberExa {
   @ApiProperty()
   by: number;
 
+}
+
+export class UpdateMemberStatusExa {
+  @ApiProperty()
+  roomId: 44117771;
+  @ApiProperty()
+  memberId: number;
+
+  @ApiProperty({
+    enum: MemberStatusConstant,
+    name: "MemberStatus"
+  })
+  status: "OFFLINE";
 }
