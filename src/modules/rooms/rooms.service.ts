@@ -60,4 +60,15 @@ export class RoomsService {
     if (limit > maxLimit) limit = maxLimit;
     return this.roomsRepository.getUserRooms(userId, page, limit);
   }
+
+  async getPublicRooms(page: number, limit: number): Promise<Room[]> {
+    const maxLimit: number = 10;
+    if (!page || !limit || Number(page) < 1 || Number(limit) < 1) {
+      page = 1;
+      limit = maxLimit;
+    }
+    if (limit > maxLimit) limit = maxLimit;
+    return this.roomsRepository.getPublicRooms(page, limit);
+  }
+
 }

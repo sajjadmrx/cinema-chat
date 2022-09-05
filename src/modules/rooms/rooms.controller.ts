@@ -36,6 +36,28 @@ export class RoomsController {
   constructor(private roomsService: RoomsService) {
   }
 
+
+  @ApiOperation({
+    summary: "get public rooms"
+  })
+  @ApiQuery({
+    name: "limit",
+    type: String,
+    required: false,
+    example: 10
+  })
+  @ApiQuery({
+    name: "page",
+    type: String,
+    required: false,
+    example: 1
+  })
+  @Get()
+  async getRooms(@Query() query: any) {
+    return this.roomsService.getPublicRooms(Number(query.page), Number(query.limit))
+  }
+
+
   @ApiBearerAuth()
   @ApiOperation({
     summary: "get current User Rooms"
@@ -53,8 +75,8 @@ export class RoomsController {
     example: 1
   })
   @UseGuards(AuthGuard("jwt"))
-  @Get()
-  async getRooms(@Query() query: any, @getUser() user: User) {
+  @Get("@me")
+  async getUserRooms(@Query() query: any, @getUser() user: User) {
     return this.roomsService.getUserRooms(user.userId, Number(query.page), Number(query.limit));
   }
 

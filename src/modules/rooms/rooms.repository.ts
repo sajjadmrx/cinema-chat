@@ -42,6 +42,13 @@ export class RoomsRepository {
     });
   }
 
+  async getPublicRooms(page: number, limit: number) {
+    return this.db.room.findMany({
+      take: limit,
+      skip: (page - 1) * limit
+    });
+  }
+
   async updateById(id: number, input: RoomUpdateInput): Promise<Room> {
     return this.db.room.update({
       where: {
