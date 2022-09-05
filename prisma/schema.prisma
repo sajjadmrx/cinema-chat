@@ -71,6 +71,16 @@ model Message {
   updatedAt DateTime    @updatedAt
 }
 
+model movie {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  movieId     Int      @unique
+  //TODO add type 
+  src         String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 enum MemberPermissions {
   ADMINISTRATOR //All Perm
   MANAGE_MEMBERS
