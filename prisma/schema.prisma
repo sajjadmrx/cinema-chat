@@ -76,7 +76,7 @@ model Movie {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   movieId     Int      @unique
   //TODO add type 
-  src         String
+  src         String  @unique
   description String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

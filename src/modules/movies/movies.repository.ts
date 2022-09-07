@@ -10,4 +10,9 @@ export class MoviesRepository {
   create(input: MovieCreateInput): Promise<Movie> {
     return this.db.movie.create({ data: input });
   }
+
+  getBySrc(src: string): Promise<Movie | null> {
+    return this.db.movie.findUnique({ where: { src } });
+  }
+
 }
