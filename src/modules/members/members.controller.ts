@@ -25,7 +25,7 @@ import { User } from "src/shared/interfaces/user.interface";
 import { MemberCreateDto } from "./dtos/create.dto";
 import { MembersService } from "./members.service";
 import { CheckCurrentMember } from "../../shared/guards/member.guard";
-import { CheckMemberPermissions } from "../../shared/guards/permissions.guard";
+import { CheckMemberPermissions } from "../../shared/guards/member-permissions.guard";
 import { KickDto } from "./dtos/kick.dto";
 import { UpdateCurrentMemberDto } from "./dtos/update.dto";
 import { getMember } from "../../shared/decorators/member.decorator";

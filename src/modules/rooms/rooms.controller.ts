@@ -27,7 +27,7 @@ import { ResponseInterceptor } from "src/shared/interceptors/response.intercepto
 import { RoomUpdateDto } from "./dto/update.dto";
 import { CheckRoomId } from "src/shared/guards/check-roomId.guard";
 import { CheckCurrentMember } from "../../shared/guards/member.guard";
-import { CheckMemberPermissions } from "../../shared/guards/permissions.guard";
+import { CheckMemberPermissions } from "../../shared/guards/member-permissions.guard";
 
 @UseInterceptors(ResponseInterceptor)
 @ApiTags("rooms")
@@ -54,7 +54,7 @@ export class RoomsController {
   })
   @Get()
   async getRooms(@Query() query: any) {
-    return this.roomsService.getPublicRooms(Number(query.page), Number(query.limit))
+    return this.roomsService.getPublicRooms(Number(query.page), Number(query.limit));
   }
 
 

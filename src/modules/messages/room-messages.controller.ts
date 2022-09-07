@@ -5,7 +5,7 @@ import { MessagesService } from "./messages.service";
 import { CheckRoomId } from "../../shared/guards/check-roomId.guard";
 import { CheckCurrentMember } from "../../shared/guards/member.guard";
 import { getUser } from "../../shared/decorators/user.decorator";
-import { CheckMemberPermissions } from "../../shared/guards/permissions.guard";
+import { CheckMemberPermissions } from "../../shared/guards/member-permissions.guard";
 import { ResponseInterceptor } from "../../shared/interceptors/response.interceptor";
 
 @ApiBearerAuth()
