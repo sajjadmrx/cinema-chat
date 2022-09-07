@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
 import {
   promises as fs,
   ReadStream,
   createReadStream,
   Stats,
-  constants as fileConstant,
-} from 'fs';
+  constants as fileConstant
+} from "fs";
 
 
 @Injectable()
@@ -30,7 +30,7 @@ export class FileService {
     }
   }
 
-  async createDirectorie(_path: string): Promise<void> {
+  async createDirectory(_path: string): Promise<void> {
     try {
       await fs.mkdir(_path, { recursive: true });
     } catch (e) {
