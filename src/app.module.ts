@@ -10,6 +10,7 @@ import { MembersModule } from "./modules/members/members.module";
 import { ChatModule } from "./modules/chat/chat.module";
 import { MessagesModule } from "./modules/messages/messages.module";
 import { MoviesModule } from "./modules/movies/movies.module";
+import { UploadsModule } from "./modules/uploads/uploads.module";
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { MoviesModule } from "./modules/movies/movies.module";
     MembersModule,
     ChatModule,
     MessagesModule,
-    MoviesModule
+    MoviesModule,
+    UploadsModule
   ]
 })
 export class AppModule {

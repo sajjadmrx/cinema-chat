@@ -29,7 +29,7 @@ export class MoviesController {
   @UseGuards(AuthGuard("jwt"))
   @Delete(":movieId")
   delete(@Param("movieId") movieId: string) {
-    if (!Number(movieId))//TODO Check ids in Guard
+    if (!Number(movieId))//TODO Check ids in Guard/middleware
       throw new BadRequestException(ResponseMessages.INVALID_ID);
     return this.moviesService.deleteByMovieId(Number(movieId));
   }
