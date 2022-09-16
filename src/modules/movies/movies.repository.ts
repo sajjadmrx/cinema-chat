@@ -16,4 +16,20 @@ export class MoviesRepository {
     return this.db.movie.findUnique({ where: { src } });
   }
 
+  getByMovieId(movieId: number): Promise<Movie | null> {
+    return this.db.movie.findUnique({
+      where: {
+        movieId
+      }
+    });
+  }
+
+  deleteByMovieId(movieId: number): Promise<Movie> {
+    return this.db.movie.delete({
+      where: {
+        movieId
+      }
+    })
+  }
+
 }

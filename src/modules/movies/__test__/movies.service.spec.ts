@@ -3,7 +3,8 @@ import { MoviesRepository } from "../movies.repository";
 import { Movie } from "../../../shared/interfaces/movie.interface";
 import { MovieCreateDto } from "../dto/create.dto";
 import { FileService } from "../../file/file.service";
-import * as fs from "fs";
+import { BadRequestException, NotFoundException } from "@nestjs/common";
+import { ResponseMessages } from "../../../shared/constants/response-messages.constant";
 
 
 let movie: Movie = {
@@ -62,9 +63,69 @@ describe("MoviesService", function() {
         .mockImplementation(async () => movie);
 
       await expect(moviesService.create({ src: movie.src, description: movie.description }))
-        .resolves.toEqual(movie)
+        .resolves.toEqual(movie);
 
-    })
+    });
+  });
+
+  describe("deleteByMovieId()", function() {
+    it("should throw 'MOVIE_NOT_FOUND',when movie not found", async () => {
+      jest.spyOn(moviesRepository, "getByMovieId")
+        .mockImplementation(() => null);
+      await expect(moviesService.deleteByMovieId(1))
+        .rejects.toThrow(new NotFoundException("MOVIE_NOT_FOUND"));
+    });
+    it("should call method removeByPath,when src file is exists", async () => {
+      jest.spyOn(moviesRepository, "getByMovieId")
+        .mockImplementation(async () => movie);
+
+      jest.spyOn(fileService, "checkFileExists")
+        .mockImplementation(async () => true);
+
+      jest.spyOn(fileService, "removeByPath")
+        .mockImplementation(async () => {
+        });
+
+      await moviesService.deleteByMovieId(1);
+
+
+      await expect(fileService.removeByPath)
+        .toBeCalled();
+    });
+    it("should not call method removeByPath,when src file is not exists", async () => {
+      jest.spyOn(moviesRepository, "getByMovieId")
+        .mockImplementation(async () => movie);
+
+      jest.spyOn(fileService, "checkFileExists")
+        .mockImplementation(async () => false);
+
+      jest.spyOn(fileService, "removeByPath")
+        .mockImplementation(async () => {
+        });
+
+      await moviesService.deleteByMovieId(1);
+
+
+      await expect(fileService.removeByPath)
+        .not.toBeCalled();
+    });
+
+    it("should delete movie and return success message", async () => {
+      jest.spyOn(moviesRepository, "getByMovieId")
+        .mockImplementation(async () => movie);
+
+      jest.spyOn(fileService, "checkFileExists")
+        .mockImplementation(async () => true);
+
+      jest.spyOn(fileService, "removeByPath")
+        .mockImplementation(async () => {
+        });
+
+      jest.spyOn(moviesRepository, "deleteByMovieId")
+        .mockImplementation(async () => movie);
+      await expect(moviesService.deleteByMovieId(1))
+        .resolves.toBe(ResponseMessages.SUCCESS);
+    });
   });
 
 });

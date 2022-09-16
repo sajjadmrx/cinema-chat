@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { MoviesRepository } from "./movies.repository";
 import { MovieCreateDto } from "./dto/create.dto";
 import { Movie } from "../../shared/interfaces/movie.interface";
@@ -28,6 +28,23 @@ export class MoviesService {
         description: data.description
       });
       return movie;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async deleteByMovieId(movieId: number) {
+    try {
+      let movie: Movie | null = await this.moviesRepository.getByMovieId(movieId);
+      if (!movie)
+        throw new NotFoundException("MOVIE_NOT_FOUND");
+
+      const hasExistsSrc: boolean = await this.fileService.checkFileExists(movie.src);
+      if (hasExistsSrc) {
+        await this.fileService.removeByPath(movie.src);
+      }
+      await this.moviesRepository.deleteByMovieId(movieId);
+      return ResponseMessages.SUCCESS;
     } catch (e) {
       throw e;
     }
