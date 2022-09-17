@@ -9,20 +9,33 @@ import {
   UseInterceptors
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiFile } from "../../shared/decorators/api-File.decorator";
 import { movieFilter } from "./filters/movie.filter";
 import { movieStorage } from "./storages/movie.storage";
 import BestString from "best-string";
+import { ResponseInterceptor } from "../../shared/interceptors/response.interceptor";
 
 
 @ApiTags("Uploads")
 @ApiBearerAuth()
+@UseInterceptors(ResponseInterceptor)
 @UseGuards(AuthGuard("jwt"))
 @Controller("uploads")
 export class UploadsController {
 
+
+  @ApiResponse({
+    status: 201,
+    schema: {
+      example: {
+
+        "statusCode": 201,
+        "data": "uploads\\movies\\1663400974871-690118608-movie.mp4"
+      }
+    }
+  })
   @ApiOperation({
     summary: "upload a movie"
   })
@@ -36,7 +49,6 @@ export class UploadsController {
     })
   )
   movie(@UploadedFile() file: Express.Multer.File) {
-    return file.path
-
+    return file.path;
   }
 }
