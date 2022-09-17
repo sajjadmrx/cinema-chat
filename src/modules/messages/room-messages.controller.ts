@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Query, Req, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Controller, Delete, Get, Param, ParseIntPipe, Query, Req, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
 import { MessagesService } from "./messages.service";
@@ -37,26 +37,26 @@ export class RoomMessagesController {
   })
 
   @Get("")
-  getRoomMessages(@Param("roomId") roomId: string, @Query() query: { page: string; limit: string }) {
-    return this.messagesService.getRoomMessages(Number(roomId), Number(query.page), Number(query.limit));
+  getRoomMessages(@Param("roomId", ParseIntPipe) roomId: number, @Query() query: { page: string; limit: string }) {
+    return this.messagesService.getRoomMessages(roomId, Number(query.page), Number(query.limit));
   }
 
   @ApiOperation({
     summary: "fetch message by MessageID"
   })
   @Get(":messageId")
-  getMessage(@Param("roomId") roomId: string, @Param("messageId") messageId: string) {
-    return this.messagesService.getByMessageId(Number(messageId));
+  getMessage(@Param("roomId", ParseIntPipe) roomId: number, @Param("messageId", ParseIntPipe) messageId: number) {
+    return this.messagesService.getByMessageId(messageId);
   }
 
   // @UseGuards(CheckMemberPermissions(["ADMINISTRATOR",""])
   @ApiOperation({ summary: "delete message By MessageId" })
   @Delete(":messageId")
   delete(
-    @Param("roomId") roomId: string,
-    @Param("messageId") messageId: string,
+    @Param("roomId", ParseIntPipe) roomId: number,
+    @Param("messageId", ParseIntPipe) messageId: number,
     @getUser("userId") userId: number
   ) {
-    return this.messagesService.deleteRoomMessage(Number(roomId), userId, Number(messageId));
+    return this.messagesService.deleteRoomMessage(roomId, userId, messageId);
   }
 }

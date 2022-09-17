@@ -1,4 +1,14 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { MoviesService } from "./movies.service";
 import { AuthGuard } from "@nestjs/passport";
@@ -28,9 +38,7 @@ export class MoviesController {
   @UseGuards(CheckUserPermissions(["ADMINISTRATOR", "MANAGE_MOVIE"]))
   @UseGuards(AuthGuard("jwt"))
   @Delete(":movieId")
-  delete(@Param("movieId") movieId: string) {
-    if (!Number(movieId))//TODO Check ids in Guard/middleware
-      throw new BadRequestException(ResponseMessages.INVALID_ID);
-    return this.moviesService.deleteByMovieId(Number(movieId));
+  delete(@Param("movieId", ParseIntPipe) movieId: number) {
+    return this.moviesService.deleteByMovieId(movieId);
   }
 }

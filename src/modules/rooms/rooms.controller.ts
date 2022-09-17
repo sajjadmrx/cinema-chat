@@ -8,7 +8,7 @@ import {
   Post,
   UseGuards,
   UseInterceptors,
-  BadRequestException, Query
+  BadRequestException, Query, ParseIntPipe
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import {
@@ -119,9 +119,9 @@ export class RoomsController {
   @Patch(":roomId")
   async update(
     @Body() data: RoomUpdateDto,
-    @Param("roomId") roomId: string,
+    @Param("roomId", ParseIntPipe) roomId: number,
     @getUser("userId") userId: number
   ) {
-    return this.roomsService.update(Number(roomId), userId, data);
+    return this.roomsService.update(roomId, userId, data);
   }
 }
