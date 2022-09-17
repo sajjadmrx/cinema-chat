@@ -1,9 +1,7 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
-  Get,
   Param,
   ParseIntPipe,
   Post,
@@ -14,7 +12,6 @@ import { MoviesService } from "./movies.service";
 import { AuthGuard } from "@nestjs/passport";
 import { CheckUserPermissions } from "../../shared/guards/user-permissions.guard";
 import { MovieCreateDto } from "./dto/create.dto";
-import { ResponseMessages } from "../../shared/constants/response-messages.constant";
 
 
 @ApiTags("movies")

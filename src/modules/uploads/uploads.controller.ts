@@ -1,8 +1,5 @@
 import {
-  Body,
-  Controller, HttpStatus,
-  ParseFilePipe,
-  ParseFilePipeBuilder,
+  Controller,
   Post,
   UploadedFile,
   UseGuards,
@@ -14,7 +11,6 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiFile } from "../../shared/decorators/api-File.decorator";
 import { movieFilter } from "./filters/movie.filter";
 import { movieStorage } from "./storages/movie.storage";
-import BestString from "best-string";
 import { ResponseInterceptor } from "../../shared/interceptors/response.interceptor";
 
 

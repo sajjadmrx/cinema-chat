@@ -5,7 +5,6 @@ import { User } from "../../shared/interfaces/user.interface";
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
   Logger
 } from "@nestjs/common";
 import * as bcrypt from "bcryptjs";

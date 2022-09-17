@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { MemberPermission } from "src/shared/interfaces/member.interface";
 import {
   Room,
   RoomCreateInput,

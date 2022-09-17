@@ -31,7 +31,6 @@ import { Member } from "../../shared/interfaces/member.interface";
 import { MessageUpdateDto } from "../messages/dtos/update.dto";
 import { ChatEmits } from "./chat.emits";
 import { MemberStatusConstant } from "../../shared/constants/member.constant";
-import { addWaitHandler } from "pactum/src/exports/handler";
 
 @AsyncApiService()
 @UsePipes(new ValidationPipe())

@@ -6,7 +6,6 @@ import { RoomsRepository } from "./rooms.repository";
 import { RoomUpdateDto } from "./dto/update.dto";
 import { ResponseMessages } from "src/shared/constants/response-messages.constant";
 import { MembersRepository } from "../members/members.repository";
-import { getRandomNumber } from "../../shared/utils/uuid.util";
 import { MemberPermission } from "../../shared/interfaces/member.interface";
 
 @Injectable()
