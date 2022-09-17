@@ -49,4 +49,13 @@ export class MoviesService {
       throw e;
     }
   }
+
+  async find(page: number, limit: number): Promise<Movie[]> {
+    if (page < 0)
+      page = 1;
+    if (limit > 10 || limit < 0)
+      limit = 10;
+    return this.moviesRepository.find(page, limit);
+  }
+
 }

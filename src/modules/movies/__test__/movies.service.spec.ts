@@ -86,6 +86,9 @@ describe("MoviesService", function() {
         .mockImplementation(async () => {
         });
 
+      jest.spyOn(moviesRepository, "deleteByMovieId")
+        .mockImplementation(async () => movie);
+
       await moviesService.deleteByMovieId(1);
 
 
@@ -102,6 +105,9 @@ describe("MoviesService", function() {
       jest.spyOn(fileService, "removeByPath")
         .mockImplementation(async () => {
         });
+
+      jest.spyOn(moviesRepository, "deleteByMovieId")
+        .mockImplementation(async () => movie);
 
       await moviesService.deleteByMovieId(1);
 
@@ -125,6 +131,22 @@ describe("MoviesService", function() {
         .mockImplementation(async () => movie);
       await expect(moviesService.deleteByMovieId(1))
         .resolves.toBe(ResponseMessages.SUCCESS);
+    });
+  });
+
+  describe("find()", function() {
+    it("should return empty list,when movies not founds", async () => {
+      jest.spyOn(moviesRepository, "find")
+        .mockImplementation(async () => []);
+      await expect(moviesService.find(10, 10))
+        .resolves.toHaveLength(0);
+    });
+    it("should return all movies", async () => {
+      const movies: Movie[] = [movie, movie];
+      jest.spyOn(moviesRepository, "find")
+        .mockImplementation(async () => movies);
+      await expect(moviesService.find(10, 10))
+        .resolves.toHaveLength(movies.length);
     });
   });
 

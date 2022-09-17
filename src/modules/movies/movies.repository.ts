@@ -29,7 +29,14 @@ export class MoviesRepository {
       where: {
         movieId
       }
-    })
+    });
+  }
+
+  find(page: number, limit: number): Promise<Movie[]> {
+    return this.db.movie.findMany({
+      take: limit,
+      skip: (page - 1) * limit
+    });
   }
 
 }
