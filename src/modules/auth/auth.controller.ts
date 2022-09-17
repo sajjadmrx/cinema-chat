@@ -29,7 +29,7 @@ export class AuthController {
   }
 
   @ApiOperation({
-    summary: "signin",
+    summary: "login",
     description: "get Jwt Token"
   })
   @Post("login")
