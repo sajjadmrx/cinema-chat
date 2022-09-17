@@ -28,6 +28,8 @@ import { RoomUpdateDto } from "./dto/update.dto";
 import { CheckRoomId } from "src/shared/guards/check-roomId.guard";
 import { CheckCurrentMember } from "../../shared/guards/member.guard";
 import { CheckMemberPermissions } from "../../shared/guards/member-permissions.guard";
+import { Room } from "../../shared/interfaces/room.interface";
+import { ResponseMessages } from "../../shared/constants/response-messages.constant";
 
 @UseInterceptors(ResponseInterceptor)
 @ApiTags("rooms")
@@ -42,19 +44,19 @@ export class RoomsController {
   })
   @ApiQuery({
     name: "limit",
-    type: String,
+    type: Number,
     required: false,
     example: 10
   })
   @ApiQuery({
     name: "page",
-    type: String,
+    type: Number,
     required: false,
     example: 1
   })
   @Get()
-  async getRooms(@Query() query: any) {
-    return this.roomsService.getPublicRooms(Number(query.page), Number(query.limit));
+  async getRooms(@Query("page", ParseIntPipe) page: number, @Query("limit", ParseIntPipe) limit: number) {
+    return this.roomsService.getPublicRooms(page, limit);
   }
 
 
@@ -76,8 +78,12 @@ export class RoomsController {
   })
   @UseGuards(AuthGuard("jwt"))
   @Get("@me")
-  async getUserRooms(@Query() query: any, @getUser() user: User) {
-    return this.roomsService.getUserRooms(user.userId, Number(query.page), Number(query.limit));
+  async getUserRooms(
+    @getUser() user: User,
+    @Query("page", ParseIntPipe) page: number,
+    @Query("limit", ParseIntPipe) limit: number
+  ): Promise<Room[]> {
+    return this.roomsService.getUserRooms(user.userId, page, limit);
   }
 
   @ApiBearerAuth()
@@ -121,7 +127,7 @@ export class RoomsController {
     @Body() data: RoomUpdateDto,
     @Param("roomId", ParseIntPipe) roomId: number,
     @getUser("userId") userId: number
-  ) {
+  ): Promise<ResponseMessages> {
     return this.roomsService.update(roomId, userId, data);
   }
 }

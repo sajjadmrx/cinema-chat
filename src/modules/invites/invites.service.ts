@@ -53,7 +53,7 @@ export class InvitesService {
     }
   }
 
-  async findRoom(slug: string): Promise<number> {
+  async findRoom(slug: string): Promise<Room> {
     try {
       const invite: Invite | null = await this.invitesRepo.getBySlug(
         slug
@@ -69,13 +69,13 @@ export class InvitesService {
           throw new BadRequestException(ResponseMessages.EXPIRED_TIME);
       }
 
-      const room: Room | null = await this.roomsRepository.getById(invite.roomId)
+      const room: Room | null = await this.roomsRepository.getById(invite.roomId);
       if (!room)
         throw new NotFoundException(ResponseMessages.ROOM_NOT_FOUND);
 
       await this.invitesRepo.updateUsesById(invite.inviteId);
 
-      return room.roomId
+      return room;
     } catch (error: any) {
       this.logger.error(error.message, error.stack);
       throw error;

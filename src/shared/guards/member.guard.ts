@@ -1,7 +1,7 @@
 import {
   BadRequestException,
   CanActivate,
-  ExecutionContext,
+  ExecutionContext, ForbiddenException,
   forwardRef,
   Inject,
   Injectable
@@ -29,7 +29,7 @@ export class CheckCurrentMember implements CanActivate {
       const member: Member | null =
         await this.membersRepo.getByRoomIdAndUserId(room.roomId, user.userId);
       if (!member)
-        throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
+        throw new ForbiddenException(ResponseMessages.MEMBER_NOT_FOUND);
 
       request.currentMember = member;
       return true;

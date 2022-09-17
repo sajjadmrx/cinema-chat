@@ -24,7 +24,7 @@ export class AuthController {
     }
   })
   @Post("signup")
-  async signup(@Body() data: SignUpDto): Promise<any> {
+  async signup(@Body() data: SignUpDto): Promise<string> {
     return this.authService.signUp(data);
   }
 
@@ -33,7 +33,7 @@ export class AuthController {
     description: "get Jwt Token"
   })
   @Post("login")
-  async login(@Body() data: SignInDto) {
+  async login(@Body() data: SignInDto): Promise<string> {
     return this.authService.login(data);
   }
 }

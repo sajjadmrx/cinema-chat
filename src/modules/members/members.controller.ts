@@ -3,7 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
+  Param, ParseIntPipe,
   Patch,
   Put,
   Query,
@@ -33,6 +33,7 @@ import {
   Member,
   MemberWithRoom
 } from "../../shared/interfaces/member.interface";
+import { ResponseMessages } from "../../shared/constants/response-messages.constant";
 
 @ApiBearerAuth()
 @ApiTags("members")
@@ -46,39 +47,40 @@ export class MembersController {
 
   @ApiQuery({
     name: "limit",
-    type: String,
-    required: false,
+    type: Number,
+    required: true,
     example: 10
   })
   @ApiQuery({
     name: "page",
-    type: String,
-    required: false,
+    type: Number,
+    required: true,
     example: 1
   })
   @ApiOperation({ summary: "Get Members" })
   @UseGuards(CheckCurrentMember)
   @Get()
   getAll(
-    @Param("roomId") roomId: string,
-    @Query() query: { page: string; limit: string }
-  ) {
+    @Param("roomId", ParseIntPipe) roomId: number,
+    @Query("page", ParseIntPipe) page: number,
+    @Query("limit", ParseIntPipe) limit: number
+  ): Promise<Member[]> {
     return this.membersService.find(
-      Number(roomId),
-      Number(query.page),
-      Number(query.limit)
+      roomId,
+      page,
+      limit
     );
   }
 
   @ApiOperation({ summary: "Add Current user to room" })
   @Put()
   async joinRoom(
-    @Param("roomId") roomId: string,
+    @Param("roomId", ParseIntPipe) roomId: number,
     @Body() input: MemberCreateDto,
     @getUser() user: User
   ) {
     return this.membersService.joinRoom(
-      Number(roomId),
+      roomId,
       Number(input.inviteId),
       user
     );
@@ -86,8 +88,8 @@ export class MembersController {
 
   @ApiOperation({ summary: "lave Current user from room" })
   @Delete("/lave")
-  async lave(@Param("roomId") roomId: string, @getUser() user: User) {
-    return this.membersService.laveRoom(Number(roomId), user);
+  async lave(@Param("roomId", ParseIntPipe) roomId: number, @getUser() user: User): Promise<ResponseMessages> {
+    return this.membersService.laveRoom(roomId, user);
   }
 
   @ApiOperation({
@@ -98,12 +100,12 @@ export class MembersController {
   @UseGuards(CheckCurrentMember)
   @Delete()
   async kick(
-    @Param("roomId") roomId: string,
+    @Param("roomId", ParseIntPipe) roomId: number,
     @Body() input: KickDto,
     @getUser() requester: User
-  ) {
+  ): Promise<ResponseMessages> {
     return this.membersService.delete(
-      Number(roomId),
+      roomId,
       Number(input.memberId),
       requester
     );
@@ -113,10 +115,10 @@ export class MembersController {
   @UseGuards(CheckCurrentMember)
   @Patch()
   async updateCurrentMember(
-    @Param("roomId") roomId: string,
+    @Param("roomId", ParseIntPipe) roomId: number,
     @Body() input: UpdateCurrentMemberDto,
     @getMember<Member>() requester: MemberWithRoom
-  ) {
+  ): Promise<ResponseMessages> {
     return this.membersService.updateMember(requester.userId, requester, input);
   }
 
@@ -124,21 +126,21 @@ export class MembersController {
   @UseGuards(CheckCurrentMember)
   @Patch(":memberId")
   async updateMember(
-    @Param("roomId") roomId: string,
-    @Param("memberId") memberId: string,
+    @Param("roomId", ParseIntPipe) roomId: number,
+    @Param("memberId", ParseIntPipe) memberId: number,
     @Body() input: UpdateCurrentMemberDto,
     @getMember<Member>() requester: MemberWithRoom
-  ) {
-    return this.membersService.updateMember(Number(memberId), requester, input);
+  ): Promise<ResponseMessages> {
+    return this.membersService.updateMember(memberId, requester, input);
   }
 
   @ApiOperation({ summary: "fetch member by MemberId" })
   @UseGuards(CheckCurrentMember)
   @Get(":memberId")
   async getMemberById(
-    @Param("roomId") roomId: string,
-    @Param("memberId") memberId: string
-  ) {
-    return this.membersService.getMember(Number(roomId), Number(memberId));
+    @Param("roomId", ParseIntPipe) roomId: number,
+    @Param("memberId", ParseIntPipe) memberId: number
+  ): Promise<Member> {
+    return this.membersService.getMember(roomId, memberId);
   }
 }

@@ -6,8 +6,6 @@ import {
   UserWithRooms
 } from "../../shared/interfaces/user.interface";
 import { getRandomNumber } from "../../shared/utils/uuid.util";
-import { Member } from "../../shared/interfaces/member.interface";
-import { Room } from "../../shared/interfaces/room.interface";
 
 @Injectable()
 export class UsersRepository {
