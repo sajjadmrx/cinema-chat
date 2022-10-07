@@ -46,4 +46,8 @@ export class FileService {
       return false;
     }
   }
+
+  streamFile(src: string, start: number, end: number): ReadStream {
+    return createReadStream(src, { start, end });
+  }
 }

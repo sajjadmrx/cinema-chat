@@ -39,3 +39,4 @@ pnpm-lock.yaml
 .env
 data
 uploads/*
+index.html

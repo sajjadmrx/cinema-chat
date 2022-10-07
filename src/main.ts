@@ -6,7 +6,11 @@ import { ValidationPipe } from "@nestjs/common";
 import { DocumentConfig } from "./document.config";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      origin: "*"
+    }
+  });
 
   const configService = app.get(ConfigService);
   const port: number = configService.get<number>("port");

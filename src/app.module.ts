@@ -11,6 +11,7 @@ import { ChatModule } from "./modules/chat/chat.module";
 import { MessagesModule } from "./modules/messages/messages.module";
 import { MoviesModule } from "./modules/movies/movies.module";
 import { UploadsModule } from "./modules/uploads/uploads.module";
+import { StreamModule } from "./modules/stream/stream.module";
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { UploadsModule } from "./modules/uploads/uploads.module";
     ChatModule,
     MessagesModule,
     MoviesModule,
-    UploadsModule
+    UploadsModule,
+    StreamModule
   ]
 })
 export class AppModule {
