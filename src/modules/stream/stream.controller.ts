@@ -1,12 +1,10 @@
 import { Controller, Get, Param, ParseIntPipe, Req, Res, UseGuards } from "@nestjs/common";
-import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { AuthGuard } from "@nestjs/passport";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Request, Response } from "express";
 import { StreamService } from "./stream.service";
 
 @ApiTags("stream")
-// @ApiBearerAuth()
-// @UseGuards(AuthGuard("jwt"))
+//todo stream with http stream Live (HLS)
 @Controller()
 export class StreamController {
   constructor(private streamService: StreamService) {
