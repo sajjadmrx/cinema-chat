@@ -12,6 +12,8 @@ import { ApiFile } from "../../shared/decorators/api-File.decorator";
 import { movieFilter } from "./filters/movie.filter";
 import { movieStorage } from "./storages/movie.storage";
 import { ResponseInterceptor } from "../../shared/interceptors/response.interceptor";
+import { UploadsService } from "./uploads.service";
+import { ExpressFile } from "../../shared/interfaces/file.interface";
 
 
 @ApiTags("Uploads")
@@ -21,14 +23,19 @@ import { ResponseInterceptor } from "../../shared/interceptors/response.intercep
 @Controller("uploads")
 export class UploadsController {
 
+  constructor(private uploadService: UploadsService) {
+  }
 
   @ApiResponse({
     status: 201,
     schema: {
       example: {
-
         "statusCode": 201,
-        "data": "uploads\\movies\\1663400974871-690118608-movie.mp4"
+        "data": {
+          "mediaSrc": "uploads/movies/xxx.mp4",
+          "hlsPath": "hls/xx",
+          "hlsPlaylistPath": "hls/xx/xxx_480_hls.m3u8"
+        }
       }
     }
   })
@@ -44,7 +51,7 @@ export class UploadsController {
       fileFilter: movieFilter
     })
   )
-  movie(@UploadedFile() file: Express.Multer.File) {
-    return file.path;
+  movie(@UploadedFile() file: ExpressFile) {
+    return this.uploadService.uploadMovie(file);
   }
 }

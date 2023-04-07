@@ -1,18 +1,36 @@
-import { Controller, Get, Param, ParseIntPipe, Req, Res, UseGuards } from "@nestjs/common";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { Controller, Get, Param, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
 import { StreamService } from "./stream.service";
+import { ApiTags } from "@nestjs/swagger";
 
-@ApiTags("stream")
-//todo stream with http stream Live (HLS)
-@Controller()
+
+@ApiTags("Stream")
+@Controller("/stream")
 export class StreamController {
-  constructor(private streamService: StreamService) {
+  constructor(private readonly streamService: StreamService) {
   }
 
-  @ApiOperation({ summary: "stream movie" })
-  @Get("stream/:movieId")
-  stream(@Param("movieId", ParseIntPipe) movieId: number, @Req() req: Request, @Res() res: Response) {
-    return this.streamService.movie(movieId, req.headers.range || "", res);
+  @Get("/:segmentPath")
+  async segment(
+    @Param("segmentPath") segmentPath: string,
+    @Req() req: Request,
+    @Res() res: Response
+  ) {
+    await this.streamService.segment(segmentPath, res, req);
   }
+
+
+  @Get("/:hls/:folder/:file")
+  async stream(
+    @Param("hls") hls: string,
+    @Param("folder") folder: string,
+    @Param("file") file: string,
+    @Req() req: Request,
+    @Res() res: Response
+  ) {
+    const src = `${hls}/${folder}/${file}`;
+    await this.streamService.movie(src, res, req);
+  }
+
+
 }

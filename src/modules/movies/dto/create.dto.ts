@@ -8,7 +8,23 @@ export class MovieCreateDto {
   })
   @IsString()
   @IsNotEmpty()
-  src: string;
+  mediaSrc: string;
+
+  @ApiProperty({
+    description: "path of movie hls folder",
+    example: "/hls/xx"
+  })
+  @IsString()
+  @IsNotEmpty()
+  hlsSrc: string;
+
+  @ApiProperty({
+    description: "path of movie hls playlist",
+    example: "/hls/xx/xx.m3u8"
+  })
+  @IsString()
+  @IsNotEmpty()
+  hlsPlaylistPath: string;
 
   @ApiProperty({
     example: "best movie"

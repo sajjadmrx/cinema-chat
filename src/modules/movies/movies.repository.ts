@@ -12,8 +12,8 @@ export class MoviesRepository {
     return this.db.movie.create({ data: { ...input, movieId: getRandomNumber(6) } });
   }
 
-  getBySrc(src: string): Promise<Movie | null> {
-    return this.db.movie.findUnique({ where: { src } });
+  getByMediaSrc(getByMediaSrcSrc: string): Promise<Movie | null> {
+    return this.db.movie.findUnique({ where: { mediaSrc: getByMediaSrcSrc } });
   }
 
   getByMovieId(movieId: number): Promise<Movie | null> {

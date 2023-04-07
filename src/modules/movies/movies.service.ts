@@ -15,16 +15,18 @@ export class MoviesService {
 
   async create(data: MovieCreateDto) {
     try {
-      let movie: Movie = await this.moviesRepository.getBySrc(data.src);
+      let movie: Movie = await this.moviesRepository.getByMediaSrc(data.mediaSrc);
       if (movie)
         throw new BadRequestException(ResponseMessages.MOVIE_IS_DUPLICATE);
 
-      const hasExistSrc: boolean = await this.fileService.checkFileExists(data.src);
+      const hasExistSrc: boolean = await this.fileService.checkFileExists(data.mediaSrc);
       if (!hasExistSrc)
         throw  new BadRequestException("SRC_INVALID");
 
       movie = await this.moviesRepository.create({
-        src: data.src,
+        mediaSrc: data.mediaSrc,
+        hlsSrc: data.hlsSrc,
+        hlsPlaylistPath: data.hlsPlaylistPath,
         description: data.description
       });
       return movie;
@@ -39,9 +41,10 @@ export class MoviesService {
       if (!movie)
         throw new NotFoundException("MOVIE_NOT_FOUND");
 
-      const hasExistsSrc: boolean = await this.fileService.checkFileExists(movie.src);
+      const hasExistsSrc: boolean = await this.fileService.checkFileExists(movie.mediaSrc);
       if (hasExistsSrc) {
-        await this.fileService.removeByPath(movie.src);
+        await this.fileService.removeByPath(movie.mediaSrc);
+        await this.fileService.removeByPath(movie.hlsSrc);
       }
       await this.moviesRepository.deleteByMovieId(movieId);
       return ResponseMessages.SUCCESS;

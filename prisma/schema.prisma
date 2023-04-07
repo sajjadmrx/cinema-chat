@@ -75,8 +75,10 @@ model Message {
 model Movie {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   movieId     Int      @unique
-  //TODO add type 
-  src         String  @unique
+  //TODO add type
+  mediaSrc         String  @unique
+  hlsSrc        String   @unique
+  hlsPlaylistPath String
   description String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

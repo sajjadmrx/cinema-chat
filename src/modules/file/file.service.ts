@@ -7,7 +7,11 @@ import {
   Stats,
   constants as fileConstant
 } from "fs";
+import { join } from "path";
+import * as ffmpegStatic from "@ffmpeg-installer/ffmpeg";
+import * as ffmpeg from "fluent-ffmpeg";
 
+ffmpeg.setFfmpegPath(ffmpegStatic.path);
 
 @Injectable()
 export class FileService {
@@ -49,5 +53,27 @@ export class FileService {
 
   streamFile(src: string, start: number, end: number): ReadStream {
     return createReadStream(src, { start, end });
+  }
+
+  convertToHlsVideo(videoPath: string, hlsFolderPath: string, outId: string) {
+    return new Promise((resolve, reject) => {
+      const outPath: string = join(hlsFolderPath, `${outId}.m3u8`);
+      ffmpeg(videoPath)
+        .addOptions([
+          "-profile:v baseline",
+          "-level 3.0",
+          "-s 640x360",
+          "-start_number 0",
+          "-hls_time 10",
+          "-hls_list_size 0",
+          "-f hls"
+        ])
+        .output(outPath)
+        .on("end", () => {
+          console.log(`Video conversion completed for ${outId}`);
+          resolve(outPath);
+        })
+        .run();
+    });
   }
 }
