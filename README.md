@@ -36,6 +36,7 @@ Chat & streaming movies
 > - streaming movies ✅
 > - upload cover ⏳
 > - E2E testing ⌛
+> - Stream Events (play,pause,seek,nowPlaying) 🛠️📌
 
 ## 🗒️ Documents
 
