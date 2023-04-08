@@ -117,15 +117,27 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @AsyncApiPub({
-    channel: EventKeysConstant.STREAM_NOW_PLAYING,
-    message: { name: EventKeysConstant.STREAM_NOW_PLAYING, payload: { type: StreamNowPlayingDto } },
+    channel: EventKeysConstant.STREAM_GET_CURRENT_PLAYING,
+    message: { name: EventKeysConstant.STREAM_GET_CURRENT_PLAYING, payload: { type: StreamNowPlayingDto } },
     tags: [{ name: "stream" }]
   })
-  @SubscribeMessage(EventKeysConstant.STREAM_NOW_PLAYING)
+  @SubscribeMessage(EventKeysConstant.STREAM_GET_CURRENT_PLAYING)
   onStreamNowPlaying(@MessageBody() data: StreamNowPlayingDto, @ConnectedSocket() socket: Socket) {
     // send request to owner;
     //add targetId to data object => socket.id
   }
+
+
+  @AsyncApiPub({
+    channel:EventKeysConstant.STREAM_FETCH_CURRENT_PLAYING,
+    message:{name:EventKeysConstant.STREAM_FETCH_CURRENT_PLAYING, payload:{type:StreamNowPlayingDto}}
+  })
+  @SubscribeMessage(EventKeysConstant.STREAM_FETCH_CURRENT_PLAYING)
+  onStreamFetchCurrentPlaying(){
+    // callback owner
+    // send current playing to target with data.target
+  }
+
 
 
   @AsyncApiPub({
@@ -135,6 +147,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   })
   @SubscribeMessage(EventKeysConstant.STREAM_PLAY)
   onStreamPlay(@MessageBody() data: StreamPlayDto, @ConnectedSocket() socket: Socket) {
+    //send broadcast to room
   }
 
 
