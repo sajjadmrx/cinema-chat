@@ -31,6 +31,7 @@ import { Member } from "../../shared/interfaces/member.interface";
 import { MessageUpdateDto } from "../messages/dtos/update.dto";
 import { ChatEmits } from "./chat.emits";
 import { MemberStatusConstant } from "../../shared/constants/member.constant";
+import { StreamNowPlayingDto, StreamPlayDto } from "./dtos/stream.dto";
 
 @AsyncApiService()
 @UsePipes(new ValidationPipe())
@@ -114,6 +115,28 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   onUpdateMessage(@MessageBody() data: MessageUpdateDto, @ConnectedSocket() socket: Socket) {
     return this.chatService.updateMessageRoom(data, socket);
   }
+
+  @AsyncApiPub({
+    channel: EventKeysConstant.STREAM_NOW_PLAYING,
+    message: { name: EventKeysConstant.STREAM_NOW_PLAYING, payload: { type: StreamNowPlayingDto } },
+    tags: [{ name: "stream" }]
+  })
+  @SubscribeMessage(EventKeysConstant.STREAM_NOW_PLAYING)
+  onStreamNowPlaying(@MessageBody() data: StreamNowPlayingDto, @ConnectedSocket() socket: Socket) {
+    // send request to owner;
+    //add targetId to data object => socket.id
+  }
+
+
+  @AsyncApiPub({
+    channel: EventKeysConstant.STREAM_PLAY,
+    message: { name: EventKeysConstant.STREAM_PLAY, payload: { type: StreamPlayDto } },
+    tags: [{ name: "stream" }]
+  })
+  @SubscribeMessage(EventKeysConstant.STREAM_PLAY)
+  onStreamPlay(@MessageBody() data: StreamPlayDto, @ConnectedSocket() socket: Socket) {
+  }
+
 
   private disconnect(socket: Socket) {
     socket.emit("error", new UnauthorizedException());
