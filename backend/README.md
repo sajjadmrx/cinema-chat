@@ -29,14 +29,10 @@ Chat & streaming movies
 
 ## 📝 TODO
 
-> - Invite Module (Craete - find roomId By Slug) ✅
-> - Member Module (Join-Lave-and ...) ✅
-> - Message Module (CURD) ✅
-> - Upload Movie & Convert to hls ✅
-> - streaming movies ✅
-> - upload cover ⏳
-> - E2E testing ⌛
-> - Stream Events (play,pause,seek,nowPlaying) 🛠️📌
+> - ~~Invite Module (Craete - find roomId By Slug)~~ ✔️
+> - ~~Member Module (Join-Lave-and ...)~~ ✔️
+> - ~~Message Module (CURD)~~ ✔️
+> - streaming movies
 
 ## 🗒️ Documents
 

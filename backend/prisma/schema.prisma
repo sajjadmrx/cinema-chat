@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["mongodb"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    Int      @unique
+  email     String   @unique
+  username  String   @unique
+  password  String
+  permissions UserPermission[] @default([USER])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Room {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  roomId    Int      @unique
+  ownerId   Int
+  name      String
+  isPublic  Boolean  @default(true)
+  avatar    String?  @default("DEFAULT_AVATAR")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  members   Member[]
+}
+
+model Invite {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  inviteId   Int      @unique
+  slug       String   @unique
+  roomId     Int
+  inviterId  Int
+  expires_at DateTime
+  isForEver  Boolean  @default(false)
+  max_use    Int //0 == no limit
+  uses       Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Member {
+  id          String              @id @default(auto()) @map("_id") @db.ObjectId
+  room        Room                @relation(fields: [roomId], references: [roomId])
+  roomId      Int
+  userId      Int //member id or userId
+  inviteId    Int?
+  permissions MemberPermissions[] @default([DEFAULT])
+  nickname    String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+}
+
+model Message {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  messageId Int         @unique
+  authorId  Int
+  roomId    Int
+  content   String?
+  replyId   Int?
+  type      messageType @default(TEXT)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model Movie {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  movieId     Int      @unique
+  //TODO add type
+  mediaSrc         String  @unique
+  hlsSrc        String   @unique
+  hlsPlaylistPath String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum MemberPermissions {
+  ADMINISTRATOR //All Perm
+  MANAGE_MEMBERS
+  MANAGE_ROOM
+  MANAGE_INVITE
+  MANAGE_STREAM
+  DEFAULT
+}
+enum UserPermission {
+ADMINISTRATOR
+MANAGE_MOVIE
+MANAGE_ROOMS
+USER
+}
+enum messageType {
+  TEXT
+}
