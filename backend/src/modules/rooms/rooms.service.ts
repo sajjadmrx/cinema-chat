@@ -1,19 +1,21 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { Room } from "src/shared/interfaces/room.interface";
-import { User } from "src/shared/interfaces/user.interface";
-import { RoomCreateDto } from "./dto/create.dto";
-import { RoomsRepository } from "./rooms.repository";
-import { RoomUpdateDto } from "./dto/update.dto";
-import { ResponseMessages } from "src/shared/constants/response-messages.constant";
-import { MembersRepository } from "../members/members.repository";
-import { MemberPermission } from "../../shared/interfaces/member.interface";
+import { Injectable, Logger } from '@nestjs/common';
+import { Room } from 'src/shared/interfaces/room.interface';
+import { User } from 'src/shared/interfaces/user.interface';
+import { RoomCreateDto } from './dto/create.dto';
+import { RoomsRepository } from './rooms.repository';
+import { RoomUpdateDto } from './dto/update.dto';
+import { ResponseMessages } from 'src/shared/constants/response-messages.constant';
+import { MembersRepository } from '../members/members.repository';
+import { MemberPermission } from '../../shared/interfaces/member.interface';
 
 @Injectable()
 export class RoomsService {
   private readonly logger = new Logger(RoomsService.name);
 
-  constructor(private roomsRepository: RoomsRepository, private membersRepository: MembersRepository) {
-  }
+  constructor(
+    private roomsRepository: RoomsRepository,
+    private membersRepository: MembersRepository,
+  ) {}
 
   async create(input: RoomCreateDto, user: User): Promise<any> {
     try {
@@ -21,13 +23,13 @@ export class RoomsService {
         name: input.name,
         ownerId: user.userId,
         isPublic: input.isPublic,
-        avatar: input.avatar
+        avatar: input.avatar,
       });
       await this.membersRepository.create({
         roomId: newRoom.roomId,
         userId: user.userId,
         inviteId: null,
-        permissions: [MemberPermission.ADMINISTRATOR]
+        permissions: [MemberPermission.ADMINISTRATOR],
       });
       return { roomId: newRoom.roomId };
     } catch (error: any) {
@@ -41,7 +43,7 @@ export class RoomsService {
       await this.roomsRepository.updateById(roomId, {
         name: data.name,
         avatar: data.avatar,
-        isPublic: data.isPublic
+        isPublic: data.isPublic,
       });
       return ResponseMessages.SUCCESS;
     } catch (error: any) {
@@ -50,7 +52,11 @@ export class RoomsService {
     }
   }
 
-  async getUserRooms(userId: number, page: number, limit: number): Promise<Room[]> {
+  async getUserRooms(
+    userId: number,
+    page: number,
+    limit: number,
+  ): Promise<Room[]> {
     const maxLimit: number = 10;
     if (!page || !limit || Number(page) < 1 || Number(limit) < 1) {
       page = 1;
@@ -69,5 +75,4 @@ export class RoomsService {
     if (limit > maxLimit) limit = maxLimit;
     return this.roomsRepository.getPublicRooms(page, limit);
   }
-
 }

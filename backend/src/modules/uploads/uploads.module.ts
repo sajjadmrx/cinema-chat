@@ -1,9 +1,8 @@
-import { Module } from "@nestjs/common";
-import { FileModule } from "../file/file.module";
-import { FileService } from "../file/file.service";
-import { UploadsController } from "./uploads.controller";
-import { UploadsService } from "./uploads.service";
-
+import { Module } from '@nestjs/common';
+import { FileModule } from '../file/file.module';
+import { FileService } from '../file/file.service';
+import { UploadsController } from './uploads.controller';
+import { UploadsService } from './uploads.service';
 
 const providersAndExports = [UploadsService];
 
@@ -11,7 +10,6 @@ const providersAndExports = [UploadsService];
   imports: [FileModule],
   controllers: [UploadsController],
   providers: [...providersAndExports],
-  exports: [...providersAndExports]
+  exports: [...providersAndExports],
 })
-export class UploadsModule {
-}
+export class UploadsModule {}

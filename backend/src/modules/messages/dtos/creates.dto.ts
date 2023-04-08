@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class MessageCreateDto {
   @ApiProperty({ required: true })
@@ -14,5 +14,4 @@ export class MessageCreateDto {
   @IsNumber()
   roomId: number;
   //TODO add: attachments;
-
 }

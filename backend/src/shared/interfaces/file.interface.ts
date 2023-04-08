@@ -1,3 +1,1 @@
-export interface ExpressFile extends Express.Multer.File {
-
-}
+export interface ExpressFile extends Express.Multer.File {}

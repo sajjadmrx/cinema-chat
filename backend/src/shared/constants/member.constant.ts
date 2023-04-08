@@ -1,4 +1,4 @@
 export enum MemberStatusConstant {
-  OFFLINE = "OFFLINE",
-  ONLINE = "ONLINE"
+  OFFLINE = 'OFFLINE',
+  ONLINE = 'ONLINE',
 }

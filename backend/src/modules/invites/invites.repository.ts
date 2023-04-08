@@ -1,13 +1,16 @@
-import { Injectable } from "@nestjs/common";
-import { Invite, InviteCreateInput, InviteWithRoom } from "src/shared/interfaces/invite.interface";
-import { PrismaService } from "../prisma/prisma.service";
-import { getRandomNumber, getRandomString } from "../../shared/utils/uuid.util";
-import { Room } from "src/shared/interfaces/room.interface";
+import { Injectable } from '@nestjs/common';
+import {
+  Invite,
+  InviteCreateInput,
+  InviteWithRoom,
+} from 'src/shared/interfaces/invite.interface';
+import { PrismaService } from '../prisma/prisma.service';
+import { getRandomNumber, getRandomString } from '../../shared/utils/uuid.util';
+import { Room } from 'src/shared/interfaces/room.interface';
 
 @Injectable()
 export class InvitesRepository {
-  constructor(private db: PrismaService) {
-  }
+  constructor(private db: PrismaService) {}
 
   async create(input: InviteCreateInput): Promise<Invite> {
     return this.db.invite.create({
@@ -18,39 +21,37 @@ export class InvitesRepository {
         slug: getRandomString(10),
         isForEver: input.isForEver,
         roomId: input.roomId,
-        inviterId: input.inviterId
-      }
+        inviterId: input.inviterId,
+      },
     });
   }
 
   async getBySlug(slug: string): Promise<Invite | null> {
     return this.db.invite.findUnique({
       where: {
-        slug
-      }
+        slug,
+      },
     });
-
   }
 
   async getById(id: number): Promise<Invite | null> {
     return this.db.invite.findUnique({
       where: {
-        inviteId: id
-      }
+        inviteId: id,
+      },
     });
   }
 
   async updateUsesById(id: number): Promise<Invite> {
     return this.db.invite.update({
       where: {
-        inviteId: id
+        inviteId: id,
       },
       data: {
         uses: {
-          increment: 1
-        }
-      }
+          increment: 1,
+        },
+      },
     });
   }
-
 }

@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Member } from "../../interfaces/member.interface";
-import { MemberStatusConstant } from "../../constants/member.constant";
+import { ApiProperty } from '@nestjs/swagger';
+import { Member } from '../../interfaces/member.interface';
+import { MemberStatusConstant } from '../../constants/member.constant';
 
 export class JoinMemberExa {
   @ApiProperty({})
@@ -10,9 +10,7 @@ export class JoinMemberExa {
   readonly roomId: number;
 }
 
-export class LaveMemberExa extends JoinMemberExa {
-}
-
+export class LaveMemberExa extends JoinMemberExa {}
 
 export class KickMemberExa extends JoinMemberExa {
   @ApiProperty()
@@ -38,7 +36,7 @@ export class UpdateMemberStatusExa {
 
   @ApiProperty({
     enum: MemberStatusConstant,
-    name: "MemberStatus"
+    name: 'MemberStatus',
   })
-  readonly status: "OFFLINE";
+  readonly status: 'OFFLINE';
 }

@@ -1,23 +1,21 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 
 import {
   promises as fs,
   ReadStream,
   createReadStream,
   Stats,
-  constants as fileConstant
-} from "fs";
-import { join } from "path";
-import * as ffmpegStatic from "@ffmpeg-installer/ffmpeg";
-import * as ffmpeg from "fluent-ffmpeg";
+  constants as fileConstant,
+} from 'fs';
+import { join } from 'path';
+import * as ffmpegStatic from '@ffmpeg-installer/ffmpeg';
+import * as ffmpeg from 'fluent-ffmpeg';
 
 ffmpeg.setFfmpegPath(ffmpegStatic.path);
 
 @Injectable()
 export class FileService {
-  constructor() {
-  }
-
+  constructor() {}
 
   getFile(targetPath: string): ReadStream {
     return createReadStream(targetPath);
@@ -30,8 +28,7 @@ export class FileService {
   async removeByPath(pathFile: string): Promise<void> {
     try {
       await fs.unlink(pathFile);
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   async createDirectory(_path: string): Promise<void> {
@@ -60,16 +57,16 @@ export class FileService {
       const outPath: string = join(hlsFolderPath, `${outId}.m3u8`);
       ffmpeg(videoPath)
         .addOptions([
-          "-profile:v baseline",
-          "-level 3.0",
-          "-s 640x360",
-          "-start_number 0",
-          "-hls_time 10",
-          "-hls_list_size 0",
-          "-f hls"
+          '-profile:v baseline',
+          '-level 3.0',
+          '-s 640x360',
+          '-start_number 0',
+          '-hls_time 10',
+          '-hls_list_size 0',
+          '-f hls',
         ])
         .output(outPath)
-        .on("end", () => {
+        .on('end', () => {
           console.log(`Video conversion completed for ${outId}`);
           resolve(outPath);
         })

@@ -1,4 +1,4 @@
 export enum AppModeConstant {
-    PRODUCTION = 'production',
-    DEVELOPMENT = 'development'
+  PRODUCTION = 'production',
+  DEVELOPMENT = 'development',
 }

@@ -6,23 +6,23 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotFoundException
-} from "@nestjs/common";
-import { ResponseMessages } from "src/shared/constants/response-messages.constant";
+  NotFoundException,
+} from '@nestjs/common';
+import { ResponseMessages } from 'src/shared/constants/response-messages.constant';
 import {
   Member,
   MemberPermissionType,
   MemberPermission,
-  MemberWithRoom
-} from "src/shared/interfaces/member.interface";
-import { User } from "src/shared/interfaces/user.interface";
-import { MembersRepository } from "./members.repository";
-import { Room } from "../../shared/interfaces/room.interface";
-import { UpdateCurrentMemberDto } from "./dtos/update.dto";
-import { InvitesRepository } from "../invites/invites.repository";
-import { ChatService } from "../chat/chat.service";
-import { ChatEmits } from "../chat/chat.emits";
-import { RoomsRepository } from "../rooms/rooms.repository";
+  MemberWithRoom,
+} from 'src/shared/interfaces/member.interface';
+import { User } from 'src/shared/interfaces/user.interface';
+import { MembersRepository } from './members.repository';
+import { Room } from '../../shared/interfaces/room.interface';
+import { UpdateCurrentMemberDto } from './dtos/update.dto';
+import { InvitesRepository } from '../invites/invites.repository';
+import { ChatService } from '../chat/services/chat.service';
+import { ChatEmits } from '../chat/chat.emits';
+import { RoomsRepository } from '../rooms/rooms.repository';
 
 @Injectable()
 export class MembersService {
@@ -34,9 +34,8 @@ export class MembersService {
     private invitesRepository: InvitesRepository,
     private chatService: ChatService,
     private chatEmits: ChatEmits,
-    private roomsRep: RoomsRepository
-  ) {
-  }
+    private roomsRep: RoomsRepository,
+  ) {}
 
   async find(roomId: number, page: number, limit: number): Promise<Member[]> {
     const maxLimit: number = 10;
@@ -50,11 +49,10 @@ export class MembersService {
     return members;
   }
 
-
   async joinRoom(
     roomId: number,
     inviteId: number | null,
-    user: User
+    user: User,
   ): Promise<any> {
     try {
       if (Number(inviteId)) {
@@ -74,15 +72,14 @@ export class MembersService {
       const member: Member = await this.membersRep.create({
         roomId,
         userId: user.userId,
-        inviteId
+        inviteId,
       });
 
       delete member.id;
 
-
       await this.chatService.findSocketByUserIdAndJoinToRoom(
         user.userId,
-        roomId
+        roomId,
       );
 
       this.chatEmits.newMember(roomId, member); //TODO: or send Message system!
@@ -94,28 +91,29 @@ export class MembersService {
     }
   }
 
-
   async laveRoom(roomId: number, user: User) {
     try {
-      const member: Member | null =
-        await this.membersRep.getByRoomIdAndUserId(roomId, user.userId);
+      const member: Member | null = await this.membersRep.getByRoomIdAndUserId(
+        roomId,
+        user.userId,
+      );
       if (!member)
         throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
 
       const room: Room = await this.roomsRep.getById(roomId);
       if (room.ownerId == member.userId) {
         //    TODO: no idea :D
-        throw new BadRequestException("Soon");
+        throw new BadRequestException('Soon');
       }
 
       const isDeleted: boolean = await this.membersRep.deleteByRoomIdAndUserId(
         roomId,
-        member.userId
+        member.userId,
       );
       if (isDeleted) {
         await this.chatService.findSocketByUserIdAndLaveFromRoom(
           user.userId,
-          roomId
+          roomId,
         );
         this.chatEmits.laveMember(roomId, member);
         return ResponseMessages.SUCCESS;
@@ -127,7 +125,6 @@ export class MembersService {
       throw error;
     }
   }
-
 
   async delete(roomId: number, memberId: number, requester: User) {
     try {
@@ -154,7 +151,7 @@ export class MembersService {
 
       await this.chatService.findSocketByUserIdAndLaveFromRoom(
         memberId,
-        roomId
+        roomId,
       );
 
       // delete memberWithRoom.room;
@@ -173,16 +170,16 @@ export class MembersService {
   async updateMember(
     memberId: number, //target
     requester: MemberWithRoom, // requester
-    input: UpdateCurrentMemberDto
+    input: UpdateCurrentMemberDto,
   ) {
     try {
       let member: Member | null =
         memberId == requester.userId
           ? requester
           : await this.membersRep.getByRoomIdAndUserId(
-            requester.roomId,
-            memberId
-          );
+              requester.roomId,
+              memberId,
+            );
       if (!member)
         throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
 
@@ -192,7 +189,7 @@ export class MembersService {
       const permissions: MemberPermissionType[] = [...new Set([...newPerms])];
 
       const validate: Array<boolean> = permissions.map((a) =>
-        Object.keys(MemberPermission).includes(a)
+        Object.keys(MemberPermission).includes(a),
       );
       if (validate.includes(false))
         throw new BadRequestException(ResponseMessages.INVALID_PERMISSION);
@@ -200,28 +197,29 @@ export class MembersService {
       const room: Room = requester.room;
 
       let hasAdministrator: boolean =
-        requester.permissions.includes("ADMINISTRATOR");
+        requester.permissions.includes('ADMINISTRATOR');
 
       if (!hasAdministrator && oldPerms.toString() != newPerms.toString())
         throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
 
       if (
-        !permissions.includes("ADMINISTRATOR") &&
+        !permissions.includes('ADMINISTRATOR') &&
         member.userId == room.ownerId
       )
         throw new BadRequestException(); //TODO: better message
-      if (memberId == requester.userId && oldPerms.includes("ADMINISTRATOR")) {
-        if (!permissions.includes("ADMINISTRATOR"))
-          throw new BadRequestException("can not take Administrator your self"); //TODO: better Message
+      if (memberId == requester.userId && oldPerms.includes('ADMINISTRATOR')) {
+        if (!permissions.includes('ADMINISTRATOR'))
+          throw new BadRequestException('can not take Administrator your self'); //TODO: better Message
       }
 
       input.permissions = permissions;
-      await this.membersRep.updateOne(
-        member.roomId,
-        member.userId,
-        input
+      await this.membersRep.updateOne(member.roomId, member.userId, input);
+      this.chatEmits.updateMember(
+        String(room.roomId),
+        member,
+        requester.userId,
+        input,
       );
-      this.chatEmits.updateMember(String(room.roomId), member, requester.userId, input);
       return ResponseMessages.SUCCESS;
     } catch (e: any) {
       this.logger.error(e, e.stack);
@@ -231,10 +229,12 @@ export class MembersService {
 
   async getMember(roomId: number, memberId: number): Promise<Member> {
     try {
-      if (!Number(roomId) || !Number(memberId))
-        throw new BadRequestException();
+      if (!Number(roomId) || !Number(memberId)) throw new BadRequestException();
 
-      const member: Member | null = await this.membersRep.getByRoomIdAndUserId(roomId, memberId);
+      const member: Member | null = await this.membersRep.getByRoomIdAndUserId(
+        roomId,
+        memberId,
+      );
       if (!member)
         throw new NotFoundException(ResponseMessages.MEMBER_NOT_FOUND);
 

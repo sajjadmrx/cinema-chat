@@ -6,5 +6,5 @@ export function getRandomNumber(length: number): number {
 }
 export function getRandomString(length: number): string {
   const nanoid = customAlphabet('1234567890abcdef_xyaw', length);
-  return nanoid()
+  return nanoid();
 }

@@ -1,5 +1,5 @@
-import { Message } from "../../interfaces/message.interface";
-import { ApiProperty } from "@nestjs/swagger";
+import { Message } from '../../interfaces/message.interface';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class MessageUpdateExa {
   @ApiProperty({})
@@ -15,16 +15,16 @@ export class MessageUpdateExa {
 export class MessageDeleteExa {
   @ApiProperty({
     example: 123456789,
-    description: "room id"
+    description: 'room id',
   })
   readonly roomId: number;
 
   @ApiProperty({
     example: 123456,
-    description: "message id"
+    description: 'message id',
   })
   readonly messageId: number;
 
-  @ApiProperty({ example: 12345678, description: "member id" })
+  @ApiProperty({ example: 12345678, description: 'member id' })
   readonly byId: number;
 }

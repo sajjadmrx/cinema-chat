@@ -2,17 +2,17 @@ import {
   BadRequestException,
   Injectable,
   Logger,
-  NotFoundException
-} from "@nestjs/common";
-import { InvitesRepository } from "./invites.repository";
-import { InviteCreateDto } from "./dtos/create.dto";
-import { RoomsRepository } from "../rooms/rooms.repository";
-import { ResponseMessages } from "../../shared/constants/response-messages.constant";
-import { Room } from "src/shared/interfaces/room.interface";
-import { Invite, InviteWithRoom } from "src/shared/interfaces/invite.interface";
-import * as moment from "moment";
-import { MembersRepository } from "../members/members.repository";
-import { Member } from "src/shared/interfaces/member.interface";
+  NotFoundException,
+} from '@nestjs/common';
+import { InvitesRepository } from './invites.repository';
+import { InviteCreateDto } from './dtos/create.dto';
+import { RoomsRepository } from '../rooms/rooms.repository';
+import { ResponseMessages } from '../../shared/constants/response-messages.constant';
+import { Room } from 'src/shared/interfaces/room.interface';
+import { Invite, InviteWithRoom } from 'src/shared/interfaces/invite.interface';
+import * as moment from 'moment';
+import { MembersRepository } from '../members/members.repository';
+import { Member } from 'src/shared/interfaces/member.interface';
 
 @Injectable()
 export class InvitesService {
@@ -21,14 +21,13 @@ export class InvitesService {
   constructor(
     private invitesRepo: InvitesRepository,
     private roomsRepository: RoomsRepository,
-    private membersRepository: MembersRepository
-  ) {
-  }
+    private membersRepository: MembersRepository,
+  ) {}
 
   async create(input: InviteCreateDto, userId: number): Promise<string> {
     try {
       const room: Room | null = await this.roomsRepository.getById(
-        input.roomId
+        input.roomId,
       );
       if (!room) throw new BadRequestException(ResponseMessages.ROOM_NOT_FOUND);
 
@@ -43,7 +42,7 @@ export class InvitesService {
         expires_at: input.expires_at,
         max_use: input.max_use,
         roomId: input.roomId,
-        isForEver: input.isForEver
+        isForEver: input.isForEver,
       });
 
       return invite.slug;
@@ -55,9 +54,7 @@ export class InvitesService {
 
   async findRoom(slug: string): Promise<Room> {
     try {
-      const invite: Invite | null = await this.invitesRepo.getBySlug(
-        slug
-      );
+      const invite: Invite | null = await this.invitesRepo.getBySlug(slug);
       if (!invite) throw new NotFoundException(ResponseMessages.INVALID_INVITE);
 
       if (invite.max_use != 0)
@@ -69,9 +66,10 @@ export class InvitesService {
           throw new BadRequestException(ResponseMessages.EXPIRED_TIME);
       }
 
-      const room: Room | null = await this.roomsRepository.getById(invite.roomId);
-      if (!room)
-        throw new NotFoundException(ResponseMessages.ROOM_NOT_FOUND);
+      const room: Room | null = await this.roomsRepository.getById(
+        invite.roomId,
+      );
+      if (!room) throw new NotFoundException(ResponseMessages.ROOM_NOT_FOUND);
 
       await this.invitesRepo.updateUsesById(invite.inviteId);
 
