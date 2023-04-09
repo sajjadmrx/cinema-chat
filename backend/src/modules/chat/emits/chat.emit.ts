@@ -1,6 +1,6 @@
-import { ChatGateway } from './chat.gateway';
-import { SocketKeys } from '../../shared/constants/socket.keys';
-import { Member } from '../../shared/interfaces/member.interface';
+import { ChatGateway } from '../chat.gateway';
+import { SocketKeys } from '../../../shared/constants/socket.keys';
+import { Member } from '../../../shared/interfaces/member.interface';
 import { AsyncApiService, AsyncApiSub } from 'nestjs-asyncapi';
 import {
   JoinMemberExa,
@@ -8,18 +8,18 @@ import {
   LaveMemberExa,
   UpdateMemberExa,
   UpdateMemberStatusExa,
-} from '../../shared/examples/socket/member.example';
-import { Message } from '../../shared/interfaces/message.interface';
-import { MessageCreateDto } from '../messages/dtos/creates.dto';
+} from '../../../shared/examples/socket/member.example';
+import { Message } from '../../../shared/interfaces/message.interface';
+import { MessageCreateDto } from '../../messages/dtos/creates.dto';
 import {
   MessageDeleteExa,
   MessageUpdateExa,
-} from '../../shared/examples/socket/message.example';
-import { MemberStatusConstant } from '../../shared/constants/member.constant';
+} from '../../../shared/examples/socket/message.example';
+import { MemberStatusConstant } from '../../../shared/constants/member.constant';
 import { forwardRef, Inject } from '@nestjs/common';
 
 @AsyncApiService()
-export class ChatEmits {
+export class ChatEmit {
   constructor(
     @Inject(forwardRef(() => ChatGateway)) private chatGateway: ChatGateway,
   ) {}

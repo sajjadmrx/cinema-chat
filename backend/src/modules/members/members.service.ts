@@ -20,7 +20,7 @@ import { Room } from '../../shared/interfaces/room.interface';
 import { UpdateCurrentMemberDto } from './dtos/update.dto';
 import { InvitesRepository } from '../invites/invites.repository';
 import { ChatService } from '../chat/services/chat.service';
-import { ChatEmits } from '../chat/chat.emits';
+import { ChatEmit } from '../chat/emits/chat.emit';
 import { RoomsRepository } from '../rooms/rooms.repository';
 import { MembersRepository } from './repositories/members.repository';
 
@@ -33,7 +33,7 @@ export class MembersService {
     @Inject(forwardRef(() => InvitesRepository))
     private invitesRepository: InvitesRepository,
     private chatService: ChatService,
-    private chatEmits: ChatEmits,
+    private chatEmits: ChatEmit,
     private roomsRep: RoomsRepository,
   ) {}
 

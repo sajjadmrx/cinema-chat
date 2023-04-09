@@ -9,7 +9,7 @@ import { MessageCreateDto } from '../../messages/dtos/creates.dto';
 import { ResponseMessages } from '../../../shared/constants/response-messages.constant';
 import { Socket } from 'socket.io';
 import { MessagesService } from '../../messages/messages.service';
-import { ChatEmits } from '../chat.emits';
+import { ChatEmit } from '../emits/chat.emit';
 import {
   Message,
   MessageUpdateResult,
@@ -23,7 +23,7 @@ export class ChatService {
     @Inject(forwardRef(() => ChatGateway))
     private chatGateway: ChatGateway,
     private messageService: MessagesService,
-    private chatEmits: ChatEmits,
+    private chatEmits: ChatEmit,
     private userSocketManager: UserSocketManager,
   ) {}
 

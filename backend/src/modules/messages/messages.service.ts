@@ -15,7 +15,7 @@ import { ResponseMessages } from '../../shared/constants/response-messages.const
 import { MessageUpdateDto } from './dtos/update.dto';
 import { Room } from '../../shared/interfaces/room.interface';
 import { RoomsRepository } from '../rooms/rooms.repository';
-import { ChatEmits } from '../chat/chat.emits';
+import { ChatEmit } from '../chat/emits/chat.emit';
 import { MembersRepository } from '../members/repositories/members.repository';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class MessagesService {
     private messagesRepository: MessagesRepository,
     private roomsRepository: RoomsRepository,
     private membersRepository: MembersRepository,
-    private chatEmits: ChatEmits,
+    private chatEmits: ChatEmit,
   ) {}
 
   async getRoomMessages(roomId: number, page: number, limit: number) {

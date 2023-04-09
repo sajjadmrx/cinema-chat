@@ -11,7 +11,7 @@ import { Socket } from 'socket.io';
 import { Member } from '../../../shared/interfaces/member.interface';
 import { MemberStatusConstant } from '../../../shared/constants/member.constant';
 import { AuthService } from '../../auth/auth.service';
-import { ChatEmits } from '../chat.emits';
+import { ChatEmit } from '../emits/chat.emit';
 import { UserSocketManager } from '../userSocket.manager';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { ResponseMessages } from '../../../shared/constants/response-messages.constant';
@@ -26,7 +26,7 @@ export class ConnectionService {
     private chatGateway: ChatGateway,
     private authService: AuthService,
     private membersRepo: MembersRepository,
-    private chatEmits: ChatEmits,
+    private chatEmits: ChatEmit,
     private userSocketManager: UserSocketManager,
   ) {}
 

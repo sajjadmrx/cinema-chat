@@ -4,7 +4,7 @@ import { ChatGateway } from './chat.gateway';
 import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { RoomsModule } from '../rooms/rooms.module';
-import { ChatEmits } from './chat.emits';
+import { ChatEmit } from './emits/chat.emit';
 import { MessagesModule } from '../messages/messages.module';
 import { MembersModule } from '../members/members.module';
 import { StreamEventService } from './services/stream.service';
@@ -15,7 +15,7 @@ import { MoviesModule } from '../movies/movies.module';
 const providersAndExports = [
   ChatService,
   ChatGateway,
-  ChatEmits,
+  ChatEmit,
   StreamEventService,
   ConnectionService,
   UserSocketManager,
