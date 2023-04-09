@@ -8,7 +8,7 @@ export class UserSocketManager {
     private chatGateway: ChatGateway,
   ) {}
 
-  async findSocketByUserId(userId: number) {
+  async findOneSocketByUserId(userId: number) {
     const sockets = await this.chatGateway.server.sockets.fetchSockets();
     return sockets.find((so) => so.data.userId === userId);
   }

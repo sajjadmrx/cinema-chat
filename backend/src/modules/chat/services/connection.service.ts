@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
@@ -12,6 +13,9 @@ import { MemberStatusConstant } from '../../../shared/constants/member.constant'
 import { AuthService } from '../../auth/auth.service';
 import { MembersDbRepository } from '../../members/repositories/members-db.repository';
 import { ChatEmits } from '../chat.emits';
+import { UserSocketManager } from '../userSocket.manager';
+import { HttpException } from '@nestjs/common/exceptions/http.exception';
+import { ResponseMessages } from '../../../shared/constants/response-messages.constant';
 
 @Injectable()
 export class ConnectionService {
@@ -23,6 +27,7 @@ export class ConnectionService {
     private authService: AuthService,
     private membersRepo: MembersDbRepository,
     private chatEmits: ChatEmits,
+    private userSocketManager: UserSocketManager,
   ) {}
 
   async handleConnection(client: Socket) {
@@ -36,6 +41,17 @@ export class ConnectionService {
       const token: string | null = authorization.split(' ')[1];
       const result = this.authService.jwtVerify(token);
       const userId = result.userId;
+
+      const userSocket = await this.userSocketManager.findOneSocketByUserId(
+        userId,
+      );
+      if (userSocket) {
+        this.disconnect(
+          client,
+          new BadRequestException(ResponseMessages.ONLY_ONE_DEVICE_ALLOWED),
+        ); // only 1 device
+        return;
+      }
 
       const members: Member[] = await this.membersRepo.findByUserId(userId);
 
@@ -51,7 +67,7 @@ export class ConnectionService {
 
       client.data.userId = userId;
     } catch (e) {
-      this.disconnect(client);
+      this.disconnect(client, new UnauthorizedException());
     }
   }
 
@@ -71,8 +87,8 @@ export class ConnectionService {
     });
   }
 
-  private disconnect(socket: Socket) {
-    socket.emit('error', new UnauthorizedException());
+  private disconnect(socket: Socket, error: HttpException) {
+    socket.emit('error', error);
     socket.disconnect();
   }
 }
