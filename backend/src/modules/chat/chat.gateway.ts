@@ -21,12 +21,17 @@ import {
 import { WsJwtGuardGuard } from '../../shared/guards/WsJwtGuard.guard';
 import { WebsocketExceptionsFilter } from '../../shared/filters/WebsocketExceptions.filter';
 import { AsyncApiPub, AsyncApiService } from 'nestjs-asyncapi';
-import { EventKeysConstant } from '../../shared/constants/event-keys.constant';
+import { SocketKeys } from '../../shared/constants/socket.keys';
 import { MessageCreateDto } from '../messages/dtos/creates.dto';
 import { MessageUpdateDto } from '../messages/dtos/update.dto';
 import { ChatEmits } from './chat.emits';
-import { StreamNowPlayingDto, StreamPlayDto } from './dtos/stream.dto';
+import {
+  GetCurrentPlayingDto,
+  StreamNowPlayingDto,
+  StreamPlayDto,
+} from './dtos/stream.dto';
 import { ConnectionService } from './services/connection.service';
+import { StreamEventService } from './services/stream.service';
 
 @AsyncApiService()
 @UsePipes(new ValidationPipe())
@@ -50,6 +55,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @Inject(forwardRef(() => ChatEmits))
     private chatEmits: ChatEmits,
     private connectionService: ConnectionService,
+    private streamEventService: StreamEventService,
   ) {}
 
   async handleConnection(client: Socket) {
@@ -61,12 +67,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @AsyncApiPub({
-    channel: EventKeysConstant.CREATE_MESSAGE,
+    channel: SocketKeys.CREATE_MESSAGE,
     message: { name: 'test', payload: { type: MessageCreateDto } },
     tags: [{ name: 'message', description: 'Messages on room' }],
     description: 'call event create Message',
   })
-  @SubscribeMessage(EventKeysConstant.CREATE_MESSAGE)
+  @SubscribeMessage(SocketKeys.CREATE_MESSAGE)
   onCreateMessage(
     @MessageBody() data: MessageCreateDto,
     @ConnectedSocket() socket: Socket,
@@ -75,11 +81,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @AsyncApiPub({
-    channel: EventKeysConstant.UPDATE_MESSAGE,
+    channel: SocketKeys.UPDATE_MESSAGE,
     message: { name: 'UPDATE_MESSAGE', payload: { type: MessageUpdateDto } },
     tags: [{ name: 'message' }],
   })
-  @SubscribeMessage(EventKeysConstant.UPDATE_MESSAGE)
+  @SubscribeMessage(SocketKeys.UPDATE_MESSAGE)
   onUpdateMessage(
     @MessageBody() data: MessageUpdateDto,
     @ConnectedSocket() socket: Socket,
@@ -88,46 +94,47 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @AsyncApiPub({
-    channel: EventKeysConstant.STREAM_GET_CURRENT_PLAYING,
+    channel: SocketKeys.STREAM_GET_CURRENT_PLAYING,
     message: {
-      name: EventKeysConstant.STREAM_GET_CURRENT_PLAYING,
-      payload: { type: StreamNowPlayingDto },
+      name: SocketKeys.STREAM_GET_CURRENT_PLAYING,
+      payload: { type: GetCurrentPlayingDto },
     },
     tags: [{ name: 'stream' }],
-    summary: `Get the current stream with response in the event: ${EventKeysConstant.STREAM_FETCH_CURRENT_PLAYING}`,
+    summary: `Get the current stream with response in the event: ${SocketKeys.STREAM_CB_CURRENT_PLAYING}`,
   })
-  @SubscribeMessage(EventKeysConstant.STREAM_GET_CURRENT_PLAYING)
-  onStreamNowPlaying(
+  @SubscribeMessage(SocketKeys.STREAM_GET_CURRENT_PLAYING)
+  onGetCurrentPlaying(
+    @MessageBody() data: GetCurrentPlayingDto,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    return this.streamEventService.getCurrentPlaying(data, socket);
+  }
+
+  @AsyncApiPub({
+    channel: SocketKeys.STREAM_CB_CURRENT_PLAYING,
+    message: {
+      name: SocketKeys.STREAM_CB_CURRENT_PLAYING,
+      payload: { type: StreamNowPlayingDto },
+    },
+    summary: `Send the current playing stream to the specified target`,
+  })
+  @SubscribeMessage(SocketKeys.STREAM_CB_CURRENT_PLAYING)
+  onStreamCbCurrentPlaying(
     @MessageBody() data: StreamNowPlayingDto,
     @ConnectedSocket() socket: Socket,
   ) {
-    // send request to owner room for getting Current Play
-    //add targetId to data object => socket.id
+    return this.streamEventService.cbCurrentPlaying(data, socket);
   }
 
   @AsyncApiPub({
-    channel: EventKeysConstant.STREAM_FETCH_CURRENT_PLAYING,
+    channel: SocketKeys.STREAM_PLAY,
     message: {
-      name: EventKeysConstant.STREAM_FETCH_CURRENT_PLAYING,
-      payload: { type: StreamNowPlayingDto },
-    },
-    summary: `Fetch the current playing stream and send it to the target`,
-  })
-  @SubscribeMessage(EventKeysConstant.STREAM_FETCH_CURRENT_PLAYING)
-  onStreamFetchCurrentPlaying() {
-    // callback owner
-    // send current playing to target with data.target
-  }
-
-  @AsyncApiPub({
-    channel: EventKeysConstant.STREAM_PLAY,
-    message: {
-      name: EventKeysConstant.STREAM_PLAY,
+      name: SocketKeys.STREAM_PLAY,
       payload: { type: StreamPlayDto },
     },
     tags: [{ name: 'stream' }],
   })
-  @SubscribeMessage(EventKeysConstant.STREAM_PLAY)
+  @SubscribeMessage(SocketKeys.STREAM_PLAY)
   onStreamPlay(
     @MessageBody() data: StreamPlayDto,
     @ConnectedSocket() socket: Socket,

@@ -15,7 +15,7 @@ import { ResponseMessages } from '../../shared/constants/response-messages.const
 import { MessageUpdateDto } from './dtos/update.dto';
 import { Room } from '../../shared/interfaces/room.interface';
 import { RoomsRepository } from '../rooms/rooms.repository';
-import { MembersRepository } from '../members/members.repository';
+import { MembersDbRepository } from '../members/repositories/members-db.repository';
 import { ChatEmits } from '../chat/chat.emits';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class MessagesService {
   constructor(
     private messagesRepository: MessagesRepository,
     private roomsRepository: RoomsRepository,
-    private membersRepository: MembersRepository,
+    private membersRepository: MembersDbRepository,
     private chatEmits: ChatEmits,
   ) {}
 

@@ -1,12 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Movie } from '../../../shared/interfaces/movie.interface';
 import { IsBoolean, IsNumber, IsObject } from 'class-validator';
+import { SocketKeys } from '../../../shared/constants/socket.keys';
 
-export class StreamNowPlayingDto {
+export class GetCurrentPlayingDto {
   @ApiProperty()
   @IsNumber({ allowNaN: false })
   roomId: number;
-
+}
+export class StreamNowPlayingDto extends GetCurrentPlayingDto {
   @IsNumber({ allowNaN: false })
   @ApiProperty()
   mediaId: number;
@@ -18,6 +20,12 @@ export class StreamNowPlayingDto {
   @IsBoolean()
   @ApiProperty()
   paused: boolean;
+
+  @IsNumber()
+  @ApiProperty({
+    description: `The user ID of the target for the callback. This value is provided in the [${SocketKeys.STREAM_FETCH_CURRENT_PLAYING}] event.`,
+  })
+  cbTarget: number;
 }
 
 export class StreamPlayDto {

@@ -10,15 +10,15 @@ import {
 import { Request } from 'express';
 import { User } from '../interfaces/user.interface';
 import { Room } from '../interfaces/room.interface';
-import { MembersRepository } from '../../modules/members/members.repository';
+import { MembersDbRepository } from '../../modules/members/repositories/members-db.repository';
 import { Member, MemberWithRoom } from '../interfaces/member.interface';
 import { ResponseMessages } from '../constants/response-messages.constant';
 
 @Injectable()
 export class CheckCurrentMember implements CanActivate {
   constructor(
-    @Inject(forwardRef(() => MembersRepository))
-    private membersRepo: MembersRepository,
+    @Inject(forwardRef(() => MembersDbRepository))
+    private membersRepo: MembersDbRepository,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

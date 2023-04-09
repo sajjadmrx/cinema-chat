@@ -5,7 +5,7 @@ import { RoomCreateDto } from './dto/create.dto';
 import { RoomsRepository } from './rooms.repository';
 import { RoomUpdateDto } from './dto/update.dto';
 import { ResponseMessages } from 'src/shared/constants/response-messages.constant';
-import { MembersRepository } from '../members/members.repository';
+import { MembersDbRepository } from '../members/repositories/members-db.repository';
 import { MemberPermission } from '../../shared/interfaces/member.interface';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class RoomsService {
 
   constructor(
     private roomsRepository: RoomsRepository,
-    private membersRepository: MembersRepository,
+    private membersRepository: MembersDbRepository,
   ) {}
 
   async create(input: RoomCreateDto, user: User): Promise<any> {

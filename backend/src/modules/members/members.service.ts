@@ -16,7 +16,7 @@ import {
   MemberWithRoom,
 } from 'src/shared/interfaces/member.interface';
 import { User } from 'src/shared/interfaces/user.interface';
-import { MembersRepository } from './members.repository';
+import { MembersDbRepository } from './repositories/members-db.repository';
 import { Room } from '../../shared/interfaces/room.interface';
 import { UpdateCurrentMemberDto } from './dtos/update.dto';
 import { InvitesRepository } from '../invites/invites.repository';
@@ -26,10 +26,10 @@ import { RoomsRepository } from '../rooms/rooms.repository';
 
 @Injectable()
 export class MembersService {
-  private logger = new Logger(MembersRepository.name);
+  private logger = new Logger(MembersDbRepository.name);
 
   constructor(
-    private membersRep: MembersRepository,
+    private membersRep: MembersDbRepository,
     @Inject(forwardRef(() => InvitesRepository))
     private invitesRepository: InvitesRepository,
     private chatService: ChatService,

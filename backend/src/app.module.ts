@@ -12,6 +12,7 @@ import { MessagesModule } from './modules/messages/messages.module';
 import { MoviesModule } from './modules/movies/movies.module';
 import { UploadsModule } from './modules/uploads/uploads.module';
 import { StreamModule } from './modules/stream/stream.module';
+import { RedisModule } from './modules/redis/redis.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { StreamModule } from './modules/stream/stream.module';
     MoviesModule,
     UploadsModule,
     StreamModule,
+    RedisModule,
   ],
 })
 export class AppModule {}

@@ -11,7 +11,7 @@ import { ResponseMessages } from '../../shared/constants/response-messages.const
 import { Room } from 'src/shared/interfaces/room.interface';
 import { Invite, InviteWithRoom } from 'src/shared/interfaces/invite.interface';
 import * as moment from 'moment';
-import { MembersRepository } from '../members/members.repository';
+import { MembersDbRepository } from '../members/repositories/members-db.repository';
 import { Member } from 'src/shared/interfaces/member.interface';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class InvitesService {
   constructor(
     private invitesRepo: InvitesRepository,
     private roomsRepository: RoomsRepository,
-    private membersRepository: MembersRepository,
+    private membersRepository: MembersDbRepository,
   ) {}
 
   async create(input: InviteCreateDto, userId: number): Promise<string> {

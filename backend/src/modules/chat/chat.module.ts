@@ -9,6 +9,7 @@ import { MessagesModule } from '../messages/messages.module';
 import { MembersModule } from '../members/members.module';
 import { StreamEventService } from './services/stream.service';
 import { ConnectionService } from './services/connection.service';
+import { UserSocketManager } from './userSocket.manager';
 
 const providersAndExports = [
   ChatService,
@@ -16,6 +17,7 @@ const providersAndExports = [
   ChatEmits,
   StreamEventService,
   ConnectionService,
+  UserSocketManager,
 ];
 
 @Module({

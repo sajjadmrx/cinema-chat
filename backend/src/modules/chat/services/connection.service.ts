@@ -10,7 +10,7 @@ import { Socket } from 'socket.io';
 import { Member } from '../../../shared/interfaces/member.interface';
 import { MemberStatusConstant } from '../../../shared/constants/member.constant';
 import { AuthService } from '../../auth/auth.service';
-import { MembersRepository } from '../../members/members.repository';
+import { MembersDbRepository } from '../../members/repositories/members-db.repository';
 import { ChatEmits } from '../chat.emits';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class ConnectionService {
     @Inject(forwardRef(() => ChatGateway))
     private chatGateway: ChatGateway,
     private authService: AuthService,
-    private membersRepo: MembersRepository,
+    private membersRepo: MembersDbRepository,
     private chatEmits: ChatEmits,
   ) {}
 
