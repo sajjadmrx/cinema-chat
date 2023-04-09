@@ -41,13 +41,15 @@ export class StreamEventService {
   async getCurrentPlaying(data: GetCurrentPlayingDto, socket: Socket) {
     try {
       const userId = socket.data.userId;
+
       const member: MemberWithRoom | null =
         await this.membersRepository.getByRoomIdAndUserId(data.roomId, userId);
       if (!member)
         throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
 
       const ownerId = member.room.ownerId;
-      if (ownerId === member.userId) throw new BadGatewayException();
+
+      if (ownerId === member.userId) throw new BadRequestException();
       const ownerSocket = await this.userSocketManager.findOneSocketByUserId(
         ownerId,
       );
@@ -102,8 +104,10 @@ export class StreamEventService {
       if (!movie) throw new NotFoundException(ResponseMessages.INVALID_SRC);
 
       this.currentPlaying.set(`${data.roomId}:playing`, movie);
-
-      socket.to(data.roomId.toString()).emit(SocketKeys.STREAM_PLAY, movie);
+      return this.streamEmit.play(socket, data.roomId.toString(), {
+        movie,
+        roomId: data.roomId,
+      });
     } catch (e) {
       throw e;
     }

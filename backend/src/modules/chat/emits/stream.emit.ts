@@ -7,8 +7,11 @@ import { Member } from '../../../shared/interfaces/member.interface';
 import {
   CbFetchCurrentPlayingPayload,
   FetchCurrentPlayingPayload,
+  StreamPlayPayload,
 } from '../payloads/fetchCurrentPlaying.payload';
 import { TogglePlayPayload } from '../payloads/togglePlay.payload';
+import { Movie } from '../../../shared/interfaces/movie.interface';
+import { StreamTogglePlay } from '../dtos/stream.dto';
 
 @AsyncApiService()
 export class StreamEmit {
@@ -61,5 +64,18 @@ export class StreamEmit {
   })
   togglePlay(socket: Socket, roomId: string, data: TogglePlayPayload) {
     socket.to(roomId).emit(SocketKeys.STREAM_TOGGLE_PLAY, data);
+  }
+
+  @AsyncApiSub({
+    channel: SocketKeys.STREAM_PLAY,
+    tags: [{ name: 'stream' }],
+    description: 'Subscribe to receive movie stream playback events',
+    message: {
+      name: SocketKeys.STREAM_PLAY,
+      payload: { type: StreamPlayPayload },
+    },
+  })
+  play(socket: Socket, roomId: string, movie: any) {
+    socket.to(roomId).emit(SocketKeys.STREAM_PLAY, movie);
   }
 }

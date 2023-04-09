@@ -36,7 +36,6 @@ export class UpdateMemberStatusExa {
 
   @ApiProperty({
     enum: MemberStatusConstant,
-    name: 'MemberStatus',
   })
   readonly status: 'OFFLINE';
 }

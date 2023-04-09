@@ -18,7 +18,6 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { WsJwtGuardGuard } from '../../shared/guards/WsJwtGuard.guard';
 import { WebsocketExceptionsFilter } from '../../shared/filters/WebsocketExceptions.filter';
 import { AsyncApiPub, AsyncApiService } from 'nestjs-asyncapi';
 import { SocketKeys } from '../../shared/constants/socket.keys';
@@ -36,7 +35,6 @@ import { MoviesRepository } from '../movies/movies.repository';
 
 @AsyncApiService()
 @UsePipes(new ValidationPipe())
-@UseGuards(WsJwtGuardGuard)
 @UseFilters(WebsocketExceptionsFilter)
 @WebSocketGateway(81, {
   transports: ['websocket'],

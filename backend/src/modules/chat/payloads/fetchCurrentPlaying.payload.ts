@@ -38,3 +38,25 @@ export class CbFetchCurrentPlayingPayload {
   })
   movie: Movie | null;
 }
+
+export class StreamPlayPayload {
+  @ApiProperty({
+    examples: [
+      {
+        id: '64306416450ba41ad521ae2c',
+        movieId: 617141,
+        mediaSrc: 'uploads\\movies\\1680892890569-127671098-spaider.mp4',
+        hlsSrc: 'hls/spaider',
+        hlsPlaylistPath: 'hls\\spaider\\spaider_480_hls.m3u8',
+        description: 'spaider',
+        createdAt: '2023-04-07T18:42:30.894Z',
+        updatedAt: '2023-04-07T18:42:30.894Z',
+      },
+      null,
+    ],
+  })
+  movie: Movie;
+
+  @ApiProperty({ default: 26297437 })
+  roomId: number;
+}

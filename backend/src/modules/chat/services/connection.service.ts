@@ -53,6 +53,7 @@ export class ConnectionService {
         return;
       }
 
+      client.data.userId = userId;
       const members: Member[] = await this.membersRepo.findByUserId(userId);
 
       members.map((member: Member) => {
@@ -64,8 +65,6 @@ export class ConnectionService {
           MemberStatusConstant.ONLINE,
         );
       });
-
-      client.data.userId = userId;
     } catch (e) {
       this.disconnect(client, new UnauthorizedException());
     }
@@ -90,5 +89,6 @@ export class ConnectionService {
   private disconnect(socket: Socket, error: HttpException) {
     socket.emit('error', error);
     socket.disconnect();
+    socket.rooms.clear();
   }
 }
