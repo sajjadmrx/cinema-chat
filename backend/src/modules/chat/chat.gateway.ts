@@ -24,14 +24,15 @@ import { AsyncApiPub, AsyncApiService } from 'nestjs-asyncapi';
 import { SocketKeys } from '../../shared/constants/socket.keys';
 import { MessageCreateDto } from '../messages/dtos/creates.dto';
 import { MessageUpdateDto } from '../messages/dtos/update.dto';
-import { ChatEmits } from './chat.emits';
 import {
   GetCurrentPlayingDto,
   StreamNowPlayingDto,
   StreamPlayDto,
+  StreamTogglePlay,
 } from './dtos/stream.dto';
 import { ConnectionService } from './services/connection.service';
 import { StreamEventService } from './services/stream.service';
+import { MoviesRepository } from '../movies/movies.repository';
 
 @AsyncApiService()
 @UsePipes(new ValidationPipe())
@@ -52,10 +53,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     @Inject(forwardRef(() => ChatService))
     private chatService: ChatService,
-    @Inject(forwardRef(() => ChatEmits))
-    private chatEmits: ChatEmits,
+
     private connectionService: ConnectionService,
     private streamEventService: StreamEventService,
+    private movieRepository: MoviesRepository,
   ) {}
 
   async handleConnection(client: Socket) {
@@ -139,6 +140,22 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() data: StreamPlayDto,
     @ConnectedSocket() socket: Socket,
   ) {
-    //send broadcast to room
+    return this.streamEventService.play(data, socket, this.movieRepository);
+  }
+
+  @AsyncApiPub({
+    channel: SocketKeys.STREAM_TOGGLE_PLAY,
+    message: {
+      name: SocketKeys.STREAM_TOGGLE_PLAY,
+      payload: { type: StreamTogglePlay },
+    },
+    tags: [{ name: 'stream' }],
+  })
+  @SubscribeMessage(SocketKeys.STREAM_TOGGLE_PLAY)
+  onTogglePlay(
+    @MessageBody() data: StreamTogglePlay,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    return this.streamEventService.onTogglePlay(data, socket);
   }
 }

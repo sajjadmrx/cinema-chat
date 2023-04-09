@@ -1,21 +1,32 @@
 import {
   BadGatewayException,
+  BadRequestException,
   ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
+  NotFoundException,
+  Res,
 } from '@nestjs/common';
 import { ChatGateway } from '../chat.gateway';
-import { GetCurrentPlayingDto, StreamNowPlayingDto } from '../dtos/stream.dto';
+import {
+  GetCurrentPlayingDto,
+  StreamNowPlayingDto,
+  StreamPlayDto,
+  StreamTogglePlay,
+} from '../dtos/stream.dto';
 import { Socket } from 'socket.io';
 import { MembersRepository } from '../../members/repositories/members.repository';
 import { MemberWithRoom } from '../../../shared/interfaces/member.interface';
 import { ResponseMessages } from '../../../shared/constants/response-messages.constant';
 import { UserSocketManager } from '../userSocket.manager';
 import { SocketKeys } from '../../../shared/constants/socket.keys';
+import { Movie } from '../../../shared/interfaces/movie.interface';
+import { MoviesRepository } from '../../movies/movies.repository';
 
 @Injectable()
 export class StreamEventService {
+  private currentPlaying = new Map<string, Movie>();
   constructor(
     @Inject(forwardRef(() => ChatGateway))
     private chatGateway: ChatGateway,
@@ -63,10 +74,51 @@ export class StreamEventService {
       );
       if (!targetSocket) return;
       delete data.cbTarget;
+      delete data.mediaId;
       // find movie
-      targetSocket.emit(SocketKeys.STREAM_CB_CURRENT_PLAYING, { ...data });
+      const movie = this.currentPlaying.get(`${data.roomId}:playing`) || null;
+      targetSocket.emit(SocketKeys.STREAM_CB_CURRENT_PLAYING, {
+        ...data,
+        movie,
+      });
     } catch (e) {
       throw e;
     }
+  }
+
+  async play(data: StreamPlayDto, socket: Socket, movieRepo: MoviesRepository) {
+    try {
+      const ownerId: number = socket.data.userId;
+      const owner: MemberWithRoom | null =
+        await this.membersRepository.getByRoomIdAndUserId(data.roomId, ownerId);
+
+      if (!owner || owner.userId !== owner.room.ownerId)
+        throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
+
+      const movie: Movie = await movieRepo.getByMovieId(data.mediaId);
+
+      if (!movie) throw new NotFoundException(ResponseMessages.INVALID_SRC);
+
+      this.currentPlaying.set(`${data.roomId}:playing`, movie);
+
+      socket.to(data.roomId.toString()).emit(SocketKeys.STREAM_PLAY, movie);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async onTogglePlay(data: StreamTogglePlay, socket: Socket) {
+    const ownerId = socket.data.userId;
+    const member: MemberWithRoom =
+      await this.membersRepository.getByRoomIdAndUserId(data.roomId, ownerId);
+    if (!member || ownerId !== member.room.ownerId)
+      throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
+
+    const movie = this.currentPlaying.get(`${data.roomId}:playing`);
+    if (!movie) throw new NotFoundException(ResponseMessages.INVALID_SRC);
+    delete data.roomId;
+    socket
+      .to(member.roomId.toString())
+      .emit(SocketKeys.STREAM_TOGGLE_PLAY, data);
   }
 }

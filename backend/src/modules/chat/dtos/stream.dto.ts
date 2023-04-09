@@ -28,12 +28,21 @@ export class StreamNowPlayingDto extends GetCurrentPlayingDto {
   cbTarget: number;
 }
 
+export class StreamTogglePlay extends GetCurrentPlayingDto {
+  @IsNumber({ allowNaN: true })
+  @ApiProperty()
+  currentTime: number | null;
+
+  @IsBoolean()
+  @ApiProperty()
+  paused: boolean;
+}
 export class StreamPlayDto {
   @ApiProperty()
   @IsNumber({ allowNaN: false })
   roomId: number;
 
   @ApiProperty()
-  @IsObject()
-  video: Movie;
+  @IsNumber()
+  mediaId: number;
 }
