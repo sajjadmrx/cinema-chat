@@ -32,7 +32,7 @@ export class StreamEventService {
 
     const ownerId = member.room.ownerId;
     if (ownerId === member.userId) throw new BadGatewayException();
-    const ownerSocket = await this.userSocketManager.findSocketByUserId(
+    const ownerSocket = await this.userSocketManager.findOneSocketByUserId(
       ownerId,
     );
     if (!ownerSocket) {
@@ -58,7 +58,7 @@ export class StreamEventService {
 
       if (data.cbTarget === member.userId) throw new BadGatewayException();
 
-      const targetSocket = await this.userSocketManager.findSocketByUserId(
+      const targetSocket = await this.userSocketManager.findOneSocketByUserId(
         targetId,
       );
       if (!targetSocket) return;

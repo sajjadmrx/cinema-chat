@@ -15,6 +15,7 @@ import {
   MessageUpdateResult,
 } from '../../../shared/interfaces/message.interface';
 import { MessageUpdateDto } from '../../messages/dtos/update.dto';
+import { UserSocketManager } from '../userSocket.manager';
 
 @Injectable()
 export class ChatService {
@@ -23,6 +24,7 @@ export class ChatService {
     private chatGateway: ChatGateway,
     private messageService: MessagesService,
     private chatEmits: ChatEmits,
+    private userSocketManager: UserSocketManager,
   ) {}
 
   async findSocketByUserIdAndJoinToRoom(
@@ -30,10 +32,10 @@ export class ChatService {
     roomId: number,
   ): Promise<void> {
     try {
-      const sockets = await this.chatGateway.server.sockets.fetchSockets();
-      const userSockets = sockets.filter((so) => so.data.userId == userId);
-      if (userSockets.length)
-        userSockets.map((socket) => socket.join(roomId.toString()));
+      const userSocket = await this.userSocketManager.findOneSocketByUserId(
+        userId,
+      );
+      if (userSocket) userSocket.join(roomId.toString());
     } catch (e) {
       /// log
     }
@@ -44,11 +46,10 @@ export class ChatService {
     roomId: number,
   ): Promise<void> {
     try {
-      const socketsOnRoom =
-        await this.chatGateway.server.sockets.fetchSockets();
-      const userSockets = socketsOnRoom.filter((s) => s.data.userId == userId);
-      if (userSockets.length)
-        userSockets.map((socket) => socket.leave(roomId.toString()));
+      const userSocket = await this.userSocketManager.findOneSocketByUserId(
+        userId,
+      );
+      if (userSocket) userSocket.leave(roomId.toString());
     } catch (e) {
       //error
     }
