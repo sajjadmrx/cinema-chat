@@ -9,10 +9,10 @@ import { InviteCreateDto } from './dtos/create.dto';
 import { RoomsRepository } from '../rooms/rooms.repository';
 import { ResponseMessages } from '../../shared/constants/response-messages.constant';
 import { Room } from 'src/shared/interfaces/room.interface';
-import { Invite, InviteWithRoom } from 'src/shared/interfaces/invite.interface';
+import { Invite } from 'src/shared/interfaces/invite.interface';
 import * as moment from 'moment';
-import { MembersDbRepository } from '../members/repositories/members-db.repository';
 import { Member } from 'src/shared/interfaces/member.interface';
+import { MembersRepository } from '../members/repositories/members.repository';
 
 @Injectable()
 export class InvitesService {
@@ -21,7 +21,7 @@ export class InvitesService {
   constructor(
     private invitesRepo: InvitesRepository,
     private roomsRepository: RoomsRepository,
-    private membersRepository: MembersDbRepository,
+    private membersRepository: MembersRepository,
   ) {}
 
   async create(input: InviteCreateDto, userId: number): Promise<string> {

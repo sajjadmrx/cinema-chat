@@ -8,11 +8,7 @@ import { InvitesModule } from '../invites/invites.module';
 import { MembersRepository } from './repositories/members.repository';
 import { MembersCacheRepository } from './repositories/members-cache.repository';
 
-const providersAndExports = [
-  MembersRepository,
-  MembersDbRepository,
-  MembersCacheRepository,
-];
+const providersAndExports = [MembersRepository];
 
 @Module({
   imports: [
@@ -21,7 +17,12 @@ const providersAndExports = [
     forwardRef(() => InvitesModule),
   ],
   controllers: [MembersController],
-  providers: [...providersAndExports, MembersService],
+  providers: [
+    ...providersAndExports,
+    MembersService,
+    MembersDbRepository,
+    MembersCacheRepository,
+  ],
   exports: [...providersAndExports],
 })
 export class MembersModule {}

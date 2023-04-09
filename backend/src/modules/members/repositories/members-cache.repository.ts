@@ -26,6 +26,14 @@ export class MembersCacheRepository {
     const cacheKey = this.cachePrefix + roomId;
     await this.cacheService.del(cacheKey);
   }
+
+  async deleteMember(roomId: number, userId: number): Promise<void> {
+    const currentMembers = await this.getMembers(roomId);
+    const newMembers = currentMembers.filter(
+      (member) => member.userId !== userId,
+    );
+    await this.updateMembers(roomId, newMembers);
+  }
   async addMember(roomId: number, member: Member): Promise<void> {
     const cacheKey = this.cachePrefix + roomId;
     const cachedData = await this.cacheService.get(cacheKey);

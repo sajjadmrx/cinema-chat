@@ -11,11 +11,11 @@ import { Socket } from 'socket.io';
 import { Member } from '../../../shared/interfaces/member.interface';
 import { MemberStatusConstant } from '../../../shared/constants/member.constant';
 import { AuthService } from '../../auth/auth.service';
-import { MembersDbRepository } from '../../members/repositories/members-db.repository';
 import { ChatEmits } from '../chat.emits';
 import { UserSocketManager } from '../userSocket.manager';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { ResponseMessages } from '../../../shared/constants/response-messages.constant';
+import { MembersRepository } from '../../members/repositories/members.repository';
 
 @Injectable()
 export class ConnectionService {
@@ -25,7 +25,7 @@ export class ConnectionService {
     @Inject(forwardRef(() => ChatGateway))
     private chatGateway: ChatGateway,
     private authService: AuthService,
-    private membersRepo: MembersDbRepository,
+    private membersRepo: MembersRepository,
     private chatEmits: ChatEmits,
     private userSocketManager: UserSocketManager,
   ) {}

@@ -15,15 +15,15 @@ import { ResponseMessages } from '../../shared/constants/response-messages.const
 import { MessageUpdateDto } from './dtos/update.dto';
 import { Room } from '../../shared/interfaces/room.interface';
 import { RoomsRepository } from '../rooms/rooms.repository';
-import { MembersDbRepository } from '../members/repositories/members-db.repository';
 import { ChatEmits } from '../chat/chat.emits';
+import { MembersRepository } from '../members/repositories/members.repository';
 
 @Injectable()
 export class MessagesService {
   constructor(
     private messagesRepository: MessagesRepository,
     private roomsRepository: RoomsRepository,
-    private membersRepository: MembersDbRepository,
+    private membersRepository: MembersRepository,
     private chatEmits: ChatEmits,
   ) {}
 
@@ -31,7 +31,7 @@ export class MessagesService {
     try {
       if (!Number(roomId)) throw new BadRequestException();
 
-      const maxLimit: number = 10;
+      const maxLimit = 10;
       if (!page || !limit || Number(page) < 1 || Number(limit) < 1) {
         page = 1;
         limit = maxLimit;

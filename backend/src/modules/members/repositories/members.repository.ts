@@ -3,6 +3,7 @@ import { MembersCacheRepository } from './members-cache.repository';
 import {
   Member,
   MemberCreateInput,
+  MemberUpdateInput,
   MemberWithRoom,
 } from '../../../shared/interfaces/member.interface';
 import { Injectable } from '@nestjs/common';
@@ -15,9 +16,13 @@ export class MembersRepository {
   ) {}
 
   async create(input: MemberCreateInput): Promise<Member> {
-    const member = await this.membersDbRepo.create(input);
-    await this.membersCacheRepo.addMember(member.roomId, member);
-    return member;
+    try {
+      const member = await this.membersDbRepo.create(input);
+      await this.membersCacheRepo.addMember(member.roomId, member);
+      return member;
+    } catch (e) {
+      throw e;
+    }
   }
 
   async find(roomId: number, page: number, limit: number): Promise<Member[]> {
@@ -28,8 +33,56 @@ export class MembersRepository {
     roomId: number,
     userId: number,
   ): Promise<MemberWithRoom | null> {
-    const memberCache = await this.membersCacheRepo.getMember(roomId, userId);
-    if (memberCache) return memberCache;
-    return this.membersDbRepo.getByRoomIdAndUserId(roomId, userId);
+    try {
+      const memberCache = await this.membersCacheRepo.getMember(roomId, userId);
+      if (memberCache) return memberCache;
+      const memberDB = await this.membersDbRepo.getByRoomIdAndUserId(
+        roomId,
+        userId,
+      );
+      await this.membersCacheRepo.addMember(roomId, memberDB);
+      return memberDB;
+    } catch (e) {
+      throw e;
+    }
+  }
+  findByUserId(userId: number): Promise<MemberWithRoom[]> {
+    return this.membersDbRepo.findByUserId(userId);
+  }
+  async updateOne(
+    roomId: number,
+    userId: number,
+    input: MemberUpdateInput,
+  ): Promise<boolean> {
+    try {
+      const result = await this.membersDbRepo.updateOne(roomId, userId, input);
+      if (result) {
+        const member = await this.membersDbRepo.getByRoomIdAndUserId(
+          roomId,
+          userId,
+        );
+        await this.membersCacheRepo.updateMember(roomId, userId, member);
+      }
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async deleteByRoomIdAndUserId(
+    roomId: number,
+    userId: number,
+  ): Promise<boolean> {
+    try {
+      const result = await this.membersDbRepo.deleteByRoomIdAndUserId(
+        roomId,
+        userId,
+      );
+      if (result) await this.membersCacheRepo.deleteMember(roomId, userId);
+
+      return result;
+    } catch (e) {
+      throw e;
+    }
   }
 }
