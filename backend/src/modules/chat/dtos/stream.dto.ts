@@ -29,6 +29,9 @@ export class StreamNowPlayingDto extends GetCurrentPlayingDto {
 }
 
 export class StreamTogglePlay extends GetCurrentPlayingDto {
+  @ApiProperty({ default: 26297437 })
+  roomId: number;
+
   @IsNumber({ allowNaN: true })
   @ApiProperty()
   currentTime: number | null;

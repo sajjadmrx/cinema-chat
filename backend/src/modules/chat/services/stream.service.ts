@@ -23,6 +23,9 @@ import { UserSocketManager } from '../userSocket.manager';
 import { SocketKeys } from '../../../shared/constants/socket.keys';
 import { Movie } from '../../../shared/interfaces/movie.interface';
 import { MoviesRepository } from '../../movies/movies.repository';
+import { ChatEmit } from '../emits/chat.emit';
+import { StreamEmit } from '../emits/stream.emit';
+import { TogglePlayPayload } from '../payloads/togglePlay.payload';
 
 @Injectable()
 export class StreamEventService {
@@ -32,29 +35,29 @@ export class StreamEventService {
     private chatGateway: ChatGateway,
     private membersRepository: MembersRepository,
     private userSocketManager: UserSocketManager,
+    private streamEmit: StreamEmit,
   ) {}
 
   async getCurrentPlaying(data: GetCurrentPlayingDto, socket: Socket) {
-    const userId = socket.data.userId;
-    const member: MemberWithRoom | null =
-      await this.membersRepository.getByRoomIdAndUserId(data.roomId, userId);
-    if (!member)
-      throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
+    try {
+      const userId = socket.data.userId;
+      const member: MemberWithRoom | null =
+        await this.membersRepository.getByRoomIdAndUserId(data.roomId, userId);
+      if (!member)
+        throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
 
-    const ownerId = member.room.ownerId;
-    if (ownerId === member.userId) throw new BadGatewayException();
-    const ownerSocket = await this.userSocketManager.findOneSocketByUserId(
-      ownerId,
-    );
-    if (!ownerSocket) {
-      throw new ForbiddenException(); //todo better message
+      const ownerId = member.room.ownerId;
+      if (ownerId === member.userId) throw new BadGatewayException();
+      const ownerSocket = await this.userSocketManager.findOneSocketByUserId(
+        ownerId,
+      );
+      if (!ownerSocket)
+        throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
+
+      return this.streamEmit.fetchCurrentPlaying(ownerSocket as any, member);
+    } catch (e) {
+      throw e;
     }
-    // todo move to stream.emit.ts
-    ownerSocket.emit(SocketKeys.STREAM_FETCH_CURRENT_PLAYING, {
-      cbTarget: member.userId,
-      roomId: member.roomId,
-      cbEvent: SocketKeys.STREAM_CB_CURRENT_PLAYING,
-    });
   }
 
   async cbCurrentPlaying(data: StreamNowPlayingDto, socket: Socket) {
@@ -67,7 +70,7 @@ export class StreamEventService {
 
       if (!member || member.room.ownerId != userId) return; //only owner can emit
 
-      if (data.cbTarget === member.userId) throw new BadGatewayException();
+      if (data.cbTarget === member.userId) throw new BadRequestException();
 
       const targetSocket = await this.userSocketManager.findOneSocketByUserId(
         targetId,
@@ -75,9 +78,8 @@ export class StreamEventService {
       if (!targetSocket) return;
       delete data.cbTarget;
       delete data.mediaId;
-      // find movie
       const movie = this.currentPlaying.get(`${data.roomId}:playing`) || null;
-      targetSocket.emit(SocketKeys.STREAM_CB_CURRENT_PLAYING, {
+      return this.streamEmit.cbFetchCurrentPlaying(targetSocket as any, {
         ...data,
         movie,
       });
@@ -116,9 +118,10 @@ export class StreamEventService {
 
     const movie = this.currentPlaying.get(`${data.roomId}:playing`);
     if (!movie) throw new NotFoundException(ResponseMessages.INVALID_SRC);
-    delete data.roomId;
-    socket
-      .to(member.roomId.toString())
-      .emit(SocketKeys.STREAM_TOGGLE_PLAY, data);
+    return this.streamEmit.togglePlay(
+      socket,
+      member.roomId.toString(),
+      data as TogglePlayPayload,
+    );
   }
 }

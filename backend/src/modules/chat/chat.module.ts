@@ -11,6 +11,7 @@ import { StreamEventService } from './services/stream.service';
 import { ConnectionService } from './services/connection.service';
 import { UserSocketManager } from './userSocket.manager';
 import { MoviesModule } from '../movies/movies.module';
+import { StreamEmit } from './emits/stream.emit';
 
 const providersAndExports = [
   ChatService,
@@ -30,7 +31,7 @@ const providersAndExports = [
     MoviesModule,
     forwardRef(() => MembersModule),
   ],
-  providers: [...providersAndExports],
+  providers: [...providersAndExports, StreamEmit],
   exports: [...providersAndExports],
 })
 export class ChatModule {}
