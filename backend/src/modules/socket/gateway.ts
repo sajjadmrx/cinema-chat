@@ -44,8 +44,8 @@ import { MoviesRepository } from '../movies/movies.repository';
     credentials: true,
   },
 })
-export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  private logger: Logger = new Logger(ChatGateway.name);
+export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
+  private logger: Logger = new Logger(Gateway.name);
   @WebSocketServer()
   server: Server;
   constructor(

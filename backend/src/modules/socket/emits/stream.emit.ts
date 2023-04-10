@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { AsyncApiService, AsyncApiSub } from 'nestjs-asyncapi';
-import { ChatGateway } from '../chat.gateway';
+import { Gateway } from '../gateway';
 import { SocketKeys } from '../../../shared/constants/socket.keys';
 import { Socket } from 'socket.io';
 import { Member } from '../../../shared/interfaces/member.interface';
@@ -16,7 +16,7 @@ import { StreamTogglePlay } from '../dtos/stream.dto';
 @AsyncApiService()
 export class StreamEmit {
   constructor(
-    @Inject(forwardRef(() => ChatGateway)) private chatGateway: ChatGateway,
+    @Inject(forwardRef(() => Gateway)) private chatGateway: Gateway,
   ) {}
 
   @AsyncApiSub({

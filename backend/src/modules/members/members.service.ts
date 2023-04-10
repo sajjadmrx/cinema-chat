@@ -19,8 +19,8 @@ import { User } from 'src/shared/interfaces/user.interface';
 import { Room } from '../../shared/interfaces/room.interface';
 import { UpdateCurrentMemberDto } from './dtos/update.dto';
 import { InvitesRepository } from '../invites/invites.repository';
-import { ChatService } from '../chat/services/chat.service';
-import { ChatEmit } from '../chat/emits/chat.emit';
+import { ChatService } from '../socket/services/chat.service';
+import { ChatEmit } from '../socket/emits/chat.emit';
 import { RoomsRepository } from '../rooms/rooms.repository';
 import { MembersRepository } from './repositories/members.repository';
 

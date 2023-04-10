@@ -6,7 +6,7 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ChatGateway } from '../chat.gateway';
+import { Gateway } from '../gateway';
 import { Socket } from 'socket.io';
 import { Member } from '../../../shared/interfaces/member.interface';
 import { MemberStatusConstant } from '../../../shared/constants/member.constant';
@@ -22,8 +22,8 @@ export class ConnectionService {
   private logger: Logger = new Logger(ConnectionService.name);
 
   constructor(
-    @Inject(forwardRef(() => ChatGateway))
-    private chatGateway: ChatGateway,
+    @Inject(forwardRef(() => Gateway))
+    private gateway: Gateway,
     private authService: AuthService,
     private membersRepo: MembersRepository,
     private chatEmits: ChatEmit,

@@ -8,7 +8,7 @@ import {
   NotFoundException,
   Res,
 } from '@nestjs/common';
-import { ChatGateway } from '../chat.gateway';
+import { Gateway } from '../gateway';
 import {
   GetCurrentPlayingDto,
   StreamNowPlayingDto,
@@ -31,8 +31,8 @@ import { TogglePlayPayload } from '../payloads/togglePlay.payload';
 export class StreamEventService {
   private currentPlaying = new Map<string, Movie>();
   constructor(
-    @Inject(forwardRef(() => ChatGateway))
-    private chatGateway: ChatGateway,
+    @Inject(forwardRef(() => Gateway))
+    private gateway: Gateway,
     private membersRepository: MembersRepository,
     private userSocketManager: UserSocketManager,
     private streamEmit: StreamEmit,

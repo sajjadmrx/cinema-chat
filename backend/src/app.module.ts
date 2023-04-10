@@ -7,7 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { RoomsModule } from './modules/rooms/rooms.module';
 import { InvitesModule } from './modules/invites/invites.module';
 import { MembersModule } from './modules/members/members.module';
-import { ChatModule } from './modules/chat/chat.module';
+import { SocketModule } from './modules/socket/socket.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { MoviesModule } from './modules/movies/movies.module';
 import { UploadsModule } from './modules/uploads/uploads.module';
@@ -26,7 +26,7 @@ import { RedisModule } from './modules/redis/redis.module';
     RoomsModule,
     InvitesModule,
     MembersModule,
-    ChatModule,
+    SocketModule,
     MessagesModule,
     MoviesModule,
     UploadsModule,

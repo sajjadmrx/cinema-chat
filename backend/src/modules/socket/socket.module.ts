@@ -1,6 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { ChatService } from './services/chat.service';
-import { ChatGateway } from './chat.gateway';
+import { Gateway } from './gateway';
 import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { RoomsModule } from '../rooms/rooms.module';
@@ -15,7 +15,7 @@ import { StreamEmit } from './emits/stream.emit';
 
 const providersAndExports = [
   ChatService,
-  ChatGateway,
+  Gateway,
   ChatEmit,
   StreamEventService,
   ConnectionService,
@@ -34,4 +34,4 @@ const providersAndExports = [
   providers: [...providersAndExports, StreamEmit],
   exports: [...providersAndExports],
 })
-export class ChatModule {}
+export class SocketModule {}
