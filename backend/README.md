@@ -85,4 +85,4 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-<img src="./github/cinema-chat-documents.png">
+<img src="../github/cinema-chat-documents.png">
