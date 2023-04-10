@@ -9,9 +9,7 @@ import {
   FetchCurrentPlayingPayload,
   StreamPlayPayload,
 } from '../payloads/fetchCurrentPlaying.payload';
-import { TogglePlayPayload } from '../payloads/togglePlay.payload';
-import { Movie } from '../../../shared/interfaces/movie.interface';
-import { StreamTogglePlay } from '../dtos/stream.dto';
+import { PlayerPayload } from '../payloads/player.payload';
 
 @AsyncApiService()
 export class StreamEmit {
@@ -23,7 +21,7 @@ export class StreamEmit {
     channel: SocketKeys.STREAM_FETCH_CURRENT_PLAYING,
     tags: [{ name: 'stream' }],
     description:
-      'Fetching current playing movie information from the room manager (owner)',
+      'Subscribe to Fetching current playing movie information from the room manager (owner)',
     message: {
       name: SocketKeys.STREAM_FETCH_CURRENT_PLAYING,
       payload: { type: FetchCurrentPlayingPayload },
@@ -41,7 +39,7 @@ export class StreamEmit {
     channel: SocketKeys.STREAM_CB_CURRENT_PLAYING,
     tags: [{ name: 'stream' }],
     description:
-      'Callback function for fetching current playing movie information',
+      'Subscribe to Callback function for fetching current playing movie information',
     message: {
       name: SocketKeys.STREAM_CB_CURRENT_PLAYING,
       payload: { type: CbFetchCurrentPlayingPayload },
@@ -56,13 +54,13 @@ export class StreamEmit {
   @AsyncApiSub({
     channel: SocketKeys.STREAM_TOGGLE_PLAY,
     tags: [{ name: 'stream' }],
-    description: 'Toggling play/pause state for media playback',
+    description: 'Subscribe to Toggling play/pause state for media playback',
     message: {
       name: SocketKeys.STREAM_TOGGLE_PLAY,
-      payload: { type: TogglePlayPayload },
+      payload: { type: PlayerPayload },
     },
   })
-  togglePlay(socket: Socket, roomId: string, data: TogglePlayPayload) {
+  togglePlay(socket: Socket, roomId: string, data: PlayerPayload) {
     socket.to(roomId).emit(SocketKeys.STREAM_TOGGLE_PLAY, data);
   }
 
@@ -77,5 +75,19 @@ export class StreamEmit {
   })
   play(socket: Socket, roomId: string, movie: any) {
     socket.to(roomId).emit(SocketKeys.STREAM_PLAY, movie);
+  }
+
+  @AsyncApiSub({
+    channel: SocketKeys.STREAM_SEEK,
+    tags: [{ name: 'stream' }],
+    description:
+      'Send a seek event to synchronize playback time across all users in a chat or streaming system',
+    message: {
+      name: SocketKeys.STREAM_SEEK,
+      payload: { type: PlayerPayload },
+    },
+  })
+  seek(socket: Socket, roomId: string, data: PlayerPayload) {
+    socket.to(roomId).emit(SocketKeys.STREAM_SEEK, data);
   }
 }

@@ -20,12 +20,10 @@ import { MembersRepository } from '../../members/repositories/members.repository
 import { MemberWithRoom } from '../../../shared/interfaces/member.interface';
 import { ResponseMessages } from '../../../shared/constants/response-messages.constant';
 import { UserSocketManager } from '../userSocket.manager';
-import { SocketKeys } from '../../../shared/constants/socket.keys';
 import { Movie } from '../../../shared/interfaces/movie.interface';
 import { MoviesRepository } from '../../movies/movies.repository';
-import { ChatEmit } from '../emits/chat.emit';
 import { StreamEmit } from '../emits/stream.emit';
-import { TogglePlayPayload } from '../payloads/togglePlay.payload';
+import { PlayerPayload } from '../payloads/player.payload';
 
 @Injectable()
 export class StreamEventService {
@@ -125,7 +123,24 @@ export class StreamEventService {
     return this.streamEmit.togglePlay(
       socket,
       member.roomId.toString(),
-      data as TogglePlayPayload,
+      data as PlayerPayload,
+    );
+  }
+
+  async seek(data: PlayerPayload, socket: Socket) {
+    const ownerId = socket.data.userId;
+    const member: MemberWithRoom =
+      await this.membersRepository.getByRoomIdAndUserId(data.roomId, ownerId);
+    if (!member || ownerId !== member.room.ownerId)
+      throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
+
+    const movie = this.currentPlaying.get(`${data.roomId}:playing`);
+    if (!movie) throw new NotFoundException(ResponseMessages.INVALID_SRC);
+
+    return this.streamEmit.seek(
+      socket,
+      member.roomId.toString(),
+      data as PlayerPayload,
     );
   }
 }

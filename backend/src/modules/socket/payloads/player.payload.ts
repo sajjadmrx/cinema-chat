@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class TogglePlayPayload {
+export class PlayerPayload {
   @ApiProperty({ default: 26297437 })
   roomId: number;
 

@@ -156,4 +156,20 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     return this.streamEventService.onTogglePlay(data, socket);
   }
+
+  @AsyncApiPub({
+    channel: SocketKeys.STREAM_SEEK,
+    message: {
+      name: SocketKeys.STREAM_SEEK,
+      payload: { type: StreamTogglePlay },
+    },
+    tags: [{ name: 'stream' }],
+  })
+  @SubscribeMessage(SocketKeys.STREAM_SEEK)
+  onSeek(
+    @MessageBody() data: StreamTogglePlay,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    return this.streamEventService.seek(data as any, socket);
+  }
 }
