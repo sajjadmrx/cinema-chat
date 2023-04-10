@@ -3,18 +3,19 @@ import { SocketKeys } from '../../../shared/constants/socket.keys';
 import { Member } from '../../../shared/interfaces/member.interface';
 import { AsyncApiService, AsyncApiSub } from 'nestjs-asyncapi';
 import {
-  JoinMemberExa,
-  KickMemberExa,
-  LaveMemberExa,
-  UpdateMemberExa,
-  UpdateMemberStatusExa,
-} from '../../../shared/examples/socket/member.example';
+  JoinMemberPayload,
+  KickMemberPayload,
+  LaveMemberPayload,
+  UpdateMemberPayload,
+  UpdateMemberStatusPayload,
+} from '../payloads/member.payload';
 import { Message } from '../../../shared/interfaces/message.interface';
 import { MessageCreateDto } from '../../messages/dtos/creates.dto';
 import {
-  MessageDeleteExa,
-  MessageUpdateExa,
-} from '../../../shared/examples/socket/message.example';
+  MessageDeletePayload,
+  MessagePayload,
+  MessageUpdatePayload,
+} from '../payloads/message.payload';
 import { MemberStatusConstant } from '../../../shared/constants/member.constant';
 import { forwardRef, Inject } from '@nestjs/common';
 
@@ -27,7 +28,7 @@ export class ChatEmit {
   @AsyncApiSub({
     channel: SocketKeys.NEW_MEMBER,
     description: 'listen event Join a member',
-    message: { name: 'member', payload: { type: JoinMemberExa } },
+    message: { name: 'member', payload: { type: JoinMemberPayload } },
     tags: [{ name: 'member', description: 'member a room' }],
   })
   newMember(roomId: number, member: Member) {
@@ -39,7 +40,7 @@ export class ChatEmit {
   @AsyncApiSub({
     channel: SocketKeys.LAVE,
     description: 'listen event Lave a member',
-    message: { name: 'member', payload: { type: LaveMemberExa } },
+    message: { name: 'member', payload: { type: LaveMemberPayload } },
     tags: [{ name: 'member', description: 'member a room' }],
   })
   laveMember(roomId: number, member: Member) {
@@ -51,7 +52,7 @@ export class ChatEmit {
   @AsyncApiSub({
     channel: SocketKeys.KICK_MEMBER,
     description: 'listen event Kick a Member',
-    message: { name: 'member', payload: { type: KickMemberExa } },
+    message: { name: 'member', payload: { type: KickMemberPayload } },
     tags: [{ name: 'member', description: 'member a room' }],
   })
   kickMember(roomId: number, member: Member, requesterId: number) {
@@ -65,7 +66,7 @@ export class ChatEmit {
   @AsyncApiSub({
     channel: SocketKeys.UPDATE_MEMBER,
     description: 'listen event update a Member',
-    message: { name: 'member', payload: { type: UpdateMemberExa } },
+    message: { name: 'member', payload: { type: UpdateMemberPayload } },
     tags: [{ name: 'member', description: 'member a room' }],
   })
   updateMember(
@@ -85,7 +86,7 @@ export class ChatEmit {
   @AsyncApiSub({
     channel: SocketKeys.CREATE_MESSAGE,
     description: 'listen event create Message(send Message)',
-    message: { name: 'message', payload: { type: MessageCreateDto } },
+    message: { name: 'message', payload: { type: MessagePayload } },
     tags: [{ name: 'message' }],
   })
   createMessage(message: Message) {
@@ -99,7 +100,7 @@ export class ChatEmit {
     description: 'listen event update Message ',
     message: {
       name: SocketKeys.UPDATE_MESSAGE,
-      payload: { type: MessageUpdateExa },
+      payload: { type: MessageUpdatePayload },
     },
     tags: [{ name: 'message' }],
   })
@@ -119,7 +120,7 @@ export class ChatEmit {
     description: 'listen for delete message',
     message: {
       name: SocketKeys.DELETE_MESSAGE,
-      payload: { type: MessageDeleteExa },
+      payload: { type: MessageDeletePayload },
     },
   })
   deleteMessage(roomId: number, memberId: number, messageId: number) {
@@ -137,7 +138,7 @@ export class ChatEmit {
     tags: [{ name: 'Member' }],
     message: {
       name: SocketKeys.UPDATE_MEMBER_STATUS,
-      payload: { type: UpdateMemberStatusExa },
+      payload: { type: UpdateMemberStatusPayload },
     },
     description: 'listen event Update Member Status',
   })
