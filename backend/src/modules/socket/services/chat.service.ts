@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ChatGateway } from '../chat.gateway';
+import { Gateway } from '../gateway';
 import { MessageCreateDto } from '../../messages/dtos/creates.dto';
 import { ResponseMessages } from '../../../shared/constants/response-messages.constant';
 import { Socket } from 'socket.io';
@@ -20,8 +20,8 @@ import { UserSocketManager } from '../userSocket.manager';
 @Injectable()
 export class ChatService {
   constructor(
-    @Inject(forwardRef(() => ChatGateway))
-    private chatGateway: ChatGateway,
+    @Inject(forwardRef(() => Gateway))
+    private gateway: Gateway,
     private messageService: MessagesService,
     private chatEmits: ChatEmit,
     private userSocketManager: UserSocketManager,

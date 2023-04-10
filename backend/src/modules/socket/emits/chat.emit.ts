@@ -1,4 +1,4 @@
-import { ChatGateway } from '../chat.gateway';
+import { Gateway } from '../gateway';
 import { SocketKeys } from '../../../shared/constants/socket.keys';
 import { Member } from '../../../shared/interfaces/member.interface';
 import { AsyncApiService, AsyncApiSub } from 'nestjs-asyncapi';
@@ -22,7 +22,7 @@ import { forwardRef, Inject } from '@nestjs/common';
 @AsyncApiService()
 export class ChatEmit {
   constructor(
-    @Inject(forwardRef(() => ChatGateway)) private chatGateway: ChatGateway,
+    @Inject(forwardRef(() => Gateway)) private chatGateway: Gateway,
   ) {}
 
   @AsyncApiSub({

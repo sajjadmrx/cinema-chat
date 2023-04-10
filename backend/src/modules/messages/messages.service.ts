@@ -15,7 +15,7 @@ import { ResponseMessages } from '../../shared/constants/response-messages.const
 import { MessageUpdateDto } from './dtos/update.dto';
 import { Room } from '../../shared/interfaces/room.interface';
 import { RoomsRepository } from '../rooms/rooms.repository';
-import { ChatEmit } from '../chat/emits/chat.emit';
+import { ChatEmit } from '../socket/emits/chat.emit';
 import { MembersRepository } from '../members/repositories/members.repository';
 
 @Injectable()
