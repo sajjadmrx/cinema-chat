@@ -1,28 +1,33 @@
 import {
+  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ChatGateway } from '../chat.gateway';
+import { Gateway } from '../gateway';
 import { Socket } from 'socket.io';
 import { Member } from '../../../shared/interfaces/member.interface';
 import { MemberStatusConstant } from '../../../shared/constants/member.constant';
 import { AuthService } from '../../auth/auth.service';
-import { MembersRepository } from '../../members/members.repository';
-import { ChatEmits } from '../chat.emits';
+import { ChatEmit } from '../emits/chat.emit';
+import { UserSocketManager } from '../userSocket.manager';
+import { HttpException } from '@nestjs/common/exceptions/http.exception';
+import { ResponseMessages } from '../../../shared/constants/response-messages.constant';
+import { MembersRepository } from '../../members/repositories/members.repository';
 
 @Injectable()
 export class ConnectionService {
   private logger: Logger = new Logger(ConnectionService.name);
 
   constructor(
-    @Inject(forwardRef(() => ChatGateway))
-    private chatGateway: ChatGateway,
+    @Inject(forwardRef(() => Gateway))
+    private gateway: Gateway,
     private authService: AuthService,
     private membersRepo: MembersRepository,
-    private chatEmits: ChatEmits,
+    private chatEmits: ChatEmit,
+    private userSocketManager: UserSocketManager,
   ) {}
 
   async handleConnection(client: Socket) {
@@ -37,6 +42,18 @@ export class ConnectionService {
       const result = this.authService.jwtVerify(token);
       const userId = result.userId;
 
+      const userSocket = await this.userSocketManager.findOneSocketByUserId(
+        userId,
+      );
+      if (userSocket) {
+        this.disconnect(
+          client,
+          new BadRequestException(ResponseMessages.ONLY_ONE_DEVICE_ALLOWED),
+        ); // only 1 device
+        return;
+      }
+
+      client.data.userId = userId;
       const members: Member[] = await this.membersRepo.findByUserId(userId);
 
       members.map((member: Member) => {
@@ -48,10 +65,8 @@ export class ConnectionService {
           MemberStatusConstant.ONLINE,
         );
       });
-
-      client.data.userId = userId;
     } catch (e) {
-      this.disconnect(client);
+      this.disconnect(client, new UnauthorizedException());
     }
   }
 
@@ -71,8 +86,9 @@ export class ConnectionService {
     });
   }
 
-  private disconnect(socket: Socket) {
-    socket.emit('error', new UnauthorizedException());
+  private disconnect(socket: Socket, error: HttpException) {
+    socket.emit('error', error);
     socket.disconnect();
+    socket.rooms.clear();
   }
 }

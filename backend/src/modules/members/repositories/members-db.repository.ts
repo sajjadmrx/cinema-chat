@@ -5,15 +5,17 @@ import {
   MemberUpdateInput,
   MemberWithRoom,
 } from 'src/shared/interfaces/member.interface';
-import { PrismaService } from '../prisma/prisma.service';
-import { User } from '../../shared/interfaces/user.interface';
+import { PrismaService } from '../../prisma/prisma.service';
+import { User } from '../../../shared/interfaces/user.interface';
 
 @Injectable()
-export class MembersRepository {
+export class MembersDbRepository {
   constructor(private db: PrismaService) {}
 
   async create(input: MemberCreateInput): Promise<Member> {
-    return this.db.member.create({ data: input });
+    return this.db.member.create({
+      data: input,
+    });
   }
 
   async find(roomId: number, page: number, limit: number): Promise<Member[]> {
@@ -29,9 +31,17 @@ export class MembersRepository {
   async getByRoomIdAndUserId(
     roomId: number,
     userId: number,
-  ): Promise<Member | null> {
+  ): Promise<MemberWithRoom | null> {
     return this.db.member.findFirst({
-      where: { roomId, userId },
+      where: {
+        AND: {
+          roomId,
+          userId,
+        },
+      },
+      include: {
+        room: true,
+      },
     });
   }
 
@@ -57,8 +67,10 @@ export class MembersRepository {
     try {
       const result = await this.db.member.updateMany({
         where: {
-          userId,
-          roomId,
+          AND: {
+            userId,
+            roomId,
+          },
         },
         data: {
           nickname: input.nickname,
@@ -71,10 +83,13 @@ export class MembersRepository {
     }
   }
 
-  findByUserId(userId: number): Promise<Member[]> {
+  findByUserId(userId: number): Promise<MemberWithRoom[]> {
     return this.db.member.findMany({
       where: {
         userId,
+      },
+      include: {
+        room: true,
       },
     });
   }

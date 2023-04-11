@@ -5,8 +5,8 @@ import { RoomCreateDto } from './dto/create.dto';
 import { RoomsRepository } from './rooms.repository';
 import { RoomUpdateDto } from './dto/update.dto';
 import { ResponseMessages } from 'src/shared/constants/response-messages.constant';
-import { MembersRepository } from '../members/members.repository';
 import { MemberPermission } from '../../shared/interfaces/member.interface';
+import { MembersRepository } from '../members/repositories/members.repository';
 
 @Injectable()
 export class RoomsService {
@@ -57,7 +57,7 @@ export class RoomsService {
     page: number,
     limit: number,
   ): Promise<Room[]> {
-    const maxLimit: number = 10;
+    const maxLimit = 10;
     if (!page || !limit || Number(page) < 1 || Number(limit) < 1) {
       page = 1;
       limit = maxLimit;
@@ -67,7 +67,7 @@ export class RoomsService {
   }
 
   async getPublicRooms(page: number, limit: number): Promise<Room[]> {
-    const maxLimit: number = 10;
+    const maxLimit = 10;
     if (!page || !limit || Number(page) < 1 || Number(limit) < 1) {
       page = 1;
       limit = maxLimit;
