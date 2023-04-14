@@ -43,6 +43,9 @@ export class MessagesRepository {
       where: {
         roomId,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
       take: limit,
       skip: (page - 1) * limit,
     });
