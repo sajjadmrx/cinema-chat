@@ -4,25 +4,27 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ChatGateway } from '../chat.gateway';
+import { Gateway } from '../gateway';
 import { MessageCreateDto } from '../../messages/dtos/creates.dto';
 import { ResponseMessages } from '../../../shared/constants/response-messages.constant';
 import { Socket } from 'socket.io';
 import { MessagesService } from '../../messages/messages.service';
-import { ChatEmits } from '../chat.emits';
+import { ChatEmit } from '../emits/chat.emit';
 import {
   Message,
   MessageUpdateResult,
 } from '../../../shared/interfaces/message.interface';
 import { MessageUpdateDto } from '../../messages/dtos/update.dto';
+import { UserSocketManager } from '../userSocket.manager';
 
 @Injectable()
 export class ChatService {
   constructor(
-    @Inject(forwardRef(() => ChatGateway))
-    private chatGateway: ChatGateway,
+    @Inject(forwardRef(() => Gateway))
+    private gateway: Gateway,
     private messageService: MessagesService,
-    private chatEmits: ChatEmits,
+    private chatEmits: ChatEmit,
+    private userSocketManager: UserSocketManager,
   ) {}
 
   async findSocketByUserIdAndJoinToRoom(
@@ -30,10 +32,10 @@ export class ChatService {
     roomId: number,
   ): Promise<void> {
     try {
-      const sockets = await this.chatGateway.server.sockets.fetchSockets();
-      const userSockets = sockets.filter((so) => so.data.userId == userId);
-      if (userSockets.length)
-        userSockets.map((socket) => socket.join(roomId.toString()));
+      const userSocket = await this.userSocketManager.findOneSocketByUserId(
+        userId,
+      );
+      if (userSocket) userSocket.join(roomId.toString());
     } catch (e) {
       /// log
     }
@@ -44,11 +46,10 @@ export class ChatService {
     roomId: number,
   ): Promise<void> {
     try {
-      const socketsOnRoom =
-        await this.chatGateway.server.sockets.fetchSockets();
-      const userSockets = socketsOnRoom.filter((s) => s.data.userId == userId);
-      if (userSockets.length)
-        userSockets.map((socket) => socket.leave(roomId.toString()));
+      const userSocket = await this.userSocketManager.findOneSocketByUserId(
+        userId,
+      );
+      if (userSocket) userSocket.leave(roomId.toString());
     } catch (e) {
       //error
     }

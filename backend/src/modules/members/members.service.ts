@@ -11,42 +11,41 @@ import {
 import { ResponseMessages } from 'src/shared/constants/response-messages.constant';
 import {
   Member,
-  MemberPermissionType,
   MemberPermission,
+  MemberPermissionType,
   MemberWithRoom,
 } from 'src/shared/interfaces/member.interface';
 import { User } from 'src/shared/interfaces/user.interface';
-import { MembersRepository } from './members.repository';
 import { Room } from '../../shared/interfaces/room.interface';
 import { UpdateCurrentMemberDto } from './dtos/update.dto';
 import { InvitesRepository } from '../invites/invites.repository';
-import { ChatService } from '../chat/services/chat.service';
-import { ChatEmits } from '../chat/chat.emits';
+import { ChatService } from '../socket/services/chat.service';
+import { ChatEmit } from '../socket/emits/chat.emit';
 import { RoomsRepository } from '../rooms/rooms.repository';
+import { MembersRepository } from './repositories/members.repository';
 
 @Injectable()
 export class MembersService {
-  private logger = new Logger(MembersRepository.name);
+  private logger = new Logger(MembersService.name);
 
   constructor(
     private membersRep: MembersRepository,
     @Inject(forwardRef(() => InvitesRepository))
     private invitesRepository: InvitesRepository,
     private chatService: ChatService,
-    private chatEmits: ChatEmits,
+    private chatEmits: ChatEmit,
     private roomsRep: RoomsRepository,
   ) {}
 
   async find(roomId: number, page: number, limit: number): Promise<Member[]> {
-    const maxLimit: number = 10;
+    const maxLimit = 10;
     if (!page || !limit || Number(page) < 1 || Number(limit) < 1) {
       page = 1;
       limit = maxLimit;
     }
     if (limit > maxLimit) limit = maxLimit;
     if (!Number(roomId)) return [];
-    const members: Member[] = await this.membersRep.find(roomId, page, limit);
-    return members;
+    return await this.membersRep.find(roomId, page, limit);
   }
 
   async joinRoom(
@@ -173,7 +172,7 @@ export class MembersService {
     input: UpdateCurrentMemberDto,
   ) {
     try {
-      let member: Member | null =
+      const member: Member | null =
         memberId == requester.userId
           ? requester
           : await this.membersRep.getByRoomIdAndUserId(
@@ -196,7 +195,7 @@ export class MembersService {
 
       const room: Room = requester.room;
 
-      let hasAdministrator: boolean =
+      const hasAdministrator: boolean =
         requester.permissions.includes('ADMINISTRATOR');
 
       if (!hasAdministrator && oldPerms.toString() != newPerms.toString())

@@ -39,7 +39,7 @@ export class StreamService {
       | string
       | undefined;
     if (!hlsFolder || typeof hlsFolder !== 'string')
-      throw new BadRequestException(ResponseMessages.SRC_INVALID);
+      throw new BadRequestException(ResponseMessages.INVALID_SRC);
 
     const segmentFilePath: string = path.join(
       path.resolve(),

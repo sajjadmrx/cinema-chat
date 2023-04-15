@@ -6,7 +6,7 @@ import {
 } from 'nestjs-asyncapi';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-const brandName = 'cinema-chat';
+const brandName = 'cinema-socket';
 
 export class DocumentConfig {
   constructor(

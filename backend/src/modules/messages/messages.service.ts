@@ -15,8 +15,8 @@ import { ResponseMessages } from '../../shared/constants/response-messages.const
 import { MessageUpdateDto } from './dtos/update.dto';
 import { Room } from '../../shared/interfaces/room.interface';
 import { RoomsRepository } from '../rooms/rooms.repository';
-import { MembersRepository } from '../members/members.repository';
-import { ChatEmits } from '../chat/chat.emits';
+import { ChatEmit } from '../socket/emits/chat.emit';
+import { MembersRepository } from '../members/repositories/members.repository';
 
 @Injectable()
 export class MessagesService {
@@ -24,14 +24,14 @@ export class MessagesService {
     private messagesRepository: MessagesRepository,
     private roomsRepository: RoomsRepository,
     private membersRepository: MembersRepository,
-    private chatEmits: ChatEmits,
+    private chatEmits: ChatEmit,
   ) {}
 
   async getRoomMessages(roomId: number, page: number, limit: number) {
     try {
       if (!Number(roomId)) throw new BadRequestException();
 
-      const maxLimit: number = 10;
+      const maxLimit = 10;
       if (!page || !limit || Number(page) < 1 || Number(limit) < 1) {
         page = 1;
         limit = maxLimit;

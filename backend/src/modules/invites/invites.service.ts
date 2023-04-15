@@ -9,10 +9,10 @@ import { InviteCreateDto } from './dtos/create.dto';
 import { RoomsRepository } from '../rooms/rooms.repository';
 import { ResponseMessages } from '../../shared/constants/response-messages.constant';
 import { Room } from 'src/shared/interfaces/room.interface';
-import { Invite, InviteWithRoom } from 'src/shared/interfaces/invite.interface';
+import { Invite } from 'src/shared/interfaces/invite.interface';
 import * as moment from 'moment';
-import { MembersRepository } from '../members/members.repository';
 import { Member } from 'src/shared/interfaces/member.interface';
+import { MembersRepository } from '../members/repositories/members.repository';
 
 @Injectable()
 export class InvitesService {

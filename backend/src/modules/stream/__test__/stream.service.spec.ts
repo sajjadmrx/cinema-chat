@@ -52,7 +52,7 @@ describe('StreamService', function () {
 
       await expect(
         streamService.movie(1, '', jest.fn() as any),
-      ).rejects.toEqual(new NotFoundException(ResponseMessages.SRC_INVALID));
+      ).rejects.toEqual(new NotFoundException(ResponseMessages.INVALID_SRC));
     });
   });
 });
