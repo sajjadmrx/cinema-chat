@@ -1,0 +1,57 @@
+@font-face {
+    font-family: 'shabnam';
+    src: url('../../public/assets/fonts/shabnam/Shabnam.woff2');
+    src: url('../../public/assets/fonts/shabnam/Shabnam.woff');
+    src: url('../../public/assets/fonts/shabnam/Shabnam.eot');
+    src: url('../../public/assets/fonts/shabnam/Shabnam.ttf');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'shabnam-bold';
+    src: url('../../public/assets/fonts/shabnam/Shabnam-Bold.eot');
+    src: url('../../public/assets/fonts/shabnam/Shabnam-Bold.ttf');
+    src: url('../../public/assets/fonts/shabnam/Shabnam-Bold.woff');
+    src: url('../../public/assets/fonts/shabnam/Shabnam-Bold.woff2');
+    font-weight: 800;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'rancho';
+    src: url('../../public/assets/fonts/rancho/Rancho-Regular.ttf');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'poppins';
+    src: url('../../public/assets/fonts/poppins/Poppins-Regular.ttf');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'poppins-bold';
+    src: url('../../public/assets/fonts/poppins/Poppins-Bold.ttf');
+    font-weight: 800;
+    font-style: normal;
+}
+
+html{
+    direction: rtl;
+    margin: 0;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    height: 100%;
+}
+
+input{
+    border: 0;
+    outline: 0;
+}
