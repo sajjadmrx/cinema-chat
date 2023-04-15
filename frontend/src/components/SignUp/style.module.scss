@@ -1,0 +1,45 @@
+.signUp {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    align-items: center;
+    background-color: #181818;
+    padding: 64px 32px;
+    font-family: $poppinsFont;
+    margin: 100px auto 0;
+    border-radius: 4px;
+
+    input {
+        width: 200px;
+        text-align: center;
+        padding: 10px 4px;
+        border-radius: 25px;
+        margin: 12px 0;
+        background-color: transparent;
+        color: $gray;
+        border: 1px solid #2B5EAB;
+    }
+
+    button {
+        border: 1px solid $green;
+        background-color: transparent;
+        color: $white;
+        padding: 6px 32px;
+        border-radius: 20px;
+        margin-top: 12px;
+        font-size: 24px;
+        font-family: $ranchoFont;
+        cursor: pointer;
+    }
+
+    &__title {
+        color: $white;
+        font-family: $poppinsBoldFont;
+        font-size: 34px;
+    }
+
+    &__description {
+        font-size: 12px;
+        color: $gray;
+    }
+}

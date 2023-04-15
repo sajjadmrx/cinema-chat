@@ -1,16 +1,4 @@
 .mainPage {
     display: flex;
-    height: 100vh;
-
-    &__right {
-        flex-basis: 100px;
-        background-color: $secondary-color;
-    }
-
-    &__left {
-        display: flex;
-        flex-grow: 1;
-        background-color: $primary-color;
-        padding: 200px 32px 64px 32px;
-    }
+    padding: 160px 32px 64px 32px;
 }
