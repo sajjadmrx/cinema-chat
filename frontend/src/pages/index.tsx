@@ -1,3 +1,9 @@
-export default function MainPage() {
-  return <div></div>;
+import MainPage from "@/components/MainPage";
+
+export default function IndexPage() {
+  return (
+    <div>
+      <MainPage />
+    </div>
+  );
 }
