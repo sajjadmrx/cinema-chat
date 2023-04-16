@@ -3,24 +3,19 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { InvitesService } from './invites.service';
 import { ResponseInterceptor } from '../../shared/interceptors/response.interceptor';
 import { InviteCreateDto } from './dtos/create.dto';
 import { getUser } from 'src/shared/decorators/user.decorator';
-import { Room } from '../../shared/interfaces/room.interface';
+import { ApiCreateInvite } from './docs/create.doc';
+import { ApiFindRoomInvite } from './docs/findRoom.doc';
 
 @ApiTags('Invites')
 @ApiBearerAuth()
@@ -30,79 +25,19 @@ import { Room } from '../../shared/interfaces/room.interface';
 export class InvitesController {
   constructor(private invitesService: InvitesService) {}
 
-  @ApiOperation({
-    summary: 'create invite',
-    description: 'Create an invitation code to join the room',
-  })
-  @ApiResponse({
-    status: 201,
-    schema: {
-      example: {
-        statusCode: 201,
-        data: 'xw161ca1fa',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 400,
-    schema: {
-      example: {
-        statusCode: 400,
-        message: 'ROOM_NOT_FOUND',
-      },
-    },
-  })
-  @Post()
+  @ApiCreateInvite()
+  @Post(':roomId')
   async create(
+    @Param('roomId', ParseIntPipe) roomId: number,
     @Body() data: InviteCreateDto,
     @getUser('userId') userId: number,
-  ): Promise<string> {
-    return this.invitesService.create(data, userId);
+  ) {
+    return this.invitesService.create(roomId, data, userId);
   }
 
-  @ApiOperation({
-    summary: 'find room by slug',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Find room By Slug',
-    schema: {
-      example: {
-        statusCode: 200,
-        data: {
-          roomId: 26297437,
-          ownerId: 692869485481,
-          name: 'relaxing',
-          isPublic: false,
-          avatar: 'DEFAULT_AVATAR',
-          createdAt: '2022-08-27T06:28:43.142Z',
-          updatedAt: '2022-08-27T06:28:43.142Z',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'INVALID_INVITE',
-      },
-    },
-  })
-  @ApiBadRequestResponse({
-    status: 400,
-    description: 'When the Expire time expired',
-    schema: {
-      example: {
-        statusCode: 400,
-        message: 'EXPIRED_TIME',
-      },
-    },
-  })
-  @ApiParam({ name: 'slug', type: String })
+  @ApiFindRoomInvite()
   @Get(':slug')
-  async findRoom(@Param('slug') slug: string): Promise<Room> {
+  async findRoom(@Param('slug') slug: string) {
     return this.invitesService.findRoom(slug);
   }
 }

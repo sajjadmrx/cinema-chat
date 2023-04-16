@@ -6,20 +6,14 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import {
-  ApiBearerAuth,
-  ApiConsumes,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiFile } from '../../shared/decorators/api-File.decorator';
 import { movieFilter } from './filters/movie.filter';
 import { movieStorage } from './storages/movie.storage';
 import { ResponseInterceptor } from '../../shared/interceptors/response.interceptor';
 import { UploadsService } from './uploads.service';
 import { ExpressFile } from '../../shared/interfaces/file.interface';
+import { ApiUploadMedia } from './docs/uploadMedia.doc';
 
 @ApiTags('Uploads')
 @ApiBearerAuth()
@@ -29,24 +23,7 @@ import { ExpressFile } from '../../shared/interfaces/file.interface';
 export class UploadsController {
   constructor(private uploadService: UploadsService) {}
 
-  @ApiResponse({
-    status: 201,
-    schema: {
-      example: {
-        statusCode: 201,
-        data: {
-          mediaSrc: 'uploads/movies/xxx.mp4',
-          hlsPath: 'hls/xx',
-          hlsPlaylistPath: 'hls/xx/xxx_480_hls.m3u8',
-        },
-      },
-    },
-  })
-  @ApiOperation({
-    summary: 'upload a movie',
-  })
-  @ApiConsumes('multipart/form-data')
-  @ApiFile('movie')
+  @ApiUploadMedia()
   @Post('movie')
   @UseInterceptors(
     FileInterceptor('movie', {

@@ -5,23 +5,19 @@ import {
   Param,
   ParseIntPipe,
   Query,
-  Req,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiQuery,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { MessagesService } from './messages.service';
 import { CheckRoomId } from '../../shared/guards/check-roomId.guard';
 import { CheckCurrentMember } from '../../shared/guards/member.guard';
 import { getUser } from '../../shared/decorators/user.decorator';
-import { CheckMemberPermissions } from '../../shared/guards/member-permissions.guard';
 import { ResponseInterceptor } from '../../shared/interceptors/response.interceptor';
+import { ApiGetRoomMessages } from './docs/getRoomMsgs.doc';
+import { ApiGetMessage } from './docs/getMessage.doc';
+import { ApiDeleteMessage } from './docs/delete-msg.doc';
 
 @ApiBearerAuth()
 @ApiTags('Room Messages')
@@ -33,22 +29,8 @@ import { ResponseInterceptor } from '../../shared/interceptors/response.intercep
 export class RoomMessagesController {
   constructor(private messagesService: MessagesService) {}
 
-  @ApiOperation({
-    summary: 'fetch room messages by roomId',
-  })
-  @ApiQuery({
-    name: 'limit',
-    type: String,
-    required: false,
-    example: 10,
-  })
-  @ApiQuery({
-    name: 'page',
-    type: String,
-    required: false,
-    example: 1,
-  })
-  @Get('')
+  @ApiGetRoomMessages()
+  @Get()
   getRoomMessages(
     @Param('roomId', ParseIntPipe) roomId: number,
     @Query() query: { page: string; limit: string },
@@ -60,9 +42,7 @@ export class RoomMessagesController {
     );
   }
 
-  @ApiOperation({
-    summary: 'fetch message by MessageID',
-  })
+  @ApiGetMessage()
   @Get(':messageId')
   getMessage(
     @Param('roomId', ParseIntPipe) roomId: number,
@@ -72,7 +52,7 @@ export class RoomMessagesController {
   }
 
   // @UseGuards(CheckMemberPermissions(["ADMINISTRATOR",""])
-  @ApiOperation({ summary: 'delete message By MessageId' })
+  @ApiDeleteMessage()
   @Delete(':messageId')
   delete(
     @Param('roomId', ParseIntPipe) roomId: number,

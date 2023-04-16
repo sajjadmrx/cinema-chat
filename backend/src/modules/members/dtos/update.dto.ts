@@ -26,10 +26,10 @@ export class UpdateCurrentMemberDto {
   nickname: string;
 
   @ApiProperty({
-    type: [String],
+    type: Array,
     required: true,
-    enum: Object.keys(MemberPermission),
     isArray: true,
+    example: [MemberPermission.DEFAULT],
     description: 'required Permission: ADMINISTRATOR, for update this field',
   })
   @ArrayContains([MemberPermission.DEFAULT])

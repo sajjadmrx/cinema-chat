@@ -28,7 +28,7 @@ export class CheckCurrentMember implements CanActivate {
         user.userId,
       );
       if (!member)
-        throw new ForbiddenException(ResponseMessages.MEMBER_NOT_FOUND);
+        throw new ForbiddenException(ResponseMessages.USER_NOT_MEMBER);
 
       request.currentMember = member;
       return true;

@@ -14,7 +14,10 @@ export class MembersCacheRepository {
   async getMembers(roomId: number): Promise<MemberWithRoom[]> {
     const cacheKey = this.cachePrefix + roomId;
     const cachedData = await this.cacheService.get(cacheKey);
-    return cachedData ? JSON.parse(cachedData) : [];
+
+    const data = cachedData ? JSON.parse(cachedData) : [];
+    if (!data[0]) return [];
+    return data;
   }
 
   async updateMembers(roomId: number, members: Member[]): Promise<void> {

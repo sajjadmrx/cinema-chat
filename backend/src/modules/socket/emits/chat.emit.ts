@@ -10,7 +10,6 @@ import {
   UpdateMemberStatusPayload,
 } from '../payloads/member.payload';
 import { Message } from '../../../shared/interfaces/message.interface';
-import { MessageCreateDto } from '../../messages/dtos/creates.dto';
 import {
   MessageDeletePayload,
   MessagePayload,

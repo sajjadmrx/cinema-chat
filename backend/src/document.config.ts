@@ -59,7 +59,7 @@ export class DocumentConfig {
        \n
         {
             statusCode: int,
-            data : any
+            data : string | object | array
         }
 
     `,

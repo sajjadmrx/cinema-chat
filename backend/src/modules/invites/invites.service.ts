@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
   Logger,
   NotFoundException,
@@ -13,6 +14,7 @@ import { Invite } from 'src/shared/interfaces/invite.interface';
 import * as moment from 'moment';
 import { Member } from 'src/shared/interfaces/member.interface';
 import { MembersRepository } from '../members/repositories/members.repository';
+import { ResponseFormat } from '../../shared/interfaces/response.interface';
 
 @Injectable()
 export class InvitesService {
@@ -24,35 +26,40 @@ export class InvitesService {
     private membersRepository: MembersRepository,
   ) {}
 
-  async create(input: InviteCreateDto, userId: number): Promise<string> {
+  async create(
+    roomId: number,
+    input: InviteCreateDto,
+    userId: number,
+  ): Promise<ResponseFormat<string>> {
     try {
-      const room: Room | null = await this.roomsRepository.getById(
-        input.roomId,
-      );
-      if (!room) throw new BadRequestException(ResponseMessages.ROOM_NOT_FOUND);
+      const room: Room | null = await this.roomsRepository.getById(roomId);
+      if (!room) throw new NotFoundException(ResponseMessages.ROOM_NOT_FOUND);
 
       const member: Member | null =
         await this.membersRepository.getByRoomIdAndUserId(room.roomId, userId);
 
       if (!member)
-        throw new NotFoundException(ResponseMessages.MEMBER_NOT_FOUND);
+        throw new BadRequestException(ResponseMessages.USER_NOT_MEMBER);
 
       const invite: Invite = await this.invitesRepo.create({
         inviterId: userId,
         expires_at: input.expires_at,
         max_use: input.max_use,
-        roomId: input.roomId,
+        roomId: roomId,
         isForEver: input.isForEver,
       });
 
-      return invite.slug;
+      return {
+        statusCode: HttpStatus.CREATED,
+        data: invite.slug,
+      };
     } catch (error: any) {
       this.logger.error(error.message, error.stack);
       throw error;
     }
   }
 
-  async findRoom(slug: string): Promise<Room> {
+  async findRoom(slug: string): Promise<ResponseFormat<any>> {
     try {
       const invite: Invite | null = await this.invitesRepo.getBySlug(slug);
       if (!invite) throw new NotFoundException(ResponseMessages.INVALID_INVITE);
@@ -73,7 +80,13 @@ export class InvitesService {
 
       await this.invitesRepo.updateUsesById(invite.inviteId);
 
-      return room;
+      return {
+        statusCode: HttpStatus.OK,
+        data: {
+          inviteId: invite.inviteId,
+          ...room,
+        },
+      };
     } catch (error: any) {
       this.logger.error(error.message, error.stack);
       throw error;

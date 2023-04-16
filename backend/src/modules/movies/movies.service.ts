@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -8,6 +9,7 @@ import { MovieCreateDto } from './dto/create.dto';
 import { Movie } from '../../shared/interfaces/movie.interface';
 import { ResponseMessages } from '../../shared/constants/response-messages.constant';
 import { FileService } from '../file/file.service';
+import { ResponseFormat } from '../../shared/interfaces/response.interface';
 
 @Injectable()
 export class MoviesService {
@@ -16,7 +18,7 @@ export class MoviesService {
     private fileService: FileService,
   ) {}
 
-  async create(data: MovieCreateDto) {
+  async create(data: MovieCreateDto): Promise<ResponseFormat<Movie>> {
     try {
       let movie: Movie = await this.moviesRepository.getByMediaSrc(
         data.mediaSrc,
@@ -27,7 +29,8 @@ export class MoviesService {
       const hasExistSrc: boolean = await this.fileService.checkFileExists(
         data.mediaSrc,
       );
-      if (!hasExistSrc) throw new BadRequestException('SRC_INVALID');
+      if (!hasExistSrc)
+        throw new NotFoundException(ResponseMessages.INVALID_SRC);
 
       movie = await this.moviesRepository.create({
         mediaSrc: data.mediaSrc,
@@ -35,13 +38,18 @@ export class MoviesService {
         hlsPlaylistPath: data.hlsPlaylistPath,
         description: data.description,
       });
-      return movie;
+      return {
+        statusCode: HttpStatus.CREATED,
+        data: movie,
+      };
     } catch (e) {
       throw e;
     }
   }
 
-  async deleteByMovieId(movieId: number) {
+  async deleteByMovieId(
+    movieId: number,
+  ): Promise<ResponseFormat<ResponseMessages>> {
     try {
       let movie: Movie | null = await this.moviesRepository.getByMovieId(
         movieId,
@@ -56,15 +64,22 @@ export class MoviesService {
         await this.fileService.removeByPath(movie.hlsSrc);
       }
       await this.moviesRepository.deleteByMovieId(movieId);
-      return ResponseMessages.SUCCESS;
+      return {
+        statusCode: HttpStatus.OK,
+        data: ResponseMessages.SUCCESS,
+      };
     } catch (e) {
       throw e;
     }
   }
 
-  async find(page: number, limit: number): Promise<Movie[]> {
+  async find(page: number, limit: number): Promise<ResponseFormat<Movie[]>> {
     if (page < 0) page = 1;
     if (limit > 10 || limit < 0) limit = 10;
-    return this.moviesRepository.find(page, limit);
+    const media = await this.moviesRepository.find(page, limit);
+    return {
+      statusCode: HttpStatus.OK,
+      data: media,
+    };
   }
 }

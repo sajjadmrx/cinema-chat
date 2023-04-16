@@ -12,13 +12,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiParam,
-  ApiQuery,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { getUser } from 'src/shared/decorators/user.decorator';
 import { CheckRoomId } from 'src/shared/guards/check-roomId.guard';
 import { ResponseInterceptor } from 'src/shared/interceptors/response.interceptor';
@@ -27,14 +21,18 @@ import { MemberCreateDto } from './dtos/create.dto';
 import { MembersService } from './members.service';
 import { CheckCurrentMember } from '../../shared/guards/member.guard';
 import { CheckMemberPermissions } from '../../shared/guards/member-permissions.guard';
-import { KickDto } from './dtos/kick.dto';
 import { UpdateCurrentMemberDto } from './dtos/update.dto';
 import { getMember } from '../../shared/decorators/member.decorator';
 import {
   Member,
   MemberWithRoom,
 } from '../../shared/interfaces/member.interface';
-import { ResponseMessages } from '../../shared/constants/response-messages.constant';
+import { ApiGetAllMembers } from './docs/getAll.doc';
+import { ApiLaveMember } from './docs/lave.doc';
+import { ApiKickMember } from './docs/kick.doc';
+import { ApiJoinRoom } from './docs/joinRoom.doc';
+import { ApiUpdateMember } from './docs/updateCurrentMember.doc';
+import { ApiGetMemberById } from './docs/getMemberById.doc';
 
 @ApiBearerAuth()
 @ApiTags('members')
@@ -45,30 +43,18 @@ import { ResponseMessages } from '../../shared/constants/response-messages.const
 export class MembersController {
   constructor(private membersService: MembersService) {}
 
-  @ApiQuery({
-    name: 'limit',
-    type: Number,
-    required: true,
-    example: 10,
-  })
-  @ApiQuery({
-    name: 'page',
-    type: Number,
-    required: true,
-    example: 1,
-  })
-  @ApiOperation({ summary: 'Get Members' })
+  @ApiGetAllMembers()
   @UseGuards(CheckCurrentMember)
   @Get()
   getAll(
     @Param('roomId', ParseIntPipe) roomId: number,
     @Query('page', ParseIntPipe) page: number,
     @Query('limit', ParseIntPipe) limit: number,
-  ): Promise<Member[]> {
+  ) {
     return this.membersService.find(roomId, page, limit);
   }
 
-  @ApiOperation({ summary: 'Add Current user to room' })
+  @ApiJoinRoom()
   @Put()
   async joinRoom(
     @Param('roomId', ParseIntPipe) roomId: number,
@@ -78,46 +64,39 @@ export class MembersController {
     return this.membersService.joinRoom(roomId, Number(input.inviteId), user);
   }
 
-  @ApiOperation({ summary: 'lave Current user from room' })
-  @Delete('/lave')
+  @ApiLaveMember()
+  @Put('/lave')
   async lave(
     @Param('roomId', ParseIntPipe) roomId: number,
     @getUser() user: User,
-  ): Promise<ResponseMessages> {
+  ) {
     return this.membersService.laveRoom(roomId, user);
   }
 
-  @ApiOperation({
-    summary: 'delete a member',
-    description: "required permissions: 'ADMINISTRATOR' or 'MANAGE_MEMBERS'",
-  })
+  @ApiKickMember()
   @UseGuards(CheckMemberPermissions(['ADMINISTRATOR', 'MANAGE_MEMBERS']))
   @UseGuards(CheckCurrentMember)
-  @Delete()
+  @Delete('/:memberId')
   async kick(
     @Param('roomId', ParseIntPipe) roomId: number,
-    @Body() input: KickDto,
+    @Param('memberId', ParseIntPipe) memberId: number,
     @getUser() requester: User,
-  ): Promise<ResponseMessages> {
-    return this.membersService.delete(
-      roomId,
-      Number(input.memberId),
-      requester,
-    );
+  ) {
+    return this.membersService.delete(roomId, Number(memberId), requester);
   }
 
-  @ApiOperation({ summary: 'update current member' })
+  @ApiUpdateMember('update current member')
   @UseGuards(CheckCurrentMember)
   @Patch()
   async updateCurrentMember(
     @Param('roomId', ParseIntPipe) roomId: number,
     @Body() input: UpdateCurrentMemberDto,
     @getMember<Member>() requester: MemberWithRoom,
-  ): Promise<ResponseMessages> {
+  ) {
     return this.membersService.updateMember(requester.userId, requester, input);
   }
 
-  @ApiOperation({ summary: 'update a member' })
+  @ApiUpdateMember('update a member')
   @UseGuards(CheckCurrentMember)
   @Patch(':memberId')
   async updateMember(
@@ -125,17 +104,17 @@ export class MembersController {
     @Param('memberId', ParseIntPipe) memberId: number,
     @Body() input: UpdateCurrentMemberDto,
     @getMember<Member>() requester: MemberWithRoom,
-  ): Promise<ResponseMessages> {
+  ) {
     return this.membersService.updateMember(memberId, requester, input);
   }
 
-  @ApiOperation({ summary: 'fetch member by MemberId' })
+  @ApiGetMemberById()
   @UseGuards(CheckCurrentMember)
   @Get(':memberId')
   async getMemberById(
     @Param('roomId', ParseIntPipe) roomId: number,
     @Param('memberId', ParseIntPipe) memberId: number,
-  ): Promise<Member> {
+  ) {
     return this.membersService.getMember(roomId, memberId);
   }
 }

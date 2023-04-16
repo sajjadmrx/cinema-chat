@@ -3,6 +3,7 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
@@ -25,7 +26,7 @@ export class CheckRoomId implements CanActivate {
       request.currentRoom = room;
       return true;
     } catch (error) {
-      throw new BadRequestException(ResponseMessages.ROOM_NOT_FOUND);
+      throw new NotFoundException(ResponseMessages.ROOM_NOT_FOUND);
     }
   }
 }

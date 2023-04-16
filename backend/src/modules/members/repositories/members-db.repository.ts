@@ -28,6 +28,14 @@ export class MembersDbRepository {
     });
   }
 
+  async membersCount(roomId: number): Promise<number> {
+    return this.db.member.count({
+      where: {
+        roomId,
+      },
+    });
+  }
+
   async getByRoomIdAndUserId(
     roomId: number,
     userId: number,

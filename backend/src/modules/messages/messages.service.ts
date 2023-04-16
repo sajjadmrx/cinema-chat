@@ -1,13 +1,13 @@
 import { MessagesRepository } from './messages.repository';
 import {
   Message,
-  MessageCreateInput,
   MessageUpdateResult,
 } from '../../shared/interfaces/message.interface';
 import { MessageCreateDto } from './dtos/creates.dto';
 import {
   BadRequestException,
   ForbiddenException,
+  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -17,6 +17,7 @@ import { Room } from '../../shared/interfaces/room.interface';
 import { RoomsRepository } from '../rooms/rooms.repository';
 import { ChatEmit } from '../socket/emits/chat.emit';
 import { MembersRepository } from '../members/repositories/members.repository';
+import { ResponseFormat } from '../../shared/interfaces/response.interface';
 
 @Injectable()
 export class MessagesService {
@@ -27,7 +28,11 @@ export class MessagesService {
     private chatEmits: ChatEmit,
   ) {}
 
-  async getRoomMessages(roomId: number, page: number, limit: number) {
+  async getRoomMessages(
+    roomId: number,
+    page: number,
+    limit: number,
+  ): Promise<ResponseFormat<Message[]>> {
     try {
       if (!Number(roomId)) throw new BadRequestException();
 
@@ -43,17 +48,23 @@ export class MessagesService {
         page,
         limit,
       );
-      return messages;
+      return {
+        statusCode: HttpStatus.OK,
+        data: messages,
+      };
     } catch (e) {
       throw e;
     }
   }
 
-  async getByMessageId(messageId: number) {
+  async getByMessageId(messageId: number): Promise<ResponseFormat<Message>> {
     if (!Number(messageId)) throw new BadRequestException();
 
     const message = await this.messagesRepository.getById(messageId);
-    return message;
+    return {
+      statusCode: HttpStatus.OK,
+      data: message,
+    };
   }
 
   async create(
@@ -117,7 +128,11 @@ export class MessagesService {
     }
   }
 
-  async deleteRoomMessage(roomId: number, memberId: number, messageId: number) {
+  async deleteRoomMessage(
+    roomId: number,
+    memberId: number,
+    messageId: number,
+  ): Promise<ResponseFormat<any>> {
     try {
       if (!Number(roomId) || !Number(messageId))
         throw new BadRequestException();
@@ -144,7 +159,12 @@ export class MessagesService {
         messageId,
       );
       this.chatEmits.deleteMessage(roomId, memberId, messageId);
-      return deletedMessage.messageId;
+      return {
+        statusCode: HttpStatus.OK,
+        data: {
+          messageId: deletedMessage.messageId,
+        },
+      };
     } catch (e) {
       throw e;
     }
