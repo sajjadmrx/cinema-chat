@@ -1,57 +1,89 @@
+/***** IMPORT FONTFAMILY *****/
 @font-face {
-    font-family: 'shabnam';
-    src: url('../../public/assets/fonts/shabnam/Shabnam.woff2');
-    src: url('../../public/assets/fonts/shabnam/Shabnam.woff');
-    src: url('../../public/assets/fonts/shabnam/Shabnam.eot');
-    src: url('../../public/assets/fonts/shabnam/Shabnam.ttf');
-    font-weight: 400;
-    font-style: normal;
+  font-family: "shabnam";
+  src: url("../../public/assets/fonts/shabnam/Shabnam.woff2");
+  src: url("../../public/assets/fonts/shabnam/Shabnam.woff");
+  src: url("../../public/assets/fonts/shabnam/Shabnam.eot");
+  src: url("../../public/assets/fonts/shabnam/Shabnam.ttf");
+  font-weight: 400;
+  font-style: normal;
 }
 @font-face {
-    font-family: 'shabnam-bold';
-    src: url('../../public/assets/fonts/shabnam/Shabnam-Bold.eot');
-    src: url('../../public/assets/fonts/shabnam/Shabnam-Bold.ttf');
-    src: url('../../public/assets/fonts/shabnam/Shabnam-Bold.woff');
-    src: url('../../public/assets/fonts/shabnam/Shabnam-Bold.woff2');
-    font-weight: 800;
-    font-style: normal;
+  font-family: "shabnam-bold";
+  src: url("../../public/assets/fonts/shabnam/Shabnam-Bold.eot");
+  src: url("../../public/assets/fonts/shabnam/Shabnam-Bold.ttf");
+  src: url("../../public/assets/fonts/shabnam/Shabnam-Bold.woff");
+  src: url("../../public/assets/fonts/shabnam/Shabnam-Bold.woff2");
+  font-weight: 800;
+  font-style: normal;
 }
 @font-face {
-    font-family: 'rancho';
-    src: url('../../public/assets/fonts/rancho/Rancho-Regular.ttf');
-    font-weight: 400;
-    font-style: normal;
+  font-family: "rancho";
+  src: url("../../public/assets/fonts/rancho/Rancho-Regular.ttf");
+  font-weight: 400;
+  font-style: normal;
 }
 @font-face {
-    font-family: 'poppins';
-    src: url('../../public/assets/fonts/poppins/Poppins-Regular.ttf');
-    font-weight: 400;
-    font-style: normal;
+  font-family: "poppins";
+  src: url("../../public/assets/fonts/poppins/Poppins-Regular.ttf");
+  font-weight: 400;
+  font-style: normal;
 }
 @font-face {
-    font-family: 'poppins-bold';
-    src: url('../../public/assets/fonts/poppins/Poppins-Bold.ttf');
-    font-weight: 800;
-    font-style: normal;
+  font-family: "poppins-bold";
+  src: url("../../public/assets/fonts/poppins/Poppins-Bold.ttf");
+  font-weight: 800;
+  font-style: normal;
 }
 
-html{
-    direction: rtl;
-    margin: 0;
-    box-sizing: border-box;
-    height: 100%;
+html {
+  direction: rtl;
+  margin: 0;
+  box-sizing: border-box;
+  height: 100%;
 }
 
-*{
-    box-sizing: border-box;
+* {
+  box-sizing: border-box;
 }
 
-body{
-    margin: 0;
-    height: 100%;
+body {
+  margin: 0;
+  height: 100%;
 }
 
-input{
-    border: 0;
-    outline: 0;
+input {
+  border: 0;
+  outline: 0;
+}
+
+/***** TAILWINDCSS *****/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply scroll-smooth text-gray-900 bg-white;
+  }
+
+  a,
+  button {
+    @apply select-none;
+  }
+
+  a {
+    @apply focus:outline-none;
+  }
+
+  button,
+  input {
+    @apply focus:outline-none;
+  }
+}
+
+@layer components {
+  .remove-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
