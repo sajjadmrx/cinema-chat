@@ -36,27 +36,6 @@
   font-style: normal;
 }
 
-html {
-  direction: rtl;
-  margin: 0;
-  box-sizing: border-box;
-  height: 100%;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  height: 100%;
-}
-
-input {
-  border: 0;
-  outline: 0;
-}
-
 /***** TAILWINDCSS *****/
 @tailwind base;
 @tailwind components;
@@ -86,4 +65,24 @@ input {
   .remove-scrollbar::-webkit-scrollbar {
     display: none;
   }
+}
+
+html {
+  direction: rtl;
+  margin: 0;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+}
+
+input {
+  outline: 0;
 }
