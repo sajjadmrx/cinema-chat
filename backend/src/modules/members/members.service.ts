@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   forwardRef,
+  HttpStatus,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -23,6 +24,7 @@ import { ChatService } from '../socket/services/chat.service';
 import { ChatEmit } from '../socket/emits/chat.emit';
 import { RoomsRepository } from '../rooms/rooms.repository';
 import { MembersRepository } from './repositories/members.repository';
+import { ResponseFormat } from '../../shared/interfaces/response.interface';
 
 @Injectable()
 export class MembersService {
@@ -37,22 +39,40 @@ export class MembersService {
     private roomsRep: RoomsRepository,
   ) {}
 
-  async find(roomId: number, page: number, limit: number): Promise<Member[]> {
+  async find(
+    roomId: number,
+    page: number,
+    limit: number,
+  ): Promise<ResponseFormat<any>> {
     const maxLimit = 10;
     if (!page || !limit || Number(page) < 1 || Number(limit) < 1) {
       page = 1;
       limit = maxLimit;
     }
     if (limit > maxLimit) limit = maxLimit;
-    if (!Number(roomId)) return [];
-    return await this.membersRep.find(roomId, page, limit);
+
+    const members = await this.membersRep.find(roomId, page, limit);
+
+    const totalMembers: number = await this.membersRep.membersCount(roomId);
+    const totalPages = Math.ceil(totalMembers / limit);
+    const nextPage = page < totalPages ? page + 1 : null;
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: {
+        totalMembers,
+        totalPages,
+        nextPage,
+        members,
+      },
+    };
   }
 
   async joinRoom(
     roomId: number,
     inviteId: number | null,
     user: User,
-  ): Promise<any> {
+  ): Promise<ResponseFormat<any>> {
     try {
       if (Number(inviteId)) {
         const invite = await this.invitesRepository.getById(inviteId);
@@ -83,21 +103,29 @@ export class MembersService {
 
       this.chatEmits.newMember(roomId, member); //TODO: or send Message system!
 
-      return ResponseMessages.OK;
+      return {
+        statusCode: HttpStatus.OK,
+        data: {
+          member,
+        },
+      };
     } catch (error: any) {
       this.logger.error(error, error.satck);
       throw error;
     }
   }
 
-  async laveRoom(roomId: number, user: User) {
+  async laveRoom(
+    roomId: number,
+    user: User,
+  ): Promise<ResponseFormat<ResponseMessages>> {
     try {
       const member: Member | null = await this.membersRep.getByRoomIdAndUserId(
         roomId,
         user.userId,
       );
       if (!member)
-        throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
+        throw new BadRequestException(ResponseMessages.USER_NOT_MEMBER);
 
       const room: Room = await this.roomsRep.getById(roomId);
       if (room.ownerId == member.userId) {
@@ -115,7 +143,10 @@ export class MembersService {
           roomId,
         );
         this.chatEmits.laveMember(roomId, member);
-        return ResponseMessages.SUCCESS;
+        return {
+          statusCode: HttpStatus.OK,
+          data: ResponseMessages.SUCCESS,
+        };
       } else {
         throw new InternalServerErrorException();
       }
@@ -125,12 +156,16 @@ export class MembersService {
     }
   }
 
-  async delete(roomId: number, memberId: number, requester: User) {
+  async delete(
+    roomId: number,
+    memberId: number,
+    requester: User,
+  ): Promise<ResponseFormat<ResponseMessages>> {
     try {
       const hasMember: Member | null =
         await this.membersRep.getByRoomIdAndUserId(roomId, memberId);
       if (!hasMember)
-        throw new BadRequestException(ResponseMessages.MEMBER_NOT_FOUND);
+        throw new BadRequestException(ResponseMessages.USER_NOT_MEMBER);
 
       //   const room: Room = hasMember.room;
 
@@ -159,7 +194,10 @@ export class MembersService {
       //
       // this.chatEmits.kickMember(String(roomId), member, requester.userId);
 
-      return ResponseMessages.SUCCESS;
+      return {
+        statusCode: HttpStatus.OK,
+        data: ResponseMessages.SUCCESS,
+      };
     } catch (e: any) {
       this.logger.error(e, e.stack);
       throw e;
@@ -170,7 +208,7 @@ export class MembersService {
     memberId: number, //target
     requester: MemberWithRoom, // requester
     input: UpdateCurrentMemberDto,
-  ) {
+  ): Promise<ResponseFormat<ResponseMessages>> {
     try {
       const member: Member | null =
         memberId == requester.userId
@@ -206,6 +244,7 @@ export class MembersService {
         member.userId == room.ownerId
       )
         throw new BadRequestException(); //TODO: better message
+
       if (memberId == requester.userId && oldPerms.includes('ADMINISTRATOR')) {
         if (!permissions.includes('ADMINISTRATOR'))
           throw new BadRequestException('can not take Administrator your self'); //TODO: better Message
@@ -219,25 +258,32 @@ export class MembersService {
         requester.userId,
         input,
       );
-      return ResponseMessages.SUCCESS;
+      return {
+        statusCode: HttpStatus.OK,
+        data: ResponseMessages.SUCCESS,
+      };
     } catch (e: any) {
       this.logger.error(e, e.stack);
       throw e;
     }
   }
 
-  async getMember(roomId: number, memberId: number): Promise<Member> {
+  async getMember(
+    roomId: number,
+    memberId: number,
+  ): Promise<ResponseFormat<MemberWithRoom>> {
     try {
       if (!Number(roomId) || !Number(memberId)) throw new BadRequestException();
 
-      const member: Member | null = await this.membersRep.getByRoomIdAndUserId(
-        roomId,
-        memberId,
-      );
+      const member: MemberWithRoom | null =
+        await this.membersRep.getByRoomIdAndUserId(roomId, memberId);
       if (!member)
         throw new NotFoundException(ResponseMessages.MEMBER_NOT_FOUND);
 
-      return member;
+      return {
+        statusCode: HttpStatus.OK,
+        data: member,
+      };
     } catch (e) {
       throw e;
     }

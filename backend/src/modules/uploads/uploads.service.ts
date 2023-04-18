@@ -26,7 +26,7 @@ export class UploadsService {
     );
     return {
       mediaSrc: file.path,
-      hlsPath: outHlsFolder,
+      hlsSrc: outHlsFolder,
       hlsPlaylistPath,
     };
   }

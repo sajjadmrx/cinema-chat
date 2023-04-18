@@ -29,6 +29,10 @@ export class MembersRepository {
     return this.membersDbRepo.find(roomId, page, limit);
   }
 
+  async membersCount(roomId: number): Promise<number> {
+    return this.membersDbRepo.membersCount(roomId);
+  }
+
   async getByRoomIdAndUserId(
     roomId: number,
     userId: number,

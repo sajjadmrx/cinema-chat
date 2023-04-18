@@ -6,6 +6,7 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { SignInDto } from './dtos/signin.dto';
 import { ResponseMessages } from '../../shared/constants/response-messages.constant';
+import { ResponseFormat } from '../../shared/interfaces/response.interface';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(input: SignUpDto): Promise<string> {
+  async signUp(input: SignUpDto): Promise<ResponseFormat<string>> {
     try {
       const usersExists: User[] =
         await this.usersRepository.findByEmailOrUsername(
@@ -30,14 +31,17 @@ export class AuthService {
 
       const createdUser = await this.usersRepository.insert(input);
 
-      return this.jwtSignUserId(createdUser.userId);
+      return {
+        statusCode: 201,
+        data: this.jwtSignUserId(createdUser.userId),
+      };
     } catch (error: any) {
       this.logger.error(error.message, error.stack);
       throw error;
     }
   }
 
-  async login(input: SignInDto): Promise<string> {
+  async login(input: SignInDto): Promise<ResponseFormat<string>> {
     try {
       let user: User | null = await this.usersRepository.getByUsername(
         input.username,
@@ -49,7 +53,11 @@ export class AuthService {
             ResponseMessages.INVALID_USERNAME_PASSWORD,
           );
 
-        return this.jwtSignUserId(user.userId);
+        const token = this.jwtSignUserId(user.userId);
+        return {
+          statusCode: 200,
+          data: token,
+        };
       }
       throw new BadRequestException(ResponseMessages.INVALID_USERNAME_PASSWORD);
     } catch (error: any) {

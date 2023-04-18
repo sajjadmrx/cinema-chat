@@ -39,11 +39,28 @@ export class RoomsRepository {
       skip: (page - 1) * limit,
     });
   }
+  async getUserRoomsCount(userId: number) {
+    return this.db.room.count({
+      where: {
+        members: {
+          some: { userId },
+        },
+      },
+    });
+  }
 
   async getPublicRooms(page: number, limit: number) {
     return this.db.room.findMany({
       take: limit,
       skip: (page - 1) * limit,
+    });
+  }
+
+  async getTotalPublicRooms() {
+    return this.db.room.count({
+      where: {
+        isPublic: false, //todo change to true
+      },
     });
   }
 

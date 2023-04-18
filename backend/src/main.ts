@@ -24,8 +24,10 @@ async function bootstrap() {
 
   console.log(`App Running On ${port}`);
 
-  isDevelopmentMode &&
+  if (isDevelopmentMode) {
     console.log(`AsyncApi at http://localhost:${port}/socket`);
+    console.log(`RestApi Docs: http://localhost:${port}/api`);
+  }
 }
 
 bootstrap();

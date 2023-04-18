@@ -25,11 +25,4 @@ export class InviteCreateDto {
   })
   @IsNumber()
   max_use: number;
-
-  @ApiProperty({
-    description: 'room Id',
-    required: true,
-  })
-  @IsNumber()
-  roomId: number;
 }
