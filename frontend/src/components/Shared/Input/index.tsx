@@ -34,7 +34,9 @@ export default function Input({
         type={inputType}
         placeholder={placeholder}
         className={classNames(
-          "w-full py-2 bg-white px-4 text-sm rounded-xl placeholder-gray-500 text-gray-800 transition duration-100 ease-in-out border border-gray-200 focus:border-blue-700 focus:ring-1 focus:ring-blue-700 pr-10",
+          "w-full py-2.5 bg-white text-sm rounded-xl placeholder-gray-500 text-gray-800 transition duration-100 ease-in-out border border-gray-200 focus:border-blue-700 focus:ring-1 focus:ring-blue-700",
+          type === "password" ? "pr-10" : "pr-4",
+          icon ? " pl-10" : " pl-4",
           inputClassName,
         )}
         onChange={onChange}
@@ -44,7 +46,7 @@ export default function Input({
         <button
           type="button"
           style={{ transform: "translateY(-50%)" }}
-          className="absolute top-1/2 left-3 transform -translate-y-1/2"
+          className="absolute top-1/2 right-3 transform -translate-y-1/2"
           onClick={onTogglePassword}
         >
           {showPassword ? (
