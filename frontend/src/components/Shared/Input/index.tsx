@@ -15,6 +15,7 @@ export default function Input({
   className,
   inputClassName,
   onChange,
+  formik,
 }: IInput) {
   const [inputType, setInputType] = useState(type || "text")
   const [showPassword, setShowPassword] = useState(false)
@@ -25,36 +26,44 @@ export default function Input({
   }
 
   return (
-    <div className={classNames("relative", className)}>
-      <input
-        id={id}
-        dir={dir}
-        name={name}
-        value={value}
-        type={inputType}
-        placeholder={placeholder}
-        className={classNames(
-          "w-full py-2.5 bg-white text-sm rounded-xl placeholder-gray-500 text-gray-800 transition duration-100 ease-in-out border border-gray-200 focus:border-blue-700 focus:ring-1 focus:ring-blue-700",
-          type === "password" ? "pr-10" : "pr-4",
-          icon ? " pl-10" : " pl-4",
-          inputClassName,
-        )}
-        onChange={onChange}
-      />
-      {icon}
-      {type === "password" && (
-        <button
-          type="button"
-          style={{ transform: "translateY(-50%)" }}
-          className="absolute top-1/2 right-3 transform -translate-y-1/2"
-          onClick={onTogglePassword}
-        >
-          {showPassword ? (
-            <Icon name="eye" size={16} />
-          ) : (
-            <Icon name="eye-slash" size={16} />
+    <div>
+      <div className={classNames("relative", className)}>
+        <input
+          id={id}
+          dir={dir}
+          name={name}
+          value={value}
+          type={inputType}
+          placeholder={placeholder}
+          className={classNames(
+            "w-full py-2.5 bg-white text-sm rounded-xl placeholder-gray-500 text-gray-800 transition duration-100 ease-in-out border border-gray-200 focus:border-blue-700 focus:ring-1 focus:ring-blue-700",
+            type === "password" ? "pr-10" : "pr-4",
+            icon ? " pl-10" : " pl-4",
+            inputClassName,
           )}
-        </button>
+          onChange={onChange}
+          {...formik.getFieldProps(name)}
+        />
+        {icon}
+        {type === "password" && (
+          <button
+            type="button"
+            style={{ transform: "translateY(-50%)" }}
+            className="absolute top-1/2 right-3 transform -translate-y-1/2"
+            onClick={onTogglePassword}
+          >
+            {showPassword ? (
+              <Icon name="eye" size={16} />
+            ) : (
+              <Icon name="eye-slash" size={16} />
+            )}
+          </button>
+        )}
+      </div>
+      {formik?.errors[name] && formik?.touched[name] && (
+        <div className="text-xs text-secondary mt-1 !text-left">
+          {formik.errors[name]}
+        </div>
       )}
     </div>
   )
