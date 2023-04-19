@@ -12,34 +12,32 @@ let timer: any
 
 const initialValues = {
   username: "",
-  email: "",
   password: "",
 }
 
 const validationSchema = Yup.object({
   username: Yup.string().required("Please enter username"),
-  email: Yup.string().email("Invalid email address").required("Please enter email"),
   password: Yup.string()
     .required("Please enter password")
     .min(8, "Password must be at least 8 characters long"),
 })
 
-const SignUp = () => {
+const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   const router = useRouter()
 
   const onSubmit = async (values: any) => {
     setIsLoading(true)
-    toast.loading("Registering")
+    toast.loading("Entering the website")
 
-    const res = await authService.signUpUser(values)
+    const res = await authService.logInUser(values)
 
     if (res.success) {
       setIsLoading(false)
       localStorage.setItem("token", res.token)
       toast.dismiss()
-      toast.success("Your account has been successfully created")
+      toast.success("Login was successful!")
       timer = setInterval(() => router.push("/"), 2000)
     } else {
       toast.dismiss()
@@ -64,7 +62,7 @@ const SignUp = () => {
       <div className="p-16 pb-32 w-full lg:w-1/3 rounded-l-2xl bg-white z-10 lg:max-w-xl text-center grid place-items-center">
         <div className="w-full">
           <h1 className="mb-2 text-2xl font-bold">
-            Sigup in <span className="text-primaryHover">Cinema Chat</span>
+            Log in <span className="text-primaryHover">Cinema Chat</span>
           </h1>
           <p className="text-sm text-gray-500 mb-8">
             Welcome back! Please enter your details
@@ -78,19 +76,6 @@ const SignUp = () => {
               icon={
                 <Icon
                   name="user"
-                  size={20}
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2"
-                />
-              }
-            />
-            <Input
-              name="email"
-              type="email"
-              formik={formik}
-              placeholder="Email"
-              icon={
-                <Icon
-                  name="mail"
                   size={20}
                   className="absolute left-3 top-1/2 transform -translate-y-1/2"
                 />
@@ -111,13 +96,13 @@ const SignUp = () => {
             />
 
             <Button type="submit" variant="primary" loading={isLoading} className="mt-5">
-              Signup
+              Login
             </Button>
 
             <p className="mt-4 mb-2 text-sm text-left">
-              Do you have an account before?{" "}
-              <Link href="/login" className="text-primary hover:text-primaryActive">
-                Login
+              Don't have an account?{" "}
+              <Link href="/signup" className="text-primary hover:text-primaryActive">
+                Sign up
               </Link>
             </p>
           </form>
@@ -129,4 +114,4 @@ const SignUp = () => {
   )
 }
 
-export default SignUp
+export default LoginForm
