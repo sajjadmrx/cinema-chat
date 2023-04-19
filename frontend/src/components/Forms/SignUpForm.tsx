@@ -44,6 +44,12 @@ const SignUp = () => {
     } else {
       toast.dismiss()
       setIsLoading(false)
+
+      const userAlreadyExists = res.error.response.data.message === "USER_EXISTS"
+      const serverError = res.error.response.data.message === "SERVER_ERROR"
+
+      if (userAlreadyExists) toast.error("User already exists")
+      if (serverError) toast.error("There is a problem on the server side")
     }
   }
 

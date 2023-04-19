@@ -20,3 +20,12 @@ export const logInUser = async (user: loginUser) => {
     return { success: false, error }
   }
 }
+
+export const verifyToken = async () => {
+  try {
+    const { data } = await http.post("/auth/me")
+    return { success: true, user: data.data }
+  } catch (err) {
+    return { success: false, error: err }
+  }
+}

@@ -42,6 +42,13 @@ const LoginForm = () => {
     } else {
       toast.dismiss()
       setIsLoading(false)
+
+      const invalidUsernamePassword =
+        res.error.response.data.message === "INVALID_USERNAME_PASSWORD"
+      const serverError = res.error.response.data.message === "SERVER_ERROR"
+
+      if (invalidUsernamePassword) toast.error("Username or password is incorrect")
+      if (serverError) toast.error("There is a problem on the server side")
     }
   }
 
