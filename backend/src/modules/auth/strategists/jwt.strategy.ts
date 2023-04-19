@@ -4,6 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { JwtConstant } from '../../../shared/constants/jwt.constant';
 import { User } from '../../../shared/interfaces/user.interface';
 import { UsersRepository } from '../../users/users.repository';
+import { ResponseMessages } from '../../../shared/constants/response-messages.constant';
 
 interface payload {
   userId: number;
@@ -25,7 +26,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     const user: User | null = await this.usersRepository.getById(
       payload.userId,
     );
-    if (!user) throw new UnauthorizedException();
+    if (!user) throw new UnauthorizedException(ResponseMessages.UNAUTHORIZED);
     return user;
   }
 }

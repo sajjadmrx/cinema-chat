@@ -1,5 +1,7 @@
 export enum ResponseMessages {
   SUCCESS = 'SUCCESS',
+
+  UNAUTHORIZED = 'UNAUTHORIZED',
   BAD_REQUEST = 'BAD_REQUEST',
   CREATED = 'CREATED',
   OK = 'OK',
