@@ -1,6 +1,7 @@
 .chatbox {
     width: 400px;
-    height: 100%;
+    max-height: 500px;
+    overflow-y: scroll;
     background-color: $secondary-color;
 
     &__input {

@@ -1,17 +1,18 @@
 .layout {
     display: flex;
-    height: 100vh;
     background-color: $primary-color;
-
+    height: 100%;
 
     &__right {
         flex-basis: 100px;
+        align-self: stretch;
         background-color: $secondary-color;
     }
 
     &__left {
-        // height: 100vh;
         flex-grow: 1;
+        overflow: scroll;
+
     }
 
 

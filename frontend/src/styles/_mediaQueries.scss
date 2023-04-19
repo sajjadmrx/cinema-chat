@@ -1,0 +1,29 @@
+@mixin sm-media {
+    @media only screen and (max-width: $small-br) {
+        @content;
+    }
+}
+
+@mixin md-media {
+    @media only screen and (max-width: $medium-br) {
+        @content;
+    }
+}
+
+@mixin lg-media {
+    @media only screen and (max-width: $large-br) {
+        @content;
+    }
+}
+
+@mixin xl-media {
+    @media only screen and (max-width: $extra-large-br) {
+        @content;
+    }
+}
+
+@mixin xxl-media {
+    @media only screen and (max-width: $extra-extra-large-br) {
+        @content;
+    }
+}

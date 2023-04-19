@@ -1,4 +1,16 @@
+@import '@/styles/mediaQueries';
+
 .mainPage {
     display: flex;
-    padding: 160px 32px 64px 32px;
+    padding: 60px 32px 64px 32px;
+    column-gap: 12px;
+}
+
+@include lg-media {
+    .mainPage {
+        flex-direction: column-reverse;
+        padding: 60px 32px 64px 32px;
+        row-gap: 16px;
+        align-items: center;
+    }
 }

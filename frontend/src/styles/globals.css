@@ -46,6 +46,10 @@ html{
     box-sizing: border-box;
 }
 
+#__next{
+    height: 100%;
+}
+
 body{
     margin: 0;
     height: 100%;
