@@ -34,14 +34,12 @@ const LoginForm = () => {
     const res = await authService.logInUser(values)
 
     if (res.success) {
-      setIsLoading(false)
       localStorage.setItem("token", res.token)
       toast.dismiss()
       toast.success("Login was successful!")
       timer = setInterval(() => router.push("/"), 2000)
     } else {
       toast.dismiss()
-      setIsLoading(false)
 
       const invalidUsernamePassword =
         res.error.response.data.message === "INVALID_USERNAME_PASSWORD"
@@ -50,6 +48,7 @@ const LoginForm = () => {
       if (invalidUsernamePassword) toast.error("Username or password is incorrect")
       if (serverError) toast.error("There is a problem on the server side")
     }
+    setIsLoading(false)
   }
 
   const formik = useFormik({
@@ -79,7 +78,7 @@ const LoginForm = () => {
               name="username"
               type="text"
               formik={formik}
-              placeholder="Fullname"
+              placeholder="username"
               icon={
                 <Icon
                   name="user"

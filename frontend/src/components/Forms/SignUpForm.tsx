@@ -36,14 +36,12 @@ const SignUp = () => {
     const res = await authService.signUpUser(values)
 
     if (res.success) {
-      setIsLoading(false)
       localStorage.setItem("token", res.token)
       toast.dismiss()
       toast.success("Your account has been successfully created")
       timer = setInterval(() => router.push("/"), 2000)
     } else {
       toast.dismiss()
-      setIsLoading(false)
 
       const userAlreadyExists = res.error.response.data.message === "USER_EXISTS"
       const serverError = res.error.response.data.message === "SERVER_ERROR"
@@ -51,6 +49,7 @@ const SignUp = () => {
       if (userAlreadyExists) toast.error("User already exists")
       if (serverError) toast.error("There is a problem on the server side")
     }
+    setIsLoading(false)
   }
 
   const formik = useFormik({
