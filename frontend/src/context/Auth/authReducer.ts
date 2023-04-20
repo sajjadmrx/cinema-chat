@@ -23,7 +23,7 @@ export const authReducer = (state = initialState, action: ActionProps) => {
   }
 }
 
-export const asyncActionHandlers = {
+export const asyncActionHandlers: any = {
   SIGNUP:
     ({ dispatch }) =>
     async (action: any) => {
