@@ -23,6 +23,7 @@
     "react-icons": "^4.8.0",
     "sass": "^1.62.0",
     "typescript": "5.0.4",
+    "use-reducer-async": "^2.1.1",
     "yup": "^1.1.1"
   },
   "devDependencies": {

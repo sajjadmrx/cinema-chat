@@ -1,10 +1,22 @@
+import { useEffect } from "react"
+import { useRouter } from "next/router"
+
 import Layout from "@/components/Layout"
 import SignUpForm from "@/components/Forms/SignUpForm"
-
-import styles from "./styles.module.css"
 import { Icon } from "@/components/Shared"
 
+import { useAuth } from "@/context/Auth/AuthProvider"
+
+import styles from "./styles.module.css"
+
 const SignUpPage = () => {
+  const router = useRouter()
+  const { user } = useAuth()
+
+  useEffect(() => {
+    if (user) router.push("/")
+  }, [user])
+
   return (
     <Layout>
       <div className={styles.Wrapper}>

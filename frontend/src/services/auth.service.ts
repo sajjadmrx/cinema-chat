@@ -21,11 +21,11 @@ export const logInUser = async (user: loginUser) => {
   }
 }
 
-export const verifyToken = async () => {
+export const getCurrentUser = async () => {
   try {
-    const { data } = await http.post("/auth/me")
+    const { data } = await http.post("/users/@me")
     return { success: true, user: data.data }
-  } catch (err) {
-    return { success: false, error: err }
+  } catch (error) {
+    return { success: false, error }
   }
 }
