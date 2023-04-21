@@ -78,8 +78,6 @@ export class InvitesService {
       );
       if (!room) throw new NotFoundException(ResponseMessages.ROOM_NOT_FOUND);
 
-      await this.invitesRepo.updateUsesById(invite.inviteId);
-
       return {
         statusCode: HttpStatus.OK,
         data: {

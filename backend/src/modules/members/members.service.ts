@@ -74,7 +74,7 @@ export class MembersService {
     user: User,
   ): Promise<ResponseFormat<any>> {
     try {
-      if (Number(inviteId)) {
+      if (inviteId) {
         const invite = await this.invitesRepository.getById(inviteId);
         if (!invite)
           throw new NotFoundException(ResponseMessages.INVALID_INVITE);
@@ -101,6 +101,7 @@ export class MembersService {
         roomId,
       );
 
+      inviteId && (await this.invitesRepository.updateUsesById(inviteId));
       this.chatEmits.newMember(roomId, member); //TODO: or send Message system!
 
       return {
