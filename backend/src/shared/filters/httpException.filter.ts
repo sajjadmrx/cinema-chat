@@ -29,13 +29,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
     // @ts-ignore
-    const exMessage = exception.response?.message;
+    const exMessage = exception.response?.message || exception.message;
 
     const message =
       httpStatus == HttpStatus.INTERNAL_SERVER_ERROR
         ? ResponseMessages.SERVER_ERROR
         : // @ts-ignore
-          exMessage || exception.message;
+          exMessage;
 
     const responseBody: any = {
       statusCode: httpStatus,
