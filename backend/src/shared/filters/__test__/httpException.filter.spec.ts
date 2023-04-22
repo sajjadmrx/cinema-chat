@@ -3,7 +3,7 @@ import { HttpStatus, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AbstractHttpAdapter } from '@nestjs/core';
 import { HttpExceptionFilter } from '../httpException.filter';
-import { ConfigsType } from '../../../config/configuration';
+import { ConfigsType } from '../../../configuration';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { ResponseMessages } from '../../constants/response-messages.constant';
 import { HttpAdapterHost } from '@nestjs/core';

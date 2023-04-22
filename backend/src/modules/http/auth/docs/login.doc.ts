@@ -1,9 +1,9 @@
 import { applyDecorators } from '@nestjs/common';
 import {
-  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiOperation,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ResponseMessages } from '../../../../shared/constants/response-messages.constant';
 
@@ -21,7 +21,7 @@ export function ApiLogin() {
         },
       },
     }),
-    ApiBadRequestResponse({
+    ApiUnauthorizedResponse({
       schema: {
         example: {
           statusCode: 401,

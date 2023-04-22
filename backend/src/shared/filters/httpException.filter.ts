@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { ConfigsType } from '../../config/configuration';
+import { ConfigsType } from '../../configuration';
 import { ResponseMessages } from '../constants/response-messages.constant';
 
 @Catch()
