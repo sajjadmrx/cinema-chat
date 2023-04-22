@@ -24,7 +24,7 @@ export function ApiLogin() {
     ApiBadRequestResponse({
       schema: {
         example: {
-          statusCode: 400,
+          statusCode: 401,
           message: ResponseMessages.INVALID_USERNAME_PASSWORD,
           error: 'Bad Request',
         },

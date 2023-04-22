@@ -2,7 +2,12 @@ import { UsersRepository } from '../users/users.repository';
 import { JwtService } from '@nestjs/jwt';
 import { SignUpDto } from './dtos/signup.dto';
 import { User } from '../../shared/interfaces/user.interface';
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { SignInDto } from './dtos/signin.dto';
 import { ResponseMessages } from '../../shared/constants/response-messages.constant';
@@ -49,7 +54,7 @@ export class AuthService {
       if (user) {
         const validPass = await bcrypt.compare(input.password, user.password);
         if (!validPass)
-          throw new BadRequestException(
+          throw new UnauthorizedException(
             ResponseMessages.INVALID_USERNAME_PASSWORD,
           );
 
@@ -59,7 +64,9 @@ export class AuthService {
           data: token,
         };
       }
-      throw new BadRequestException(ResponseMessages.INVALID_USERNAME_PASSWORD);
+      throw new UnauthorizedException(
+        ResponseMessages.INVALID_USERNAME_PASSWORD,
+      );
     } catch (error: any) {
       this.logger.error(error.message, error.stack);
       throw error;
