@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Query,
+  UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,9 +19,11 @@ import { ResponseInterceptor } from '../../shared/interceptors/response.intercep
 import { ApiGetRoomMessages } from './docs/getRoomMsgs.doc';
 import { ApiGetMessage } from './docs/getMessage.doc';
 import { ApiDeleteMessage } from './docs/delete-msg.doc';
+import { HttpExceptionFilter } from '../../shared/filters/httpException.filter';
 
 @ApiBearerAuth()
 @ApiTags('Room Messages')
+@UseFilters(HttpExceptionFilter)
 @UseInterceptors(ResponseInterceptor)
 @UseGuards(CheckCurrentMember)
 @UseGuards(CheckRoomId)

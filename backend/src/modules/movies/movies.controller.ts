@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -19,8 +20,10 @@ import { ResponseInterceptor } from '../../shared/interceptors/response.intercep
 import { ApiFindAllMedia } from './docs/findAll.doc';
 import { ApiCreateMedia } from './docs/create.doc';
 import { ApiDeleteMedia } from './docs/delete.doc';
+import { HttpExceptionFilter } from '../../shared/filters/httpException.filter';
 
 @ApiTags('movies')
+@UseFilters(HttpExceptionFilter)
 @UseInterceptors(ResponseInterceptor)
 @Controller('movies')
 export class MoviesController {

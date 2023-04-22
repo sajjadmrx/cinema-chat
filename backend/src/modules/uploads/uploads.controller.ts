@@ -2,6 +2,7 @@ import {
   Controller,
   Post,
   UploadedFile,
+  UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -14,9 +15,11 @@ import { ResponseInterceptor } from '../../shared/interceptors/response.intercep
 import { UploadsService } from './uploads.service';
 import { ExpressFile } from '../../shared/interfaces/file.interface';
 import { ApiUploadMedia } from './docs/uploadMedia.doc';
+import { HttpExceptionFilter } from '../../shared/filters/httpException.filter';
 
 @ApiTags('Uploads')
 @ApiBearerAuth()
+@UseFilters(HttpExceptionFilter)
 @UseInterceptors(ResponseInterceptor)
 @UseGuards(AuthGuard('jwt'))
 @Controller('uploads')

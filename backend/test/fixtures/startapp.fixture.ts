@@ -7,9 +7,7 @@ export async function runAndGetAppFixture(): Promise<INestApplication> {
     imports: [AppModule],
   }).compile();
 
-  const app = moduleFixture.createNestApplication({
-    logger: false,
-  });
+  const app = moduleFixture.createNestApplication({});
   app.useGlobalPipes(new ValidationPipe());
   await app.init();
   return app;

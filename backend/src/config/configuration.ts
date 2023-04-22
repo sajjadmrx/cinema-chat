@@ -1,9 +1,12 @@
 import * as process from 'process';
 
-export default () => ({
-  port: parseInt(process.env.PORT, 10) || 3000,
-  mode: process.env.NODE_ENV,
-  DATABASE_URL: process.env.DB_URL,
-  REDIS_URL: process.env.REDIS_URL,
-  JWT_SECRET: process.env.JWT_SECRET,
-});
+const configs = {
+  port: Number(process.env.PORT) || 3000,
+  mode: String(process.env.NODE_ENV),
+  DATABASE_URL: String(process.env.DB_URL),
+  REDIS_URL: String(process.env.REDIS_URL),
+  JWT_SECRET: String(process.env.JWT_SECRET),
+};
+
+export default () => configs;
+export type ConfigsType = typeof configs;

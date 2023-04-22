@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   Query,
   ParseIntPipe,
+  UseFilters,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
@@ -25,9 +26,11 @@ import { ApiGetRooms } from './docs/getRooms.doc';
 import { ApiGetUserRooms } from './docs/getUserRooms.doc';
 import { ApiCreateRoom } from './docs/createRoom.doc';
 import { ApiUpdateRoom } from './docs/updateRoom.doc';
+import { HttpExceptionFilter } from '../../shared/filters/httpException.filter';
 
-@UseInterceptors(ResponseInterceptor)
 @ApiTags('rooms')
+@UseFilters(HttpExceptionFilter)
+@UseInterceptors(ResponseInterceptor)
 @Controller('rooms')
 export class RoomsController {
   constructor(private roomsService: RoomsService) {}

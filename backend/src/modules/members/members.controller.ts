@@ -8,6 +8,7 @@ import {
   Patch,
   Put,
   Query,
+  UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -33,9 +34,11 @@ import { ApiKickMember } from './docs/kick.doc';
 import { ApiJoinRoom } from './docs/joinRoom.doc';
 import { ApiUpdateMember } from './docs/updateCurrentMember.doc';
 import { ApiGetMemberById } from './docs/getMemberById.doc';
+import { HttpExceptionFilter } from '../../shared/filters/httpException.filter';
 
 @ApiBearerAuth()
 @ApiTags('members')
+@UseFilters(HttpExceptionFilter)
 @UseInterceptors(ResponseInterceptor)
 @UseGuards(CheckRoomId)
 @UseGuards(AuthGuard('jwt'))

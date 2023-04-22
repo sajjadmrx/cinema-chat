@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   HttpStatus,
+  UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -14,9 +15,11 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ResponseInterceptor } from '../../../shared/interceptors/response.interceptor';
 import { ResponseFormat } from '../../../shared/interfaces/response.interface';
 import { ApiGetMe } from '../docs/getMe.doc';
+import { HttpExceptionFilter } from '../../../shared/filters/httpException.filter';
 
 @ApiBearerAuth()
 @ApiTags('Current User')
+@UseFilters(HttpExceptionFilter)
 @UseInterceptors(ResponseInterceptor)
 @UseGuards(AuthGuard('jwt'))
 @Controller('users/@me')

@@ -9,7 +9,9 @@ import { Movie } from '../../../shared/interfaces/movie.interface';
 let movie: Movie = {
   id: 'mongoId',
   movieId: 21651561,
-  src: '/uploads/movie/my-video.mp4',
+  hlsSrc: 'xxx/xxx/',
+  hlsPlaylistPath: 'xx/xx/xx.xx',
+  mediaSrc: 'xx/xxx/xx.mkv',
   description: 'best movie and ...',
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -36,7 +38,7 @@ describe('StreamService', function () {
         .mockImplementation(() => null);
 
       await expect(
-        streamService.movie(1, '', jest.fn() as any),
+        streamService.movie('xx', jest.fn() as any, jest.fn() as any),
       ).rejects.toEqual(
         new NotFoundException(ResponseMessages.MOVIE_NOT_FOUND),
       );
@@ -51,7 +53,7 @@ describe('StreamService', function () {
         .mockImplementation(async () => false);
 
       await expect(
-        streamService.movie(1, '', jest.fn() as any),
+        streamService.movie('xx', jest.fn() as any, jest.fn() as any),
       ).rejects.toEqual(new NotFoundException(ResponseMessages.INVALID_SRC));
     });
   });

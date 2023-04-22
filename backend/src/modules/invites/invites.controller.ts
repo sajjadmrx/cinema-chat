@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -16,9 +17,11 @@ import { InviteCreateDto } from './dtos/create.dto';
 import { getUser } from 'src/shared/decorators/user.decorator';
 import { ApiCreateInvite } from './docs/create.doc';
 import { ApiFindRoomInvite } from './docs/findRoom.doc';
+import { HttpExceptionFilter } from '../../shared/filters/httpException.filter';
 
 @ApiTags('Invites')
 @ApiBearerAuth()
+@UseFilters(HttpExceptionFilter)
 @UseGuards(AuthGuard('jwt'))
 @UseInterceptors(ResponseInterceptor)
 @Controller('invites')
