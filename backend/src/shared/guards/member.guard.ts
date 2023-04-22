@@ -12,7 +12,7 @@ import { User } from '../interfaces/user.interface';
 import { Room } from '../interfaces/room.interface';
 import { Member } from '../interfaces/member.interface';
 import { ResponseMessages } from '../constants/response-messages.constant';
-import { MembersRepository } from '../../modules/members/repositories/members.repository';
+import { MembersRepository } from '../../modules/http/members/repositories/members.repository';
 
 @Injectable()
 export class CheckCurrentMember implements CanActivate {

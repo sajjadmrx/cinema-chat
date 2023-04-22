@@ -13,7 +13,7 @@ declare global {
   }
 }
 //
-// declare module 'socket.io' {
+// declare module 'websocket.io' {
 //   interface Socket {
 //     data: {
 //       userId: number;
