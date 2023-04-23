@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect } from "react"
-import { useReducerAsync } from 'use-reducer-async'
+import { useReducerAsync } from "use-reducer-async"
 
 import { User } from "@/types/schemas/User.schema"
-import { types } from "@/types/utils/providers"
+import { types } from "@/types/utils/contexts"
 import { authReducer, asyncActionHandlers } from "./authReducer"
 
 const initialState = {

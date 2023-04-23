@@ -2,7 +2,7 @@ import Router from "next/router"
 import { toast } from "react-hot-toast"
 
 import * as authService from "@/services/auth.service"
-import { ActionProps, types } from "@/types/utils/providers"
+import { ActionProps, types } from "@/types/utils/contexts"
 
 const initialState = {
   loading: true,

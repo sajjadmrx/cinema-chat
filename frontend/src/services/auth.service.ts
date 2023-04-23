@@ -23,7 +23,7 @@ export const logInUser = async (user: loginUser) => {
 
 export const getCurrentUser = async () => {
   try {
-    const { data } = await http.post("/users/@me")
+    const { data } = await http.get("/users/@me")
     return { success: true, user: data.data }
   } catch (error) {
     return { success: false, error }
