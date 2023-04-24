@@ -41,3 +41,4 @@ data
 uploads/*
 index.html
 hls/*
+.run

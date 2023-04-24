@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { RoomsRepository } from 'src/modules/rooms/rooms.repository';
+import { RoomsRepository } from 'src/modules/http/rooms/rooms.repository';
 import { ResponseMessages } from 'src/shared/constants/response-messages.constant';
 
 @Injectable()

@@ -6,7 +6,7 @@ import {
 } from 'nestjs-asyncapi';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-const brandName = 'cinema-socket';
+const brandName = 'cinema-websocket';
 
 export class DocumentConfig {
   constructor(
@@ -19,7 +19,7 @@ export class DocumentConfig {
     try {
       const asyncApiServer: AsyncServerObject = {
         url: `ws://localhost:${socketServerPort}`,
-        protocol: 'socket.io',
+        protocol: 'websocket.io',
         protocolVersion: '4',
         description:
           'Allows you to connect using the websocket protocol to our Socket.io server.',
