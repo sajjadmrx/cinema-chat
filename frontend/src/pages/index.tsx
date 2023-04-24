@@ -2,7 +2,8 @@ import Layout from "@/components/Layout"
 import MainPage from "@/components/MainPage"
 import { Button, Icon } from "@/components/Shared"
 
-import { CiStreamOn } from "react-icons/ci"
+import { VscLock, VscUnlock } from "react-icons/vsc"
+import { HiOutlineUserGroup } from "react-icons/hi"
 
 const data = [
   {
@@ -110,29 +111,45 @@ const IndexPage = () => {
                   src="https://marketplace.canva.com/EAFEits4-uw/1/0/800w/canva-boy-cartoon-gamer-animated-twitch-profile-photo-r0bPCSjUqg0.jpg"
                 />
                 <div className="ml-2 mt-4">
-                  <h4 className="font-semibold">{item.name}</h4>
-                  <div
-                    className={`text-xs px-3 py-1 rounded-full inline ${
-                      item.isPublic ? "bg-green-200" : "bg-red-200"
-                    }`}
-                  >
-                    {item.isPublic ? "Public" : "Private"}
-                  </div>
+                  <h4 className="font-semibold flex gap-1">
+                    {item.isPublic ? (
+                      <VscUnlock className={""} />
+                    ) : (
+                      <VscLock className={""} />
+                    )}
+                    {item.name}
+                  </h4>
+
                   <div className="mt-2 flex items-center space-x-3 text-[#60637B]">
                     <div className="text-sm flex">
-                      <Icon name="user" size={16} color="gray" className="mr-1" />
-                      <span className="leading-[23px]">20</span>
+                      <HiOutlineUserGroup
+                        name="user"
+                        size={16}
+                        color="gray"
+                        className="mr-1"
+                      />
+                      <span className="leading-[23px]"> 01/10 </span>
                     </div>
                     <div>
                       <div className="flex">
-                        <Icon name="radar" size={16} color="red" className="mr-1 animate-ping" />
+                        <Icon
+                          name="radar"
+                          size={18}
+                          className="mr-1 animate-pulse  delay-75"
+                        />
                         <span className="text-sm leading-[23px]">
                           Played Battlefield V
                         </span>
                       </div>
                     </div>
                   </div>
-                  <Button variant="primary" size="small" className="mt-2" rounded="full">
+                  <Button
+                    variant="primary"
+                    size="small"
+                    className="mt-2"
+                    rounded="full"
+                    disabled={!item.isPublic}
+                  >
                     Join to room
                   </Button>
                 </div>
