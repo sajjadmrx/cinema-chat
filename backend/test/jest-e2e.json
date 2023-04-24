@@ -4,10 +4,14 @@
     "json",
     "ts"
   ],
-  "rootDir": "src",
+  "rootDir": ".",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
-  }
+  },
+  "moduleDirectories": [
+    "<rootDir>/../",
+    "node_modules"
+  ]
 }

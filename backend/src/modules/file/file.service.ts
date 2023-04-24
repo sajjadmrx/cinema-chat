@@ -9,7 +9,7 @@ import {
 } from 'fs';
 import { join } from 'path';
 import * as ffmpegStatic from '@ffmpeg-installer/ffmpeg';
-import * as ffmpeg from 'fluent-ffmpeg';
+import ffmpeg from 'fluent-ffmpeg';
 
 ffmpeg.setFfmpegPath(ffmpegStatic.path);
 
