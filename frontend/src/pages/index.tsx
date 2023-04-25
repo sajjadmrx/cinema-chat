@@ -4,6 +4,7 @@ import { Button, Icon } from "@/components/Shared"
 
 import { VscLock, VscUnlock } from "react-icons/vsc"
 import { HiOutlineUserGroup } from "react-icons/hi"
+import Navbar from "@/components/Layout/Navbar"
 
 const data = [
   {
@@ -92,13 +93,7 @@ const IndexPage = () => {
   return (
     <Layout>
       <div className="bg-[#f8f7fa]">
-        <nav className="flex items-center justify-between bg-white shadow-sm py-3 px-4">
-          <Button variant="secondary">New Room</Button>
-          <img
-            className="w-16 rounded-full border-4 border-gray-200"
-            src="https://marketplace.canva.com/EAFEits4-uw/1/0/800w/canva-boy-cartoon-gamer-animated-twitch-profile-photo-r0bPCSjUqg0.jpg"
-          />
-        </nav>
+        <Navbar />
         <section className="grid grid-cols-3 gap-5 p-5 min-h-screen">
           {data.map((item) => (
             <div
@@ -144,7 +139,7 @@ const IndexPage = () => {
                     </div>
                   </div>
                   <Button
-                    variant="primary"
+                    variant={item.isPublic ? "primary" : "outline-danger"}
                     size="small"
                     className="mt-2"
                     rounded="full"
