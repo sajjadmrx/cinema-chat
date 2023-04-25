@@ -1,6 +1,6 @@
-export default function Layout({ children }) {
+export default function Layout({ children }: any) {
   return (
-    <section className="min-h-full">
+    <section className="min-h-screen">
       <section>{children}</section>
     </section>
   )

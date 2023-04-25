@@ -5,7 +5,7 @@ import { classNames } from "@/utils"
 import { useOnClickOutside } from "@/hooks/useOnClickOutside"
 import { Icon } from "@/components/Shared"
 
-const ProfileDropdown = () => {
+const DropdownMenu = () => {
   const [open, setOpen] = useState(false)
   const onOpen = () => setOpen(true)
   const onClose = () => setOpen(false)
@@ -22,11 +22,7 @@ const ProfileDropdown = () => {
           open && "pointer-events-none",
         )}
       >
-        <span className="mr-3 font-semibold">Johne Doe</span>
-        <img
-          className="w-12 h-12 object-cover rounded-full border border-gray-200"
-          src="https://xsgames.co/randomusers/avatar.php?g=pixel"
-        />
+        <Icon name="more" size={20} />
       </div>
 
       <motion.div
@@ -45,8 +41,22 @@ const ProfileDropdown = () => {
             onClick={onClose}
             className="w-full flex px-3 py-2 text-xs rounded-[4px] transition-colors text-[#37352fa6] hover:bg-[#ebebea]"
           >
-            <Icon name="logout" size={22} />
-            <span className="text-base ml-2">Log out</span>
+            <Icon name="undo" size={18} />
+            <span className="text-sm ml-2">Replay</span>
+          </button>
+          <button
+            onClick={onClose}
+            className="w-full flex px-3 py-2 text-xs rounded-[4px] transition-colors text-[#37352fa6] hover:bg-[#ebebea]"
+          >
+            <Icon name="copy" size={18} />
+            <span className="text-sm ml-2">Copy</span>
+          </button>
+          <button
+            onClick={onClose}
+            className="w-full flex px-3 py-2 text-xs rounded-[4px] transition-colors text-[#37352fa6] hover:bg-[#ebebea]"
+          >
+            <Icon name="trash" size={18} />
+            <span className="text-sm ml-2">Delete</span>
           </button>
         </div>
       </motion.div>
@@ -54,4 +64,4 @@ const ProfileDropdown = () => {
   )
 }
 
-export default ProfileDropdown
+export default DropdownMenu
