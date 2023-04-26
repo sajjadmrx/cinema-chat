@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import axios from "axios";
 import styles from "./style.module.scss";
 
@@ -14,6 +15,12 @@ const Login = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
+    const result = await signIn("credentials", {
+      username: formData.username,
+      password: formData.password,
+      redirect: true,
+      callbackUrl: "/",
+    });
     try {
       const response = await axios.post(
         "http://193.36.85.124:4000/auth/login",

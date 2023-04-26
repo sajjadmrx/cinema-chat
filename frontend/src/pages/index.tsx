@@ -1,10 +1,13 @@
+import CreateRoomPage from "@/components/CreateRoomPage";
 import Layout from "@/components/Layout";
-import MainPage from "@/components/MainPage";
+import { SessionProvider } from "next-auth/react";
 
 export default function IndexPage() {
   return (
-    <Layout>
-      <MainPage />
-    </Layout>
+    <SessionProvider>
+      <Layout>
+        <CreateRoomPage />
+      </Layout>
+    </SessionProvider>
   );
 }
