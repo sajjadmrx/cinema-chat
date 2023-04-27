@@ -4,98 +4,37 @@ import { ButtonComponent, IconComponent } from "../../components/Shared"
 
 import { VscLock, VscUnlock } from "react-icons/vsc"
 import { HiOutlineUserGroup } from "react-icons/hi"
-import React from "react"
+import React, { useEffect, useState } from "react"
+import { Room } from "../../shared/interfaces/schemas/Room.interface"
+import {
+  getCurrentRoomsService,
+  getPublicRoomsService,
+} from "../../services/rooms.service"
 
-const data = [
-  {
-    id: "6442bebb67d69647618f4cc5c",
-    roomId: 32255782,
-    ownerId: 173796573357,
-    name: "Sua Smythe",
-    isPublic: true,
-    avatar: "DEFAULT_AVATAR",
-  },
-  {
-    id: "6442bebqb6769647618f4cc5c",
-    roomId: 32255782,
-    ownerId: 173796573357,
-    name: "Sua Smythe",
-    isPublic: true,
-    avatar: "DEFAULT_AVATAR",
-  },
-  {
-    id: "6442beb6b6769647618f4cc5c",
-    roomId: 32255782,
-    ownerId: 173796573357,
-    name: "Sua Smythe",
-    isPublic: false,
-    avatar: "DEFAULT_AVATAR",
-  },
-  {
-    id: "6442bebb67693647618f4cc5c",
-    roomId: 32255782,
-    ownerId: 173796573357,
-    name: "Sua Smythe",
-    isPublic: true,
-    avatar: "DEFAULT_AVATAR",
-  },
-  {
-    id: "64452bebb6769647618f4cc5c",
-    roomId: 32255782,
-    ownerId: 173796573357,
-    name: "Sua Smythe",
-    isPublic: false,
-    avatar: "DEFAULT_AVATAR",
-  },
-  {
-    id: "6442b9ebb6769647618f4cc5c",
-    roomId: 32255782,
-    ownerId: 173796573357,
-    name: "Sua Smythe",
-    isPublic: false,
-    avatar: "DEFAULT_AVATAR",
-  },
-  {
-    id: "64423bebb6769647618f4cc5c",
-    roomId: 32255782,
-    ownerId: 173796573357,
-    name: "Sua Smythe",
-    isPublic: true,
-    avatar: "DEFAULT_AVATAR",
-  },
-  {
-    id: "6442bebb67696647618f4cc5c",
-    roomId: 32255782,
-    ownerId: 173796573357,
-    name: "Sua Smythe",
-    isPublic: false,
-    avatar: "DEFAULT_AVATAR",
-  },
-  {
-    id: "6442hbebb6769647618f4cc5c",
-    roomId: 32255782,
-    ownerId: 173796573357,
-    name: "Sua Smythe",
-    isPublic: true,
-    avatar: "DEFAULT_AVATAR",
-  },
-  {
-    id: "6442bebb676dc9647618f4cc5c",
-    roomId: 32255782,
-    ownerId: 173796573357,
-    name: "Sua Smythe",
-    isPublic: true,
-    avatar: "DEFAULT_AVATAR",
-  },
-]
+const RoomsPage = () => {
+  const [publicRooms, setPublicRooms] = useState<Array<Room>>([])
+  const [currentRooms, setCurrentRooms] = useState<Array<Room>>([])
+  useEffect(() => {
+    async function fetch() {
+      const [responsePublic, responseCurrent] = await Promise.all([
+        await getPublicRoomsService(1),
+        await getCurrentRoomsService(1),
+      ])
+      setPublicRooms(responsePublic.data.rooms)
+      setCurrentRooms(responseCurrent.data.rooms)
+      // todo remove duplicate room
+    }
+    return () => {
+      fetch()
+    }
+  }, [])
 
-const Rooms = () => {
   return (
     <Layout>
       <div className="bg-[#f8f7fa]">
         <Navbar />
         <section className="grid grid-cols-3 gap-5 p-5 min-h-screen">
-          {data.map((item) => (
+          {publicRooms.map((item) => (
             <div
               key={item.id}
               className="bg-white w-full rounded-3xl px-7 py-7 shadow-sm"
@@ -124,9 +63,7 @@ const Rooms = () => {
                           size={18}
                           className="mr-1 animate-pulse  delay-75"
                         />
-                        <span className="text-sm leading-[23px]">
-                          Played Battlefield V
-                        </span>
+                        <span className="text-sm leading-[23px]">current playing</span>
                       </div>
                     </div>
                   </div>
@@ -148,4 +85,4 @@ const Rooms = () => {
     </Layout>
   )
 }
-export default Rooms
+export default RoomsPage
