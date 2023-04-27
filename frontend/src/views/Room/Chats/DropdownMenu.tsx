@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 
 import { classNames } from "../../../utils"
 import { useOnClickOutside } from "../../../hooks/useOnClickOutside"
-import { Icon } from "../../../components/Shared"
+import { IconComponent } from "../../../components/Shared"
 import React from "react"
 
 const DropdownMenu = () => {
@@ -23,7 +23,7 @@ const DropdownMenu = () => {
           open && "pointer-events-none",
         )}
       >
-        <Icon name="more" size={20} />
+        <IconComponent name="more" size={20} />
       </div>
 
       <motion.div
@@ -42,21 +42,21 @@ const DropdownMenu = () => {
             onClick={onClose}
             className="w-full flex px-3 py-2 text-xs rounded-[4px] transition-colors text-[#37352fa6] hover:bg-[#ebebea]"
           >
-            <Icon name="undo" size={18} />
+            <IconComponent name="undo" size={18} />
             <span className="text-sm ml-2">Replay</span>
           </button>
           <button
             onClick={onClose}
             className="w-full flex px-3 py-2 text-xs rounded-[4px] transition-colors text-[#37352fa6] hover:bg-[#ebebea]"
           >
-            <Icon name="copy" size={18} />
+            <IconComponent name="copy" size={18} />
             <span className="text-sm ml-2">Copy</span>
           </button>
           <button
             onClick={onClose}
             className="w-full flex px-3 py-2 text-xs rounded-[4px] transition-colors text-[#37352fa6] hover:bg-[#ebebea]"
           >
-            <Icon name="trash" size={18} />
+            <IconComponent name="trash" size={18} />
             <span className="text-sm ml-2">Delete</span>
           </button>
         </div>

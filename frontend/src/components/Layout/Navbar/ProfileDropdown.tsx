@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 
 import { classNames } from "../../../utils"
 import { useOnClickOutside } from "../../../hooks/useOnClickOutside"
-import { Icon } from "../../../components/Shared"
+import { IconComponent } from "../../Shared"
 import React from "react"
 
 const ProfileDropdown = () => {
@@ -46,7 +46,7 @@ const ProfileDropdown = () => {
             onClick={onClose}
             className="w-full flex px-3 py-2 text-xs rounded-[4px] transition-colors text-[#37352fa6] hover:bg-[#ebebea]"
           >
-            <Icon name="logout" size={22} />
+            <IconComponent name="logout" size={22} />
             <span className="text-base ml-2">Log out</span>
           </button>
         </div>

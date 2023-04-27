@@ -1,4 +1,4 @@
-export interface IButton {
+export interface Button {
   href?: string
   className?: string
 

@@ -1,4 +1,6 @@
-export interface IInput {
+import React from "react"
+
+export interface Input {
   type?: string
   value?: string
   placeholder?: string

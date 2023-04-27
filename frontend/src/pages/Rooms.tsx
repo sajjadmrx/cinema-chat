@@ -1,6 +1,6 @@
 import Layout from "../components/Layout"
 import Navbar from "../components/Layout/Navbar"
-import { Button, Icon } from "../components/Shared"
+import { ButtonComponent, IconComponent } from "../components/Shared"
 
 import { VscLock, VscUnlock } from "react-icons/vsc"
 import { HiOutlineUserGroup } from "react-icons/hi"
@@ -118,7 +118,7 @@ const Rooms = () => {
                     </div>
                     <div>
                       <div className="flex">
-                        <Icon
+                        <IconComponent
                           name="radar"
                           size={18}
                           className="mr-1 animate-pulse  delay-75"
@@ -129,7 +129,7 @@ const Rooms = () => {
                       </div>
                     </div>
                   </div>
-                  <Button
+                  <ButtonComponent
                     variant={item.isPublic ? "primary" : "outline-danger"}
                     size="small"
                     className="mt-2"
@@ -137,7 +137,7 @@ const Rooms = () => {
                     disabled={!item.isPublic}
                   >
                     Join to room
-                  </Button>
+                  </ButtonComponent>
                 </div>
               </div>
             </div>

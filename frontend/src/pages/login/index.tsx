@@ -1,4 +1,4 @@
-import { Icon } from "../../components/Shared"
+import { IconComponent } from "../../components/Shared"
 import LoginForm from "../../components/Forms/LoginForm"
 // @ts-ignore
 import styles from "./styles.module.css"
@@ -16,7 +16,7 @@ const SignUpPage = () => {
                 style={{ background: "#21A73F" }}
                 className="w-24 h-24 rounded-[40px] grid place-items-center"
               >
-                <Icon name="user" color="white" size={40} />
+                <IconComponent name="user" color="white" size={40} />
               </div>
               <h2 className="text-white text-2xl font-bold">
                 Lorem ipsum dolor sit amet.

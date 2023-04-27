@@ -1,6 +1,6 @@
 import React from "react"
 import SignUpForm from "../../components/Forms/SignUpForm"
-import { Icon } from "../../components/Shared"
+import { IconComponent } from "../../components/Shared"
 // @ts-ignore
 import styles from "./styles.module.css"
 
@@ -15,7 +15,7 @@ const SignUpPage = () => {
               style={{ background: "#2136F7" }}
               className="w-24 h-24 rounded-[40px] grid place-items-center"
             >
-              <Icon name="mail" color="white" size={40} />
+              <IconComponent name="mail" color="white" size={40} />
             </div>
             <h2 className="text-white text-2xl font-bold">Lorem ipsum dolor sit.</h2>
             <p className="text-white opacity-50 w-1/2">

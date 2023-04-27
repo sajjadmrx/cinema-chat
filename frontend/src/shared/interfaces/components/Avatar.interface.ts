@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 
-export interface IProps {
+export interface Props {
   className?: string
   variant: "circle" | "square"
   size: number

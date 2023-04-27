@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
 
 import * as authService from "../../services/auth.service"
-import { Button, Icon, Input } from "../Shared"
+import { ButtonComponent, IconComponent, InputComponent } from "../Shared"
 import React from "react"
 
 let timer: any
@@ -51,39 +51,39 @@ const SignUp = () => {
             Welcome back! Please enter your details
           </p>
           <form className="flex flex-col gap-2" onSubmit={formik.handleSubmit}>
-            <Input
+            <InputComponent
               name="username"
               type="text"
               formik={formik}
               placeholder="Fullname"
               icon={
-                <Icon
+                <IconComponent
                   name="user"
                   size={20}
                   className="absolute left-3 top-1/2 transform -translate-y-1/2"
                 />
               }
             />
-            <Input
+            <InputComponent
               name="email"
               type="email"
               formik={formik}
               placeholder="Email"
               icon={
-                <Icon
+                <IconComponent
                   name="mail"
                   size={20}
                   className="absolute left-3 top-1/2 transform -translate-y-1/2"
                 />
               }
             />
-            <Input
+            <InputComponent
               name="password"
               type="password"
               formik={formik}
               placeholder="Password"
               icon={
-                <Icon
+                <IconComponent
                   name="lock"
                   size={20}
                   className="absolute left-3 top-1/2 transform -translate-y-1/2"
@@ -91,9 +91,14 @@ const SignUp = () => {
               }
             />
 
-            <Button type="submit" variant="primary" loading={isLoading} className="mt-5">
+            <ButtonComponent
+              type="submit"
+              variant="primary"
+              loading={isLoading}
+              className="mt-5"
+            >
               Signup
-            </Button>
+            </ButtonComponent>
 
             <p className="mt-4 mb-2 text-sm text-left">
               Do you have an account before?{" "}

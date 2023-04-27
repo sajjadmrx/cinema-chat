@@ -1,5 +1,5 @@
 import React from "react"
-import { IIcon } from "../../../types/components/Icon"
+import { Icon } from "../../../shared/interfaces/components/Icon.interface"
 import { icons } from "./icons"
 
 const colors = {
@@ -13,7 +13,7 @@ const colors = {
   red: "#FF6161",
 }
 
-const Icon = ({ name, size = 24, color = "gray", className }: IIcon) => {
+export const IconComponent = ({ name, size = 24, color = "gray", className }: Icon) => {
   // @ts-ignore
   const IconElement = icons[name]
 
@@ -38,5 +38,3 @@ const Icon = ({ name, size = 24, color = "gray", className }: IIcon) => {
     </svg>
   )
 }
-
-export default Icon

@@ -15,6 +15,7 @@ const Room = () => {
             <img
               className="w-16 h-16 rounded-full border-[6px] border-gray-200"
               src="https://xsgames.co/randomusers/avatar.php?g=pixel"
+              alt={""}
             />
             <h4 className="ml-3 -mb-1.5 font-bold">Call of Duty: World War II</h4>
           </div>

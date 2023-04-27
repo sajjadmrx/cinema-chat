@@ -1,11 +1,11 @@
 import React from "react"
 import { useState } from "react"
 
-import { Icon } from "../../../components/Shared"
-import { IInput } from "../../../types/components/Input"
-import { classNames } from "../../../utils/classNames"
+import { Input } from "../../../shared/interfaces/components/input.interface"
+import { classNames } from "../../../utils"
+import { IconComponent } from "../Icon"
 
-export default function Input({
+export function InputComponent({
   type,
   value,
   placeholder,
@@ -17,7 +17,7 @@ export default function Input({
   inputClassName,
   onChange,
   formik,
-}: IInput) {
+}: Input) {
   const [inputType, setInputType] = useState(type || "text")
   const [showPassword, setShowPassword] = useState(false)
 
@@ -54,9 +54,9 @@ export default function Input({
             onClick={onTogglePassword}
           >
             {showPassword ? (
-              <Icon name="eye" size={16} />
+              <IconComponent name="eye" size={16} />
             ) : (
-              <Icon name="eye-slash" size={16} />
+              <IconComponent name="eye-slash" size={16} />
             )}
           </button>
         )}

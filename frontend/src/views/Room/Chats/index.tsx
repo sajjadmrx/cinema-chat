@@ -1,5 +1,5 @@
 import React from "react"
-import { Icon } from "../../../components/Shared"
+import { IconComponent } from "../../../components/Shared"
 import DropdownMenu from "./DropdownMenu"
 
 const CHATS = [
@@ -55,7 +55,7 @@ const Chats = () => {
             className="absolute top-0 left-0 rounded-full w-full h-full pl-4 text-sm"
           />
           <button className="absolute top-1/2 -translate-y-1/2 z-10 right-4">
-            <Icon name="send" size={22} />
+            <IconComponent name="send" size={22} />
           </button>
         </div>
       </div>

@@ -1,10 +1,10 @@
 import React from "react"
 import { Link } from "react-router-dom"
 
-import { IButton } from "../../../types/components/Button"
-import { classNames } from "../../../utils/classNames"
+import { Button } from "../../../shared/interfaces/components/Button.interface"
+import { classNames } from "../../../utils"
 
-const Button = ({
+export const ButtonComponent = ({
   children,
   className,
   disabled,
@@ -17,7 +17,7 @@ const Button = ({
   type,
   variant,
   rounded,
-}: IButton) => {
+}: Button) => {
   const handleClickButton = () => {
     if (!disabled && !loading && typeof onClick === "function") {
       onClick()
@@ -116,5 +116,3 @@ const Button = ({
     </button>
   )
 }
-
-export default Button

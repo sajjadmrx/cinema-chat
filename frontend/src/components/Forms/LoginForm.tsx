@@ -4,7 +4,7 @@ import { useFormik } from "formik"
 import toast, { Toaster } from "react-hot-toast"
 // import { signIn } from "next-auth/react"
 
-import { Button, Icon, Input } from "../Shared"
+import { ButtonComponent, IconComponent, InputComponent } from "../Shared"
 import React from "react"
 
 const initialValues = {
@@ -39,26 +39,26 @@ const LoginForm = () => {
             Welcome back! Please enter your details
           </p>
           <form className="flex flex-col gap-2" onSubmit={formik.handleSubmit}>
-            <Input
+            <InputComponent
               name="username"
               type="text"
               formik={formik}
               placeholder="username"
               icon={
-                <Icon
+                <IconComponent
                   name="user"
                   size={20}
                   className="absolute left-3 top-1/2 transform -translate-y-1/2"
                 />
               }
             />
-            <Input
+            <InputComponent
               name="password"
               type="password"
               formik={formik}
               placeholder="Password"
               icon={
-                <Icon
+                <IconComponent
                   name="lock"
                   size={20}
                   className="absolute left-3 top-1/2 transform -translate-y-1/2"
@@ -66,9 +66,9 @@ const LoginForm = () => {
               }
             />
 
-            <Button type="submit" variant="primary" className="mt-5">
+            <ButtonComponent type="submit" variant="primary" className="mt-5">
               Login
-            </Button>
+            </ButtonComponent>
 
             <p className="mt-4 mb-2 text-sm text-left">
               Don't have an account?{" "}
