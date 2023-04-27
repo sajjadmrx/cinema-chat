@@ -1,11 +1,13 @@
 import * as Yup from "yup"
-// import Link from "next/link"
+import React, { useState, useEffect } from "react"
 import { useFormik } from "formik"
+import { Link, useNavigate } from "react-router-dom"
 import toast, { Toaster } from "react-hot-toast"
-// import { signIn } from "next-auth/react"
 
+import * as authService from "../../services/auth.service"
 import { ButtonComponent, IconComponent, InputComponent } from "../Shared"
-import React from "react"
+
+type loginUser = { username: string; password: string }
 
 const initialValues = {
   username: "",
@@ -19,8 +21,38 @@ const validationSchema = Yup.object({
     .min(8, "Password must be at least 8 characters long"),
 })
 
+let timer: any
+
 const LoginForm = () => {
-  const onSubmit = async (values: any) => {}
+  const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
+
+  const onSubmit = async (values: loginUser) => {
+    setIsLoading(true)
+    const res = await authService.login(values)
+    if (res.success) {
+      localStorage.setItem("token", res.data)
+      toast.success("Login was successful!")
+      timer = setInterval(() => navigate("/rooms"), 2000)
+    } else {
+      toast.dismiss()
+
+      const invalidUesrnamePassword =
+        res.error?.response?.data?.message === "INVALID_USERNAME_PASSWORD"
+      const serverError = res.error.response.data.message === "SERVER_ERROR"
+
+      if (invalidUesrnamePassword) toast.error("Invalid username or password")
+      if (serverError) toast.error("There is a problem on the server side")
+    }
+    setIsLoading(false)
+    console.log(res)
+  }
+
+  useEffect(() => {
+    return () => {
+      clearInterval(timer)
+    }
+  }, [])
 
   const formik = useFormik({
     initialValues,
@@ -66,15 +98,20 @@ const LoginForm = () => {
               }
             />
 
-            <ButtonComponent type="submit" variant="primary" className="mt-5">
+            <ButtonComponent
+              type="submit"
+              variant="primary"
+              className="mt-5"
+              loading={isLoading}
+            >
               Login
             </ButtonComponent>
 
             <p className="mt-4 mb-2 text-sm text-left">
               Don't have an account?{" "}
-              {/* <Link href="/signup" className="text-primary hover:text-primaryActive">
+              <Link to="/signup" className="text-primary hover:text-primaryActive">
                 Sign up
-              </Link> */}
+              </Link>
             </p>
           </form>
         </div>

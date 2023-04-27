@@ -5,6 +5,7 @@ export const isAuthenticated = async () => {
   if (!token) return false
 
   const res = await authService.getCurrentUser()
+  console.log(res)
   if (res.success) return res.user
   return false
 }

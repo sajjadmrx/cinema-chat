@@ -1,7 +1,30 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { isAuthenticated } from "../../utils"
+import { useAuth } from "../../context/auth/AuthProvider"
 
 export default function Layout({ children }: any) {
-  return (
+  const [loading, setLoading] = useState(true)
+
+  const navigate = useNavigate()
+  const { handleSetUser } = useAuth()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const user = await isAuthenticated()
+      if (!user) {
+        navigate("/login")
+      } else {
+        handleSetUser(user)
+        setLoading(false)
+      }
+    }
+    checkAuth()
+  }, [navigate])
+
+  return loading ? (
+    <div>Loading...</div>
+  ) : (
     <section className="min-h-screen">
       <section>{children}</section>
     </section>

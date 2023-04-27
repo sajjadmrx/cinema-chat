@@ -7,6 +7,8 @@ import Signup from "./pages/signup"
 import RoomsPage from "./pages/rooms/RoomsPage"
 import Room from "./pages/single-room/Room"
 
+import { AuthProvider } from "./context/auth/AuthProvider"
+
 import "./styles/globals.css"
 
 export const routes = [
@@ -21,6 +23,8 @@ const router = createBrowserRouter(routes)
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>,
 )

@@ -1,6 +1,7 @@
 import * as Yup from "yup"
 import { useFormik } from "formik"
 import { useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import toast, { Toaster } from "react-hot-toast"
 
 import * as authService from "../../services/auth.service"
@@ -25,8 +26,27 @@ const validationSchema = Yup.object({
 
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
-  const onSubmit = async (values: any) => {}
+  const onSubmit = async (values: any) => {
+    setIsLoading(true)
+    const res = await authService.signup(values)
+    if (res.success) {
+      localStorage.setItem("token", res.data)
+      toast.success("Signup was successful!")
+      timer = setInterval(() => navigate("/rooms"), 2000)
+    } else {
+      toast.dismiss()
+
+      const userAlreadyExists = res.error?.response?.data?.message === "USER_EXISTS"
+      const serverError = res.error.response.data.message === "SERVER_ERROR"
+
+      if (userAlreadyExists) toast.error("User already exists")
+      if (serverError) toast.error("There is a problem on the server side")
+    }
+    setIsLoading(false)
+    console.log(res)
+  }
 
   const formik = useFormik({
     initialValues,
@@ -102,9 +122,9 @@ const SignUp = () => {
 
             <p className="mt-4 mb-2 text-sm text-left">
               Do you have an account before?{" "}
-              {/* <Link href="/login" className="text-primary hover:text-primaryActive">
+              <Link to="/login" className="text-primary hover:text-primaryActive">
                 Login
-              </Link> */}
+              </Link>
             </p>
           </form>
         </div>
