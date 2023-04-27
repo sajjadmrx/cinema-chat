@@ -31,13 +31,13 @@ const RoomsPage = () => {
 
   return (
     <Layout>
-      <div className="bg-[#f8f7fa]">
+      <div className="bg-[#f8f7fa] min-h-screen">
         <Navbar />
-        <section className="grid grid-cols-3 gap-5 p-5 min-h-screen">
+        <section className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-6 p-5">
           {publicRooms.map((item) => (
             <div
               key={item.id}
-              className="bg-white w-full rounded-3xl px-7 py-7 shadow-sm"
+              className="bg-white w-full h-40 rounded-3xl px-7 py-7 shadow-sm"
             >
               <div className="flex items-start">
                 <img
