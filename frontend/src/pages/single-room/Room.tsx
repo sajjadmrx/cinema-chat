@@ -1,9 +1,11 @@
 import { useRef } from "react"
-import Layout from "../components/Layout"
-import Navbar from "../components/Layout/Navbar"
-import VideoPlayer from "../components/VideoPlayer"
-import Chats from "../views/Room/Chats"
-import Members from "../views/Room/Members"
+import Layout from "../../components/Layout"
+import Navbar from "../../components/Layout/Navbar"
+import VideoPlayer from "../../components/VideoPlayer"
+import Chats from "../../views/Room/Chats"
+import Members from "../../views/Room/Members"
+import videojs from "video.js"
+import React from "react"
 
 const Room = () => {
   const playerRef = useRef(null)
@@ -21,7 +23,7 @@ const Room = () => {
     ],
   }
 
-  const handlePlayerReady = (player) => {
+  const handlePlayerReady = (player: any) => {
     playerRef.current = player
 
     // You can handle player events here, for example:

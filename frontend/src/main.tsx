@@ -4,8 +4,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 
 import Login from "./pages/login"
 import Signup from "./pages/signup"
-import Rooms from "./pages/Rooms"
-import Room from "./pages/Room"
+import Rooms from "./pages/rooms/Rooms"
+import Room from "./pages/single-room/Room"
 
 import "./styles/globals.css"
 

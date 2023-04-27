@@ -1,6 +1,6 @@
-import Layout from "../components/Layout"
-import Navbar from "../components/Layout/Navbar"
-import { ButtonComponent, IconComponent } from "../components/Shared"
+import Layout from "../../components/Layout"
+import Navbar from "../../components/Layout/Navbar"
+import { ButtonComponent, IconComponent } from "../../components/Shared"
 
 import { VscLock, VscUnlock } from "react-icons/vsc"
 import { HiOutlineUserGroup } from "react-icons/hi"
@@ -104,9 +104,10 @@ const Rooms = () => {
                 <img
                   className="w-20 rounded-full border-[6px] border-gray-200"
                   src="https://marketplace.canva.com/EAFEits4-uw/1/0/800w/canva-boy-cartoon-gamer-animated-twitch-profile-photo-r0bPCSjUqg0.jpg"
+                  alt={""}
                 />
                 <div className="ml-2 mt-4">
-                  <h4 className="font-semibold flex gap-1">
+                  <h4 className="font-semi-bold flex gap-1">
                     {item.isPublic ? <VscUnlock /> : <VscLock />}
                     {item.name}
                   </h4>
@@ -130,7 +131,7 @@ const Rooms = () => {
                     </div>
                   </div>
                   <ButtonComponent
-                    variant={item.isPublic ? "primary" : "outline-danger"}
+                    variant={"primary"}
                     size="small"
                     className="mt-2"
                     rounded="full"
