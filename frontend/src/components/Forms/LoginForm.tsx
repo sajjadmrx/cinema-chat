@@ -1,14 +1,11 @@
 import * as Yup from "yup"
-import Link from "next/link"
+// import Link from "next/link"
 import { useFormik } from "formik"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
+// import { signIn } from "next-auth/react"
 
-import * as authService from "@/services/auth.service"
-import { Button, Icon, Input } from "../Shared"
-
-let timer: any
+import { ButtonComponent, IconComponent, InputComponent } from "../Shared"
+import React from "react"
 
 const initialValues = {
   username: "",
@@ -23,46 +20,13 @@ const validationSchema = Yup.object({
 })
 
 const LoginForm = () => {
-  const [isLoading, setIsLoading] = useState(false)
-
-  const router = useRouter()
-
-  const onSubmit = async (values: any) => {
-    setIsLoading(true)
-    toast.loading("Entering the website")
-
-    const res = await authService.logInUser(values)
-
-    if (res.success) {
-      setIsLoading(false)
-      localStorage.setItem("token", res.token)
-      toast.dismiss()
-      toast.success("Login was successful!")
-      timer = setInterval(() => router.push("/"), 2000)
-    } else {
-      toast.dismiss()
-      setIsLoading(false)
-
-      const invalidUsernamePassword =
-        res.error.response.data.message === "INVALID_USERNAME_PASSWORD"
-      const serverError = res.error.response.data.message === "SERVER_ERROR"
-
-      if (invalidUsernamePassword) toast.error("Username or password is incorrect")
-      if (serverError) toast.error("There is a problem on the server side")
-    }
-  }
+  const onSubmit = async (values: any) => {}
 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit,
   })
-
-  useEffect(() => {
-    return () => {
-      clearInterval(timer)
-    }
-  }, [])
 
   return (
     <>
@@ -75,26 +39,26 @@ const LoginForm = () => {
             Welcome back! Please enter your details
           </p>
           <form className="flex flex-col gap-2" onSubmit={formik.handleSubmit}>
-            <Input
+            <InputComponent
               name="username"
               type="text"
               formik={formik}
-              placeholder="Fullname"
+              placeholder="username"
               icon={
-                <Icon
+                <IconComponent
                   name="user"
                   size={20}
                   className="absolute left-3 top-1/2 transform -translate-y-1/2"
                 />
               }
             />
-            <Input
+            <InputComponent
               name="password"
               type="password"
               formik={formik}
               placeholder="Password"
               icon={
-                <Icon
+                <IconComponent
                   name="lock"
                   size={20}
                   className="absolute left-3 top-1/2 transform -translate-y-1/2"
@@ -102,15 +66,15 @@ const LoginForm = () => {
               }
             />
 
-            <Button type="submit" variant="primary" loading={isLoading} className="mt-5">
+            <ButtonComponent type="submit" variant="primary" className="mt-5">
               Login
-            </Button>
+            </ButtonComponent>
 
             <p className="mt-4 mb-2 text-sm text-left">
               Don't have an account?{" "}
-              <Link href="/signup" className="text-primary hover:text-primaryActive">
+              {/* <Link href="/signup" className="text-primary hover:text-primaryActive">
                 Sign up
-              </Link>
+              </Link> */}
             </p>
           </form>
         </div>

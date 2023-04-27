@@ -1,75 +1,59 @@
-import { useEffect, useRef, useState } from "react";
-import { BsPlayCircle, BsPauseCircle } from "react-icons/bs";
-import styles from "./style.module.scss";
+import React from "react"
+import { useEffect, useRef } from "react"
+import videojs from "video.js"
+import "video.js/dist/video-js.css"
+import Player from "video.js/dist/types/player"
 
-const VideoPlayer = () => {
-  const [videoTimer, setVideoTimer] = useState<string>("00:00");
-  const [videoIsPlaying, setVideoIsPlaying] = useState<boolean>(false);
-  const videoPlayerRef = useRef<HTMLVideoElement>(null);
-  const timeWrapperRef = useRef<HTMLDivElement>(null);
-  const timerLengthRef = useRef<HTMLDivElement>(null);
+export const VideoPlayer = (props: any) => {
+  const videoRef = useRef(null)
+  const playerRef = useRef(null)
+  const { options, onReady } = props
 
-  function setTime() {
-    const minutes = Math.floor(videoPlayerRef.current.currentTime / 60);
-    const seconds = Math.floor(
-      videoPlayerRef.current.currentTime - minutes * 60
-    );
+  useEffect(() => {
+    // Make sure Video.js player is only initialized once
+    if (!playerRef.current) {
+      // The Video.js player needs to be _inside_ the component el for React 18 Strict Mode.
+      const videoElement = document.createElement("video-js")
 
-    const minuteValue = minutes.toString().padStart(2, "0");
-    const secondValue = seconds.toString().padStart(2, "0");
+      videoElement.classList.add("vjs-big-play-centered")
+      // @ts-ignore
+      videoRef.current.appendChild(videoElement)
 
-    const mediaTime = `${minuteValue}:${secondValue}`;
-    setVideoTimer(mediaTime);
+      // @ts-ignore
+      const player: Player = (playerRef.current = videojs(videoElement, options, () => {
+        videojs.log("player is ready")
+        onReady && onReady(player)
+      }))
 
-    const barLength =
-      timeWrapperRef.current.clientWidth *
-      (videoPlayerRef.current.currentTime / videoPlayerRef.current.duration);
-    timerLengthRef.current.style.width = `${barLength}px`;
-  }
+      // You could update an existing player in the `else` block here
+      // on prop change, for example:
+    } else {
+      const player = playerRef.current
 
-  const toggleVideoPlaying = () => {
-    if (!videoIsPlaying) {
-      videoPlayerRef.current?.play();
-      setVideoIsPlaying((prev) => !prev);
-      return;
+      // @ts-ignore
+      player.src(options.sources)
     }
-    videoPlayerRef.current?.pause();
-    setVideoIsPlaying((prev) => !prev);
-  };
-  // useEffect(() => {
-  //   if (videoPlayerRef.current) {
-  //     setTimeout(() => {
-  //       videoPlayerRef.current.play();
-  //     }, 1000);
-  //   }
-  // }, []);
+  }, [options, videoRef])
+
+  // Dispose the Video.js player when the functional component unmounts
+  useEffect(() => {
+    const player = playerRef.current
+
+    return () => {
+      // @ts-ignore
+      if (player && !player.isDisposed()) {
+        // @ts-ignore
+        player.dispose()
+        playerRef.current = null
+      }
+    }
+  }, [playerRef])
 
   return (
-    <div className={styles.videoPlayer}>
-      <video onTimeUpdate={setTime} ref={videoPlayerRef}>
-        <source src="/assets/video/cat.mp4" type="video/mp4" />
-      </video>
-      <div className={styles.videoPlayer__controls}>
-        <button
-          onClick={toggleVideoPlaying}
-          className={styles.videoPlayer__controls__playAndPause}
-        >
-          {videoIsPlaying ? (
-            <BsPauseCircle size={20} />
-          ) : (
-            <BsPlayCircle size={20} />
-          )}
-        </button>
-        <div
-          ref={timeWrapperRef}
-          className={styles.videoPlayer__controls__timer}
-        >
-          <div ref={timerLengthRef}></div>
-          <span>{videoTimer}</span>
-        </div>
-      </div>
+    <div data-vjs-player="">
+      <div ref={videoRef} />
     </div>
-  );
-};
+  )
+}
 
-export default VideoPlayer;
+export default VideoPlayer

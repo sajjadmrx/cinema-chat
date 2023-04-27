@@ -1,36 +1,36 @@
-import { KeyboardEvent, useRef, useState } from "react";
-import Image from "next/image";
-import femaleUserPhoto from "../../../public/assets/images/female_user.png";
-import styles from "./style.module.scss";
+import React from "react"
+import { KeyboardEvent, useRef, useState } from "react"
+// @ts-ignore
+import styles from "./style.module.scss"
 
 const fakeMessages = [
   { id: 1, name: "sara", text: "سلام" },
   { id: 2, name: "ayda", text: "خوبین؟" },
   { id: 3, name: "hosna", text: "ما خوبیم تو چطوری؟" },
-];
+]
 
 const Chatbox = () => {
-  const [messages, setMessages] = useState(fakeMessages);
-  const [chatBoxMessage, setChatBoxMessage] = useState("");
+  const [messages, setMessages] = useState(fakeMessages)
+  const [chatBoxMessage, setChatBoxMessage] = useState("")
 
-  const messagesRef = useRef(null);
-  const endOfMessagesRef = useRef(null);
+  const messagesRef = useRef(null)
+  const endOfMessagesRef: any = useRef(null)
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.code == "Enter") {
       setMessages((prevMessages) => [
         ...prevMessages,
         { id: Math.random() * 10000, name: "saba", text: chatBoxMessage },
-      ]);
-      setChatBoxMessage("");
+      ])
+      setChatBoxMessage("")
       // messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
 
       endOfMessagesRef.current.scrollIntoView({
         behavior: "smooth",
         block: "end",
-      });
+      })
     }
-  };
+  }
 
   return (
     <div className={styles.chatbox}>
@@ -46,8 +46,8 @@ const Chatbox = () => {
         {messages.map((message) => {
           return (
             <div key={message.id} className={styles.chatbox__messages__message}>
-              <Image
-                src={femaleUserPhoto}
+              <img
+                src="/female_user.png"
                 alt="female_user_photo"
                 width={60}
                 height={60}
@@ -57,15 +57,12 @@ const Chatbox = () => {
                 <span>{message.text}</span>
               </div>
             </div>
-          );
+          )
         })}
-        <div
-          className={styles.chatbox__messages__end}
-          ref={endOfMessagesRef}
-        ></div>
+        <div className={styles.chatbox__messages__end} ref={endOfMessagesRef}></div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Chatbox;
+export default Chatbox

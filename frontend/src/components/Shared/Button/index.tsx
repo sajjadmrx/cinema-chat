@@ -1,9 +1,10 @@
-import Link from "next/link"
+import React from "react"
+import { Link } from "react-router-dom"
 
-import { IButton } from "@/types/components/Button"
-import { classNames } from "@/utils/classNames"
+import { Button } from "../../../shared/interfaces/components/Button.interface"
+import { classNames } from "../../../utils"
 
-const Button = ({
+export const ButtonComponent = ({
   children,
   className,
   disabled,
@@ -15,7 +16,8 @@ const Button = ({
   size = "medium",
   type,
   variant,
-}: IButton) => {
+  rounded,
+}: Button) => {
   const handleClickButton = () => {
     if (!disabled && !loading && typeof onClick === "function") {
       onClick()
@@ -28,10 +30,14 @@ const Button = ({
     onClick: handleClickButton,
     disabled: disabled,
     className: classNames(
-      "appearance-none relative text-center inline-block rounded-xl overflow-hidden cursor-pointer select-none transition duration-150 ease-in-out transform border",
+      "appearance-none flex relative text-center inline-block overflow-hidden cursor-pointer select-none transition duration-150 ease-in-out transform border",
+
+      typeof rounded === "number" && rounded,
+      rounded === "full" && "rounded-full",
+      !rounded && "rounded-xl",
 
       disabled && "cursor-not-allowed opacity-75",
-      leftIcon || rightIcon ? "space-x-2 space-x-reverse" : null,
+      leftIcon || (rightIcon && "space-x-2 space-x-reverse"),
 
       variant === "primary" &&
         "text-white bg-primary hover:bg-primaryHover active:bg-primaryActive",
@@ -46,7 +52,7 @@ const Button = ({
 
       size === "large" && "px-6 py-3.5",
       size === "medium" && "px-4 py-2",
-      size === "small" && "px-2 py-1.5 text-sm",
+      size === "small" && "px-4 py-2 text-sm",
 
       className,
     ),
@@ -93,9 +99,9 @@ const Button = ({
 
   const elementChildren = (
     <>
-      {rightIcon}
-      <span>{children}</span>
       {leftIcon}
+      <span>{children}</span>
+      {rightIcon}
       {loadingContent}
     </>
   )
@@ -110,5 +116,3 @@ const Button = ({
     </button>
   )
 }
-
-export default Button

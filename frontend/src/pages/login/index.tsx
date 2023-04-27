@@ -1,24 +1,12 @@
-import { useEffect } from "react"
-import { useRouter } from "next/router"
-
-import Layout from "@/components/Layout"
-import { Icon } from "@/components/Shared"
-import LoginForm from "@/components/Forms/LoginForm"
-
-import { useAuth } from "@/context/Auth/AuthProvider"
-
+import { IconComponent } from "../../components/Shared"
+import LoginForm from "../../components/Forms/LoginForm"
+// @ts-ignore
 import styles from "./styles.module.css"
+import React from "react"
 
 const SignUpPage = () => {
-  const router = useRouter()
-  const { user } = useAuth()
-
-  useEffect(() => {
-    if (user) router.push("/")
-  }, [user])
-
   return (
-    <Layout>
+    <>
       <div className={styles.Wrapper}>
         <LoginForm />
         <div className={styles.Right}>
@@ -28,7 +16,7 @@ const SignUpPage = () => {
                 style={{ background: "#21A73F" }}
                 className="w-24 h-24 rounded-[40px] grid place-items-center"
               >
-                <Icon name="user" color="white" size={40} />
+                <IconComponent name="user" color="white" size={40} />
               </div>
               <h2 className="text-white text-2xl font-bold">
                 Lorem ipsum dolor sit amet.
@@ -42,7 +30,7 @@ const SignUpPage = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   )
 }
 

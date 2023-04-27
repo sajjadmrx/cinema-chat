@@ -1,10 +1,11 @@
-export interface IButton {
+export interface Button {
   href?: string
   className?: string
 
   loading?: boolean
   disabled?: boolean
 
+  rounded?: number | "full"
   type?: "button" | "submit" | "reset"
   size?: "small" | "medium" | "large"
   variant?: "primary" | "danger" | "secondary" | "outline-primary" | "outline-danger"

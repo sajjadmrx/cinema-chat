@@ -1,6 +1,8 @@
-export default function Layout({ children }) {
+import React from "react"
+
+export default function Layout({ children }: any) {
   return (
-    <section className="min-h-full">
+    <section className="min-h-screen">
       <section>{children}</section>
     </section>
   )
