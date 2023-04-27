@@ -1,7 +1,7 @@
-import Link from "next/link"
+import { Link } from "react-router-dom"
 
-import { IButton } from "@/types/components/Button"
-import { classNames } from "@/utils/classNames"
+import { IButton } from "../../../types/components/Button"
+import { classNames } from "../../../utils/classNames"
 
 const Button = ({
   children,

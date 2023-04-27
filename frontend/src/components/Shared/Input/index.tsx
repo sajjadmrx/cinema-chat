@@ -1,8 +1,8 @@
 import { useState } from "react"
 
-import { Icon } from "@/components/Shared"
-import { IInput } from "@/types/components/Input"
-import { classNames } from "@/utils/classNames"
+import { Icon } from "../../../components/Shared"
+import { IInput } from "../../../types/components/Input"
+import { classNames } from "../../../utils/classNames"
 
 export default function Input({
   type,

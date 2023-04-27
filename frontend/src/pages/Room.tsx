@@ -1,7 +1,7 @@
-import Layout from "@/components/Layout"
-import Navbar from "@/components/Layout/Navbar"
-import Chats from "@/views/Room/Chats"
-import Members from "@/views/Room/Members"
+import Layout from "../components/Layout"
+import Navbar from "../components/Layout/Navbar"
+import Chats from "../views/Room/Chats"
+import Members from "../views/Room/Members"
 
 const Room = () => {
   return (

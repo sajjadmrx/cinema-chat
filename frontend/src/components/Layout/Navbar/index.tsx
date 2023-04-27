@@ -1,4 +1,4 @@
-import { Button } from "@/components/Shared"
+import { Button } from "../../../components/Shared"
 import ProfileDropdown from "./ProfileDropdown"
 
 const Navbar = () => {

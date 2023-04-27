@@ -1,4 +1,4 @@
-import http from "@/config/http"
+import http from "../config/http"
 
 type signupUser = { username: string; email: string; password: string }
 type loginUser = { username: string; password: string }

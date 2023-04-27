@@ -1,6 +1,4 @@
 import { KeyboardEvent, useRef, useState } from "react";
-import Image from "next/image";
-import femaleUserPhoto from "../../../public/assets/images/female_user.png";
 import styles from "./style.module.scss";
 
 const fakeMessages = [
@@ -14,7 +12,7 @@ const Chatbox = () => {
   const [chatBoxMessage, setChatBoxMessage] = useState("");
 
   const messagesRef = useRef(null);
-  const endOfMessagesRef = useRef(null);
+  const endOfMessagesRef: any = useRef(null);
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.code == "Enter") {
@@ -46,8 +44,8 @@ const Chatbox = () => {
         {messages.map((message) => {
           return (
             <div key={message.id} className={styles.chatbox__messages__message}>
-              <Image
-                src={femaleUserPhoto}
+              <img
+                src="/female_user.png"
                 alt="female_user_photo"
                 width={60}
                 height={60}

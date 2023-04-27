@@ -1,8 +1,8 @@
 import * as Yup from "yup"
-import Link from "next/link"
+// import Link from "next/link"
 import { useFormik } from "formik"
 import toast, { Toaster } from "react-hot-toast"
-import { signIn } from "next-auth/react"
+// import { signIn } from "next-auth/react"
 
 import { Button, Icon, Input } from "../Shared"
 
@@ -19,14 +19,7 @@ const validationSchema = Yup.object({
 })
 
 const LoginForm = () => {
-  const onSubmit = async (values: any) => {
-    const result = await signIn("credentials", {
-      username: values.username,
-      password: values.password,
-      redirect: true,
-      callbackUrl: "/rooms",
-    })
-  }
+  const onSubmit = async (values: any) => {}
 
   const formik = useFormik({
     initialValues,
@@ -78,9 +71,9 @@ const LoginForm = () => {
 
             <p className="mt-4 mb-2 text-sm text-left">
               Don't have an account?{" "}
-              <Link href="/signup" className="text-primary hover:text-primaryActive">
+              {/* <Link href="/signup" className="text-primary hover:text-primaryActive">
                 Sign up
-              </Link>
+              </Link> */}
             </p>
           </form>
         </div>

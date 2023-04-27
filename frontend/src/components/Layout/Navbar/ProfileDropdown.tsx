@@ -1,9 +1,9 @@
 import { useRef, useState } from "react"
 import { motion } from "framer-motion"
 
-import { classNames } from "@/utils"
-import { useOnClickOutside } from "@/hooks/useOnClickOutside"
-import { Icon } from "@/components/Shared"
+import { classNames } from "../../../utils"
+import { useOnClickOutside } from "../../../hooks/useOnClickOutside"
+import { Icon } from "../../../components/Shared"
 
 const ProfileDropdown = () => {
   const [open, setOpen] = useState(false)

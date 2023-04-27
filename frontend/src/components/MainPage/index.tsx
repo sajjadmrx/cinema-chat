@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import Chatbox from "@/components/Chatbox";
-import VideoPlayer from "@/components/VideoPlayer";
+import Chatbox from "../../components/Chatbox";
+import VideoPlayer from "../../components/VideoPlayer";
 import styles from "./style.module.scss";
 
 const MainPage = () => {

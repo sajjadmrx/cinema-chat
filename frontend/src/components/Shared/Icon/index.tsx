@@ -1,4 +1,4 @@
-import { IIcon } from "@/types/components/Icon"
+import { IIcon } from "../../../types/components/Icon"
 import { icons } from "./icons"
 
 const colors = {

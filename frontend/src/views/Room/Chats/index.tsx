@@ -1,4 +1,4 @@
-import { Icon } from "@/components/Shared"
+import { Icon } from "../../../components/Shared"
 import DropdownMenu from "./DropdownMenu"
 
 const CHATS = [

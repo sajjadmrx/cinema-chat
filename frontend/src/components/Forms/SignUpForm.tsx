@@ -1,11 +1,9 @@
 import * as Yup from "yup"
-import Link from "next/link"
 import { useFormik } from "formik"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
 
-import * as authService from "@/services/auth.service"
+import * as authService from "../../services/auth.service"
 import { Button, Icon, Input } from "../Shared"
 
 let timer: any
@@ -27,30 +25,7 @@ const validationSchema = Yup.object({
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false)
 
-  const router = useRouter()
-
-  const onSubmit = async (values: any) => {
-    setIsLoading(true)
-    toast.loading("Registering")
-
-    const res = await authService.signUpUser(values)
-
-    if (res.success) {
-      localStorage.setItem("token", res.token)
-      toast.dismiss()
-      toast.success("Your account has been successfully created")
-      timer = setInterval(() => router.push("/"), 2000)
-    } else {
-      toast.dismiss()
-
-      const userAlreadyExists = res.error.response.data.message === "USER_EXISTS"
-      const serverError = res.error.response.data.message === "SERVER_ERROR"
-
-      if (userAlreadyExists) toast.error("User already exists")
-      if (serverError) toast.error("There is a problem on the server side")
-    }
-    setIsLoading(false)
-  }
+  const onSubmit = async (values: any) => {}
 
   const formik = useFormik({
     initialValues,
@@ -121,9 +96,9 @@ const SignUp = () => {
 
             <p className="mt-4 mb-2 text-sm text-left">
               Do you have an account before?{" "}
-              <Link href="/login" className="text-primary hover:text-primaryActive">
+              {/* <Link href="/login" className="text-primary hover:text-primaryActive">
                 Login
-              </Link>
+              </Link> */}
             </p>
           </form>
         </div>

@@ -1,4 +1,4 @@
-import * as authService from "@/services/auth.service"
+import * as authService from "../services/auth.service"
 
 export const isAuthenticated = async () => {
   const token = localStorage.getItem("token")
