@@ -35,6 +35,8 @@ import { ApiJoinRoom } from './docs/joinRoom.doc';
 import { ApiUpdateMember } from './docs/updateCurrentMember.doc';
 import { ApiGetMemberById } from './docs/getMemberById.doc';
 import { HttpExceptionFilter } from '../../../shared/filters/httpException.filter';
+import { getRoom } from '../../../shared/decorators/room.decorator';
+import { Room } from '../../../shared/interfaces/room.interface';
 
 @ApiBearerAuth()
 @ApiTags('members')
@@ -63,8 +65,14 @@ export class MembersController {
     @Param('roomId', ParseIntPipe) roomId: number,
     @Body() input: MemberCreateDto,
     @getUser() user: User,
+    @getRoom() room: Room,
   ) {
-    return this.membersService.joinRoom(roomId, Number(input.inviteId), user);
+    return this.membersService.joinRoom(
+      roomId,
+      Number(input.inviteId),
+      user,
+      room,
+    );
   }
 
   @ApiLaveMember()

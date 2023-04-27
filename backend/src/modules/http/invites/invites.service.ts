@@ -64,15 +64,6 @@ export class InvitesService {
       const invite: Invite | null = await this.invitesRepo.getBySlug(slug);
       if (!invite) throw new NotFoundException(ResponseMessages.INVALID_INVITE);
 
-      if (invite.max_use != 0)
-        if (invite.max_use == invite.uses || invite.max_use < invite.uses)
-          throw new BadRequestException(ResponseMessages.USED_MAXIMUM);
-
-      if (!invite.isForEver) {
-        if (moment(invite.expires_at).isBefore())
-          throw new BadRequestException(ResponseMessages.EXPIRED_TIME);
-      }
-
       const room: Room | null = await this.roomsRepository.getById(
         invite.roomId,
       );

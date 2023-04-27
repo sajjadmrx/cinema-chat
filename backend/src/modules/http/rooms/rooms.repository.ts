@@ -37,6 +37,13 @@ export class RoomsRepository {
       },
       take: limit,
       skip: (page - 1) * limit,
+      include: {
+        _count: {
+          select: {
+            members: true,
+          },
+        },
+      },
     });
   }
   async getUserRoomsCount(userId: number) {
@@ -53,13 +60,23 @@ export class RoomsRepository {
     return this.db.room.findMany({
       take: limit,
       skip: (page - 1) * limit,
+      where: {
+        isPublic: true,
+      },
+      include: {
+        _count: {
+          select: {
+            members: true,
+          },
+        },
+      },
     });
   }
 
   async getTotalPublicRooms() {
     return this.db.room.count({
       where: {
-        isPublic: false, //todo change to true
+        isPublic: true,
       },
     });
   }
