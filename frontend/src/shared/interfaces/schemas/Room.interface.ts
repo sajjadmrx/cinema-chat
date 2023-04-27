@@ -5,6 +5,7 @@ export interface Room {
   name: string
   isPublic: boolean
   avatar: string
+  _count: RoomCount
   createdAt: Date
   updatedAt: Date
 }
@@ -15,4 +16,7 @@ export interface Pagination {
 }
 export interface FetchRooms extends Pagination {
   rooms: Array<Room>
+}
+export interface RoomCount {
+  members: number
 }
