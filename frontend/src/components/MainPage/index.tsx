@@ -1,10 +1,11 @@
-import { useRef } from "react";
-import Chatbox from "../../components/Chatbox";
-import VideoPlayer from "../../components/VideoPlayer";
-import styles from "./style.module.scss";
+import { useRef } from "react"
+import Chatbox from "../../components/Chatbox"
+import VideoPlayer from "../../components/VideoPlayer"
+import videojs from "video.js"
+import React from "react"
 
 const MainPage = () => {
-  const playerRef = useRef(null);
+  const playerRef = useRef(null)
 
   const videoJsOptions = {
     autoplay: true,
@@ -17,27 +18,27 @@ const MainPage = () => {
         type: "application/x-mpegURL",
       },
     ],
-  };
+  }
 
-  const handlePlayerReady = (player) => {
-    playerRef.current = player;
+  const handlePlayerReady = (player: any) => {
+    playerRef.current = player
 
     // You can handle player events here, for example:
     player.on("waiting", () => {
-      videojs.log("player is waiting");
-    });
+      videojs.log("player is waiting")
+    })
 
     player.on("dispose", () => {
-      videojs.log("player will dispose");
-    });
-  };
+      videojs.log("player will dispose")
+    })
+  }
 
   return (
-    <div className={styles.mainPage}>
+    <div>
       <Chatbox />
       <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
     </div>
-  );
-};
+  )
+}
 
-export default MainPage;
+export default MainPage

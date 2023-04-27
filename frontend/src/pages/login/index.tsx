@@ -1,7 +1,8 @@
 import { Icon } from "../../components/Shared"
 import LoginForm from "../../components/Forms/LoginForm"
-
+// @ts-ignore
 import styles from "./styles.module.css"
+import React from "react"
 
 const SignUpPage = () => {
   return (

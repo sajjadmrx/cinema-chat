@@ -4,6 +4,7 @@ import { Button, Icon } from "../components/Shared"
 
 import { VscLock, VscUnlock } from "react-icons/vsc"
 import { HiOutlineUserGroup } from "react-icons/hi"
+import React from "react"
 
 const data = [
   {

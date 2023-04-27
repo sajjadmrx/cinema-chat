@@ -1,3 +1,5 @@
+import React from "react"
+
 const MEMBERS = [
   { username: "@username", nickname: "Nickname" },
   { username: "@username", nickname: "Nickname" },

@@ -1,3 +1,4 @@
+import React from "react"
 import Layout from "../components/Layout"
 import Navbar from "../components/Layout/Navbar"
 import Chats from "../views/Room/Chats"
@@ -17,7 +18,9 @@ const Room = () => {
             />
             <h4 className="ml-3 -mb-1.5 font-bold">Call of Duty: World War II</h4>
           </div>
-          <div className="bg-gray-200 w-full h-96 rounded-2xl mt-6 grid place-items-center border border-gray-300">Video Player</div>
+          <div className="bg-gray-200 w-full h-96 rounded-2xl mt-6 grid place-items-center border border-gray-300">
+            Video Player
+          </div>
         </div>
         <Chats />
       </section>

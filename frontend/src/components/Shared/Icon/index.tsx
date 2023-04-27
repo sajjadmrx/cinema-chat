@@ -1,3 +1,4 @@
+import React from "react"
 import { IIcon } from "../../../types/components/Icon"
 import { icons } from "./icons"
 
@@ -13,8 +14,10 @@ const colors = {
 }
 
 const Icon = ({ name, size = 24, color = "gray", className }: IIcon) => {
+  // @ts-ignore
   const IconElement = icons[name]
 
+  // @ts-ignore
   if (!icons[name]) {
     throw new Error(`Icon ${name} not found`)
   }

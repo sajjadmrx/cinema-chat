@@ -5,6 +5,7 @@ import toast, { Toaster } from "react-hot-toast"
 
 import * as authService from "../../services/auth.service"
 import { Button, Icon, Input } from "../Shared"
+import React from "react"
 
 let timer: any
 
