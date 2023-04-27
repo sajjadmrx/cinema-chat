@@ -131,7 +131,7 @@ const Rooms = () => {
                     </div>
                   </div>
                   <ButtonComponent
-                    variant={"primary"}
+                    variant={"outline-primary"}
                     size="small"
                     className="mt-2"
                     rounded="full"
