@@ -1,12 +1,5 @@
+// import { SessionProvider } from "next-auth/react"
 import Layout from "@/components/Layout"
-import MainPage from "@/components/MainPage"
-import { Button, Icon } from "@/components/Shared"
-// import CreateRoomPage from "@/components/CreateRoomPage";
-import { SessionProvider } from "next-auth/react";
-
-import { VscLock, VscUnlock } from "react-icons/vsc"
-import { HiOutlineUserGroup } from "react-icons/hi"
-import Navbar from "@/components/Layout/Navbar"
 
 const data = [
   {
@@ -93,11 +86,9 @@ const data = [
 
 const IndexPage = () => {
   return (
-    <SessionProvider>
-      <Layout>
-        {/* <CreateRoomPage /> */}
-      </Layout>
-    </SessionProvider>
-  );
+    // <SessionProvider>
+      <Layout></Layout>
+    // </SessionProvider>
+  )
 }
 export default IndexPage

@@ -1,14 +1,10 @@
 import * as Yup from "yup"
 import Link from "next/link"
 import { useFormik } from "formik"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
+import { signIn } from "next-auth/react"
 
-import * as authService from "@/services/auth.service"
 import { Button, Icon, Input } from "../Shared"
-
-let timer: any
 
 const initialValues = {
   username: "",
@@ -23,32 +19,13 @@ const validationSchema = Yup.object({
 })
 
 const LoginForm = () => {
-  const [isLoading, setIsLoading] = useState(false)
-
-  const router = useRouter()
-
   const onSubmit = async (values: any) => {
-    setIsLoading(true)
-    toast.loading("Entering the website")
-
-    const res = await authService.logInUser(values)
-
-    if (res.success) {
-      localStorage.setItem("token", res.token)
-      toast.dismiss()
-      toast.success("Login was successful!")
-      timer = setInterval(() => router.push("/"), 2000)
-    } else {
-      toast.dismiss()
-
-      const invalidUsernamePassword =
-        res.error.response.data.message === "INVALID_USERNAME_PASSWORD"
-      const serverError = res.error.response.data.message === "SERVER_ERROR"
-
-      if (invalidUsernamePassword) toast.error("Username or password is incorrect")
-      if (serverError) toast.error("There is a problem on the server side")
-    }
-    setIsLoading(false)
+    const result = await signIn("credentials", {
+      username: values.username,
+      password: values.password,
+      redirect: true,
+      callbackUrl: "/rooms",
+    })
   }
 
   const formik = useFormik({
@@ -56,12 +33,6 @@ const LoginForm = () => {
     validationSchema,
     onSubmit,
   })
-
-  useEffect(() => {
-    return () => {
-      clearInterval(timer)
-    }
-  }, [])
 
   return (
     <>
@@ -101,7 +72,7 @@ const LoginForm = () => {
               }
             />
 
-            <Button type="submit" variant="primary" loading={isLoading} className="mt-5">
+            <Button type="submit" variant="primary" className="mt-5">
               Login
             </Button>
 

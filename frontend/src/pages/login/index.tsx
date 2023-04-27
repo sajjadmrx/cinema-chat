@@ -1,21 +1,18 @@
-import { useEffect } from "react"
 import { useRouter } from "next/router"
+import { useSession } from "next-auth/react"
 
 import Layout from "@/components/Layout"
 import { Icon } from "@/components/Shared"
 import LoginForm from "@/components/Forms/LoginForm"
 
-import { useAuth } from "@/context/Auth/AuthProvider"
-
 import styles from "./styles.module.css"
 
 const SignUpPage = () => {
+  const { data: session, status } = useSession()
   const router = useRouter()
-  const { user } = useAuth()
 
-  useEffect(() => {
-    if (user) router.push("/")
-  }, [user])
+  if (session?.user?.data) router.push("/rooms")
+  if (status === "loading") return <div>Loading...</div>
 
   return (
     <Layout>
