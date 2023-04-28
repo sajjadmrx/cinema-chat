@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Member } from "@interfaces/schemas/member.interface"
 import { fetchMembersService } from "../../../services/members.service"
+import {AiOutlineCloseCircle} from "react-icons/ai"
 
 interface Prop {
   roomId: number
@@ -19,12 +20,15 @@ const MembersComponent = (prop: Prop) => {
   }, [membersPage])
 
   return (
-    <section className="border-r w-72 px-6 py-5 h-full">
+    <section className={`${prop.showMembers? 'fixed' : 'hidden' } top-0 bottom-0 left-0 right-0 lg:border-r lg:w-72 px-6 py-5 lg:h-full lg:relative lg:block bg-white z-50`}>
       <div className="flex justify-between items-center mb-5 border-b border-gray-100 pb-3">
         <h2 className="text-lg font-semi-bold">Members</h2>
-        <span className="rounded-full bg-primary grid place-items-center leading-[25px] w-6 h-6 text-white text-sm">
-          9
-        </span>
+        <div className="flex gap-x-2">
+          <span className="rounded-full bg-primary grid place-items-center leading-[25px] w-6 h-6 text-white text-sm">
+            9
+          </span>
+          <AiOutlineCloseCircle onClick={()=>prop.setShowMembers(false)} className={`lg:hidden ${prop.showMembers ? "block" : "hidden" }`} size={24} />
+        </div>
       </div>
 
       <div className="space-y-3  h-[calc(100%-61px)] overflow-y-auto">
