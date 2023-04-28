@@ -1,27 +1,28 @@
 import http from "../config/http"
+import { ReturnFormat } from "@interfaces/schemas/api.interface"
 
 type signupUser = { username: string; email: string; password: string }
 type loginUser = { username: string; password: string }
 
-export const signup = async (user: signupUser) => {
+export async function signupService(user: signupUser): Promise<ReturnFormat<string>> {
   try {
     const { data } = await http.post("/auth/signup", user)
-    return { success: true, data: data.data }
+    return { data: data.data }
   } catch (error) {
-    return { success: false, error }
+    throw error
   }
 }
 
-export const login = async (user: loginUser) => {
+export async function loginService(user: loginUser): Promise<ReturnFormat<string>> {
   try {
     const { data } = await http.post("/auth/login", user)
-    return { success: true, data: data.data }
+    return { data: data.data }
   } catch (error) {
-    return { success: false, error }
+    throw error
   }
 }
 
-export const getCurrentUser = async () => {
+export async function getCurrentUserService() {
   try {
     const { data } = await http.get("/users/@me")
     return { success: true, user: data.data }

@@ -4,8 +4,9 @@ import { useFormik } from "formik"
 import { Link, useNavigate } from "react-router-dom"
 import toast, { Toaster } from "react-hot-toast"
 
-import * as authService from "../../services/auth.service"
+import { loginService } from "../../services/auth.service"
 import { ButtonComponent, IconComponent, InputComponent } from "../Shared"
+import { errorHandling } from "../../shared/lib/error-handling"
 
 type loginUser = { username: string; password: string }
 
@@ -29,23 +30,17 @@ const LoginForm = () => {
 
   const onSubmit = async (values: loginUser) => {
     setIsLoading(true)
-    const res = await authService.login(values)
-    if (res.success) {
+    try {
+      const res = await loginService(values)
       localStorage.setItem("token", res.data)
       toast.success("Login was successful!")
       timer = setInterval(() => navigate("/rooms"), 2000)
-    } else {
-      toast.dismiss()
-
-      const invalidUesrnamePassword =
-        res.error?.response?.data?.message === "INVALID_USERNAME_PASSWORD"
-      const serverError = res.error.response.data.message === "SERVER_ERROR"
-
-      if (invalidUesrnamePassword) toast.error("Invalid username or password")
-      if (serverError) toast.error("There is a problem on the server side")
+    } catch (e) {
+      const message = errorHandling(e)
+      toast.error(message)
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
-    console.log(res)
   }
 
   useEffect(() => {

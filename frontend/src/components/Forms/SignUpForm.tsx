@@ -4,9 +4,10 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import toast, { Toaster } from "react-hot-toast"
 
-import * as authService from "../../services/auth.service"
+import { signupService } from "../../services/auth.service"
 import { ButtonComponent, IconComponent, InputComponent } from "../Shared"
 import React from "react"
+import { errorHandling } from "../../shared/lib/error-handling"
 
 let timer: any
 
@@ -30,22 +31,16 @@ const SignUp = () => {
 
   const onSubmit = async (values: any) => {
     setIsLoading(true)
-    const res = await authService.signup(values)
-    if (res.success) {
+    try {
+      const res = await signupService(values)
       localStorage.setItem("token", res.data)
       toast.success("Signup was successful!")
       timer = setInterval(() => navigate("/rooms"), 2000)
-    } else {
-      toast.dismiss()
-
-      const userAlreadyExists = res.error?.response?.data?.message === "USER_EXISTS"
-      const serverError = res.error.response.data.message === "SERVER_ERROR"
-
-      if (userAlreadyExists) toast.error("User already exists")
-      if (serverError) toast.error("There is a problem on the server side")
+    } catch (e) {
+      toast.error(errorHandling(e))
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
-    console.log(res)
   }
 
   const formik = useFormik({
