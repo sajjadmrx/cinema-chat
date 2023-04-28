@@ -1,6 +1,6 @@
 import { ReturnFormat } from "@interfaces/schemas/api.interface"
 import http from "../config/http"
-import { fetchMembers, MemberWithRoom } from "@interfaces/schemas/member.interface"
+import { FetchMembers, MemberWithRoom } from "@interfaces/schemas/member.interface"
 
 export async function getMemberByMemberId(
   roomId: number,
@@ -19,7 +19,7 @@ export async function getMemberByMemberId(
 export async function fetchMembersService(
   roomId: number,
   page: number,
-): Promise<ReturnFormat<fetchMembers>> {
+): Promise<ReturnFormat<FetchMembers>> {
   try {
     const response = await http.get(`/rooms/${roomId}/members?page=${page}&limit=${10}`)
     return {

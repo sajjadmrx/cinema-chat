@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Member } from "@interfaces/schemas/member.interface"
+import { FetchMembers, Member } from "@interfaces/schemas/member.interface"
 import { fetchMembersService } from "../../../services/members.service"
 
 interface Prop {
@@ -11,10 +11,10 @@ const MembersComponent = (prop: Prop) => {
 
   useEffect(() => {
     fetchMembers(prop.roomId, membersPage).then((data) => {
-      const filteredData = data.filter(
+      const filteredData = data.members.filter(
         (member) => !members.some((m) => m.id === member.id),
       )
-      setMembers((prevMembers) => [...prevMembers, ...filteredData])
+      setMembers(filteredData)
     })
   }, [membersPage])
 
@@ -28,7 +28,7 @@ const MembersComponent = (prop: Prop) => {
       </div>
 
       <div className="space-y-3  h-[calc(100%-61px)] overflow-y-auto">
-        {members.map((item, index) => (
+        {members.map((member, index) => (
           <div key={index} className="flex items-center">
             <img
               className="w-12 rounded-full border border-gray-200"
@@ -36,9 +36,11 @@ const MembersComponent = (prop: Prop) => {
               alt={"xx"}
             />
             <div>
-              <h4 className="ml-2.5 -mb-1.5">{item.nickname}</h4>
+              <h4 className="ml-2.5 -mb-1.5">
+                {member.nickname || member.user.username}
+              </h4>
               {/* @ts-ignore*/}
-              <span className="ml-2.5 text-xs text-gray-400">{"username"}</span>
+              <span className="ml-2.5 text-xs text-gray-400">{member.user.username}</span>
             </div>
           </div>
         ))}
@@ -49,7 +51,7 @@ const MembersComponent = (prop: Prop) => {
 
 export default MembersComponent
 
-async function fetchMembers(roomId: number, page: number): Promise<Member[]> {
-  const { data: members } = await fetchMembersService(roomId, page)
-  return members.members
+async function fetchMembers(roomId: number, page: number): Promise<FetchMembers> {
+  const { data } = await fetchMembersService(roomId, page)
+  return data
 }
