@@ -1,4 +1,4 @@
-import { ActionProps, types } from "../../shared/interfaces/utils/contexts"
+import { ActionProps, Types } from "../../shared/interfaces/utils/contexts"
 
 const initialState = {
   loading: true,
@@ -9,7 +9,7 @@ const authReducer = (state = initialState, action: ActionProps) => {
   const { type, payload } = action
 
   switch (type) {
-    case types.SET_USER:
+    case Types.SET_USER:
       return { ...state, user: payload }
     default:
       return state

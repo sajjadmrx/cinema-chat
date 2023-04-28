@@ -6,3 +6,8 @@ export interface User {
   createdAT: string
   updateAT: string
 }
+export interface UserContext {
+  loading: boolean
+  user: User | null
+  handleSetUser: any
+}

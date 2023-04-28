@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { isAuthenticated } from "../../utils"
+import { User } from "@interfaces/schemas/User.interface"
 
 type Props = { children: React.ReactNode }
 
@@ -10,8 +11,8 @@ const AuthLayout = ({ children }: Props) => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const isAuth = await isAuthenticated()
-      if (!isAuth) setIsLoading(false)
+      const user: User | null = await isAuthenticated()
+      if (!user) setIsLoading(false)
       else navigate("/rooms")
     }
     return () => {

@@ -17,7 +17,7 @@ const Room = () => {
     fluid: true,
     sources: [
       {
-        src: "http://193.36.85.124:4000/stream/hls/cat/cat_480_hls.m3u8",
+        src: "https://hajifirouz15.asset.aparat.com/aparat-video/8c822a5d9edf7b9d01b5b7618199f2fb51781965-360p.apt/chunk.m3u8?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjUwNWJkNGEzZDIwMTFjNDFjODJkMDVkYzJmMTA4YTQ0IiwiZXhwIjoxNjgyNzE1MjE5LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.2ZwFvs7CFIlnlqY-PNrjTrP2mlGlMcis9utrrW3Uo-8",
         type: "application/x-mpegURL",
       },
     ],
@@ -49,7 +49,8 @@ const Room = () => {
             />
             <h4 className="ml-3 -mb-1.5 font-bold">Call of Duty: World War II</h4>
           </div>
-          <div className="bg-gray-200 w-full h-96 rounded-2xl mt-6 grid place-items-center border border-gray-300">
+          {/*<div className="bg-gray-200 w-full h-96 rounded-2xl mt-6 grid place-items-center border border-gray-300">*/}
+          <div>
             <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
           </div>
         </div>
