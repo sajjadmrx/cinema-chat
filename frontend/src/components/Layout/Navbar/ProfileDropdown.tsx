@@ -23,11 +23,11 @@ const ProfileDropdown = () => {
           open && "pointer-events-none",
         )}
       >
-        <span className="mr-3 font-semibold">Johne Doe</span>
+        <span className="mr-3 font-semi-bold">Johne Doe</span>
         <img
           className="w-12 h-12 object-cover rounded-full border border-gray-200"
           src="https://xsgames.co/randomusers/avatar.php?g=pixel"
-        />
+         alt={""}/>
       </div>
 
       <motion.div

@@ -1,5 +1,5 @@
 import React from "react"
-import { ButtonComponent } from "../../../components/Shared"
+import { ButtonComponent } from "../../Shared"
 import ProfileDropdown from "./ProfileDropdown"
 
 const Navbar = () => {

@@ -34,7 +34,6 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-pnpm-lock.yaml
 
 .env
 data
