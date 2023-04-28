@@ -11,7 +11,7 @@ export function ApiGetRooms() {
         example: {
           statusCode: 200,
           data: {
-            totalRooms: 4,
+            totalDoc: 4,
             totalPages: 1,
             nextPage: null,
             rooms: [

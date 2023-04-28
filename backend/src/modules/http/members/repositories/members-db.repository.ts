@@ -29,7 +29,6 @@ export class MembersDbRepository {
         user: {
           select: {
             userId: true,
-            permissions: true,
             username: true,
           },
         },

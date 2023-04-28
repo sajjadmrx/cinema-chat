@@ -61,7 +61,7 @@ export class MembersService {
     return {
       statusCode: HttpStatus.OK,
       data: {
-        totalMembers,
+        totalDoc: totalMembers,
         totalPages,
         nextPage,
         members,

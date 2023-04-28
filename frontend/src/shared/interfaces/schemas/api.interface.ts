@@ -2,7 +2,7 @@ export interface ReturnFormat<T> {
   data: T
 }
 export interface Pagination {
-  totalRooms: number
+  totalDoc: number
   totalPages: number
   nextPage: number
 }

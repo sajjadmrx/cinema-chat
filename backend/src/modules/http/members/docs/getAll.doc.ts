@@ -26,7 +26,7 @@ export function ApiGetAllMembers() {
         example: {
           statusCode: 200,
           data: {
-            totalMembers: 4,
+            totalDoc: 4,
             totalPages: 1,
             nextPage: null,
             members: [
@@ -41,7 +41,6 @@ export function ApiGetAllMembers() {
                 updatedAt: '2023-04-27T23:19:20.487Z',
                 user: {
                   userId: 825195179646,
-                  permissions: ['USER'],
                   username: 'ali',
                 },
               },

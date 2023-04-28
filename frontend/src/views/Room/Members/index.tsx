@@ -1,33 +1,48 @@
 import React, { useEffect, useState } from "react"
 import { FetchMembers, Member } from "@interfaces/schemas/member.interface"
 import { fetchMembersService } from "../../../services/members.service"
-import {AiOutlineCloseCircle} from "react-icons/ai"
+import { AiOutlineCloseCircle } from "react-icons/ai"
+import { Pagination } from "@interfaces/schemas/api.interface"
 
 interface Prop {
   roomId: number
+  showMembers: boolean
+  setShowMembers: any
 }
 const MembersComponent = (prop: Prop) => {
   const [members, setMembers] = useState<Array<Member>>([])
-  const [membersPage, setMembersPage] = useState<number>(1)
-
+  const [pagination, setPagination] = useState<Pagination>({
+    nextPage: 2,
+    totalPages: 0,
+    totalDoc: 0,
+  })
   useEffect(() => {
-    fetchMembers(prop.roomId, membersPage).then((data) => {
+    fetchMembers(prop.roomId, pagination.nextPage--).then((data) => {
       const filteredData = data.members.filter(
         (member) => !members.some((m) => m.id === member.id),
       )
       setMembers(filteredData)
+      setPagination(data)
     })
-  }, [membersPage])
+  }, [])
 
   return (
-    <section className={`${prop.showMembers? 'fixed' : 'hidden' } top-0 bottom-0 left-0 right-0 lg:border-r lg:w-72 px-6 py-5 lg:h-full lg:relative lg:block bg-white z-50`}>
+    <section
+      className={`${
+        prop.showMembers ? "fixed" : "hidden"
+      } top-0 bottom-0 left-0 right-0 lg:border-r lg:w-72 px-6 py-5 lg:h-full lg:relative lg:block bg-white z-50`}
+    >
       <div className="flex justify-between items-center mb-5 border-b border-gray-100 pb-3">
         <h2 className="text-lg font-semi-bold">Members</h2>
         <div className="flex gap-x-2">
           <span className="rounded-full bg-primary grid place-items-center leading-[25px] w-6 h-6 text-white text-sm">
-            9
+            {pagination.totalDoc || 0}
           </span>
-          <AiOutlineCloseCircle onClick={()=>prop.setShowMembers(false)} className={`lg:hidden ${prop.showMembers ? "block" : "hidden" }`} size={24} />
+          <AiOutlineCloseCircle
+            onClick={() => prop.setShowMembers(false)}
+            className={`lg:hidden ${prop.showMembers ? "block" : "hidden"}`}
+            size={24}
+          />
         </div>
       </div>
 
