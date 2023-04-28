@@ -12,7 +12,7 @@ export interface MemberWithRoom extends Member {
 }
 
 export interface MemberCreateInput
-  extends Omit<Prisma.MemberCreateInput, 'room'> {
+  extends Omit<Prisma.MemberCreateInput, 'room' | 'user'> {
   roomId: number;
   userId: number;
   inviteId?: number | null;

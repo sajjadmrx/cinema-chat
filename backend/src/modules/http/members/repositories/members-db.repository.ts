@@ -25,6 +25,15 @@ export class MembersDbRepository {
       where: {
         roomId,
       },
+      include: {
+        user: {
+          select: {
+            userId: true,
+            permissions: true,
+            username: true,
+          },
+        },
+      },
     });
   }
 
@@ -49,6 +58,13 @@ export class MembersDbRepository {
       },
       include: {
         room: true,
+        user: {
+          select: {
+            userId: true,
+            permissions: true,
+            username: true,
+          },
+        },
       },
     });
   }
@@ -98,6 +114,13 @@ export class MembersDbRepository {
       },
       include: {
         room: true,
+        user: {
+          select: {
+            userId: true,
+            permissions: true,
+            username: true,
+          },
+        },
       },
     });
   }

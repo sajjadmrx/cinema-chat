@@ -19,6 +19,7 @@ model User {
   permissions UserPermission[] @default([USER])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  members Member[]
 }
 
 model Room {
@@ -52,6 +53,7 @@ model Member {
   room        Room                @relation(fields: [roomId], references: [roomId])
   roomId      Int
   userId      Int //member id or userId
+  user        User  @relation(fields: [userId], references: [userId])
   inviteId    Int?
   permissions MemberPermissions[] @default([DEFAULT])
   nickname    String?
