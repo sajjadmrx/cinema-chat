@@ -1,5 +1,6 @@
 import React from "react"
 import { IconComponent } from "../../../components/Shared"
+import {AiOutlineUser} from 'react-icons/ai'
 import DropdownMenu from "./DropdownMenu"
 
 const CHATS = [
@@ -19,12 +20,13 @@ const CHATS = [
   { user: "Dedy Gunawan", content: "Hi, are we going on new year's holiday?" },
 ]
 
-const Chats = () => {
+const Chats = (props) => {
   return (
-    <section className="border-l w-96 px-6 py-5 h-full">
+    <section className="lg:border-l border-slate-100 border-2 w-11/12 sm:w-3/5 lg:w-80 px-6 py-5 h-full xl:w-96 m-auto">
       <div className="flex flex-col">
         <div className="flex justify-between items-center mb-5 border-b border-gray-100 pb-3">
           <h2 className="text-lg font-semibold">Chats</h2>
+          <AiOutlineUser onClick={()=>props.setShowMembers(true)} className="lg:hidden" size={24} />
         </div>
       </div>
       <div className="space-y-5 h-[calc(100%-129px)] overflow-y-auto">
