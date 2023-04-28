@@ -25,6 +25,7 @@ import { ChatEmit } from '../../websocket/emits/chat.emit';
 import { RoomsRepository } from '../rooms/rooms.repository';
 import { MembersRepository } from './repositories/members.repository';
 import { ResponseFormat } from '../../../shared/interfaces/response.interface';
+import moment from 'moment/moment';
 
 @Injectable()
 export class MembersService {
@@ -72,21 +73,37 @@ export class MembersService {
     roomId: number,
     inviteId: number | null,
     user: User,
+    room: Room,
   ): Promise<ResponseFormat<any>> {
     try {
       if (inviteId) {
         const invite = await this.invitesRepository.getById(inviteId);
         if (!invite)
           throw new NotFoundException(ResponseMessages.INVALID_INVITE);
+
         if (invite.roomId != roomId)
           throw new BadRequestException(ResponseMessages.INVALID_INVITE);
+
+        if (invite.max_use != 0)
+          if (invite.max_use <= invite.uses)
+            throw new BadRequestException(ResponseMessages.USED_INVITE_MAXIMUM);
+
+        if (!invite.isForEver) {
+          if (moment(invite.expires_at).isBefore())
+            throw new BadRequestException(ResponseMessages.EXPIRED_INVITE_TIME);
+        }
       }
+
+      if (!room.isPublic && !inviteId)
+        throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
 
       const hasMember: Member | null =
         await this.membersRep.getByRoomIdAndUserId(roomId, user.userId);
 
       if (hasMember)
         throw new BadRequestException(ResponseMessages.MEMBER_EXISTS);
+
+      //todo check max member
 
       const member: Member = await this.membersRep.create({
         roomId,

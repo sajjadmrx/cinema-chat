@@ -1,12 +1,17 @@
 {
   "compilerOptions": {
     "target": "es2016",
-    "module": "commonjs",
+    "module": "esnext",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "jsx": "react"
+    "jsx": "react",
+    "moduleResolution": "node",
+    "baseUrl": "./src",
+    "paths": {
+      "@interfaces/*": ["shared/interfaces/*"],
+    }
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }
