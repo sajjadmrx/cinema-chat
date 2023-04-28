@@ -1,5 +1,6 @@
 import http from "../config/http"
 import { ReturnFormat } from "@interfaces/schemas/api.interface"
+import { User } from "@interfaces/schemas/User.interface"
 
 type signupUser = { username: string; email: string; password: string }
 type loginUser = { username: string; password: string }
@@ -19,14 +20,5 @@ export async function loginService(user: loginUser): Promise<ReturnFormat<string
     return { data: data.data }
   } catch (error) {
     throw error
-  }
-}
-
-export async function getCurrentUserService() {
-  try {
-    const { data } = await http.get("/users/@me")
-    return { success: true, user: data.data }
-  } catch (error) {
-    return { success: false, error }
   }
 }

@@ -11,11 +11,12 @@ const AuthLayout = ({ children }: Props) => {
   useEffect(() => {
     const checkAuth = async () => {
       const isAuth = await isAuthenticated()
-      console.log(isAuth)
       if (!isAuth) setIsLoading(false)
       else navigate("/rooms")
     }
-    checkAuth()
+    return () => {
+      checkAuth()
+    }
   }, [navigate])
 
   return isLoading ? (
