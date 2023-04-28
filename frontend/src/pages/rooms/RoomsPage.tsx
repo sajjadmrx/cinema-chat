@@ -11,6 +11,7 @@ import {
   getPublicRoomsService,
 } from "../../services/rooms.service"
 import { MdOutlinePublic } from "react-icons/md"
+import { Link } from "react-router-dom"
 
 const RoomsPage = () => {
   const [publicRooms, setPublicRooms] = useState<Array<Room>>([])
@@ -55,9 +56,9 @@ const RoomsPage = () => {
         </div>
 
         <section className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-6 p-5">
-          {currentRooms.map((item) => (
+          {currentRooms.map((room) => (
             <div
-              key={item.id}
+              key={room.id}
               className="bg-white w-full h-40 rounded-3xl px-7 py-7 shadow-sm"
             >
               <div className="flex items-start">
@@ -68,14 +69,14 @@ const RoomsPage = () => {
                 />
                 <div className="ml-2 mt-4">
                   <h4 className="font-semi-bold flex gap-1">
-                    {item.isPublic ? <VscUnlock /> : <VscLock />}
-                    {item.name}
+                    {room.isPublic ? <VscUnlock /> : <VscLock />}
+                    {room.name}
                   </h4>
 
                   <div className="mt-2 flex items-center space-x-3 text-[#60637B]">
                     <div className="text-sm flex">
                       <HiOutlineUserGroup size={16} color="gray" className="mr-1" />
-                      <span className="leading-[23px]"> {item._count.members}/10 </span>
+                      <span className="leading-[23px]"> {room._count.members}/10 </span>
                     </div>
                     <div>
                       <div className="flex">
@@ -88,14 +89,16 @@ const RoomsPage = () => {
                       </div>
                     </div>
                   </div>
-                  <ButtonComponent
-                    variant={"primary"}
-                    size="small"
-                    className="mt-2"
-                    rounded="full"
-                  >
-                    open room
-                  </ButtonComponent>
+                  <Link to={`/rooms/${room.roomId}`}>
+                    <ButtonComponent
+                      variant={"primary"}
+                      size="small"
+                      className="mt-2"
+                      rounded="full"
+                    >
+                      open room
+                    </ButtonComponent>
+                  </Link>
                 </div>
               </div>
             </div>

@@ -1,3 +1,5 @@
+import { Pagination } from "@interfaces/schemas/api.interface"
+
 export interface Room {
   id: string
   roomId: number
@@ -9,11 +11,7 @@ export interface Room {
   createdAt: Date
   updatedAt: Date
 }
-export interface Pagination {
-  totalRooms: number
-  totalPages: number
-  nextPage: number
-}
+
 export interface FetchRooms extends Pagination {
   rooms: Array<Room>
 }
