@@ -51,7 +51,7 @@ const MembersComponent = (prop: Prop) => {
           <div key={index} className="flex items-center">
             <img
               className="w-12 rounded-full border border-gray-200"
-              src="https://xsgames.co/randomusers/avatar.php?g=pixel"
+              src="/assets/images/avatar.jpg"
               alt={"xx"}
             />
             <div>

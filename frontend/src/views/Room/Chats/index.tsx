@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { IconComponent } from "../../../components/Shared"
 import { AiOutlineUser } from "react-icons/ai"
 import DropdownMenu from "./DropdownMenu"
@@ -23,11 +23,14 @@ const ChatsComponent = ({ socket, setShowMembers }: Prop) => {
   const [messages, setMessages] = useState<Message[]>([])
   const { user } = useAuth()
   const params = useParams()
+  let scrollRef = useRef<any>()
+
   useEffect(() => {
     socket.on("CREATE_MESSAGE", (message: Message) => {
       if (message.roomId == Number(params.id)) {
         setMessages((prevMessages) => [...prevMessages, message])
         messagesStore.set(message.id, message)
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight // todo bug
       }
     })
     return () => {
@@ -51,6 +54,7 @@ const ChatsComponent = ({ socket, setShowMembers }: Prop) => {
     })
     setMessage("")
   }
+
   return (
     <section className="lg:border-l border-slate-100 border-2 w-11/12 sm:w-3/5 lg:w-80 px-6 py-5 h-full xl:w-96 m-auto">
       <div className="flex flex-col">
@@ -63,41 +67,44 @@ const ChatsComponent = ({ socket, setShowMembers }: Prop) => {
           />
         </div>
       </div>
-      <div className="space-y-5 h-[calc(100%-129px)] overflow-y-auto">
-        {messages.length > 0 &&
-          messages.map((item, index) => (
-            <div key={index} className="mr-2">
-              <div className="flex">
-                <img
-                  className="w-9 rounded-full border border-gray-200"
-                  src="https://xsgames.co/randomusers/avatar.php?g=pixel"
-                />
-                <div className="flex items-center justify-between w-full">
-                  <h4 className="ml-3 ">
-                    {item.authorId == user?.userId && "[you]"}{" "}
-                    {item.author?.nickname || item.author.user.username}
-                  </h4>
-                  <DropdownMenu />
-                </div>
-              </div>
-
-              <div className="ml-12 text-sm bg-gray-100 px-4 py-2 rounded-tl-none rounded-2xl border">
-                {item.content}
-                <div className="text-xs text-gray-500 mt-1">
-                  {new Date(item.createdAt).toLocaleString()}
-                </div>
+      {/* @ts-ignore*/}
+      <div className="space-y-5 h-[calc(100%-129px)] overflow-y-auto" ref={scrollRef}>
+        {messages.map((item, index) => (
+          <div key={index} className="mr-2">
+            <div className="flex">
+              <img
+                className="w-9 rounded-full border border-gray-200"
+                src="/assets/images/avatar.jpg"
+                alt={"avatar"}
+              />
+              <div className="flex items-center justify-between w-full">
+                <h4 className="ml-3 ">
+                  {item.authorId == user?.userId && "[you]"}{" "}
+                  {item.author?.nickname || item.author.user.username}
+                </h4>
+                <DropdownMenu />
               </div>
             </div>
-          ))}
+
+            <div
+              className="ml-12 text-sm bg-gray-100 px-4 py-2 rounded-tl-none rounded-2xl border"
+              style={{ wordBreak: "break-word" }}
+            >
+              {item.content}
+              <div className="text-xs text-gray-500 mt-1">
+                {new Date(item.createdAt).toLocaleString()}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
       <div className="w-full h-12 mt-5 border rounded-full overflow-hidden">
         <div className="relative w-full h-full" dir={"auto"}>
-          <input
-            type="text"
+          <textarea
             placeholder="Your message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="absolute top-0 left-0 rounded-full w-full h-full pl-4 text-sm"
+            className="absolute top-3 left-0 rounded-full w-full h-full pl-4 text-sm  focus:outline-none focus:border-indigo-500"
             onClick={() => setShowPicker(false)}
           />
           <button

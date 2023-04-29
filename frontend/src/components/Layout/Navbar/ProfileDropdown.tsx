@@ -28,7 +28,7 @@ const ProfileDropdown = () => {
         <span className="mr-3 font-semibold">{user.username || ""}</span>
         <img
           className="w-12 h-12 object-cover rounded-full border border-gray-200"
-          src="https://xsgames.co/randomusers/avatar.php?g=pixel"
+          src="/assets/images/avatar.jpg"
           alt={`${user.username} avatar`}
         />
       </div>
