@@ -4,36 +4,52 @@ import { AiOutlineUser } from "react-icons/ai"
 import DropdownMenu from "./DropdownMenu"
 import data from "@emoji-mart/data"
 import Picker from "@emoji-mart/react"
-import useSocket from "../../../hooks/useSocket"
-
-const CHATS = [
-  { user: "Dedy Gunawan", content: "Hi, are we going on new year's holiday?" },
-  {
-    user: "Dedy Gunawan",
-    content: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-  },
-  {
-    user: "Dedy Gunawan",
-    content:
-      " Natus vero itaque atque eum assumenda a accusamus obcaecati incidunt mollitia? Deleniti in possimus necessitatibus iste officia assumenda eius ratione maiores voluptatum. ",
-  },
-  { user: "Dedy Gunawan", content: "Hi, are we going on new year's holiday?" },
-  { user: "Dedy Gunawan", content: "Hi, are we going on new year's holiday?" },
-  { user: "Dedy Gunawan", content: "Hi, are we going on new year's holiday?" },
-  { user: "Dedy Gunawan", content: "Hi, are we going on new year's holiday?" },
-]
+import { Message } from "@interfaces/schemas/message.interface"
+import { Socket } from "socket.io-client"
+import { useAuth } from "../../../context/auth/AuthProvider"
+import { useParams } from "react-router-dom"
+import { BsEmojiSmile } from "react-icons/bs"
+import { fetchMessages } from "../../../services/message.service"
 
 interface Prop {
   setShowMembers: any
+  socket: Socket
 }
+const messagesStore = new Map<string, Message>()
 
-const ChatsComponent = (props: Prop) => {
+const ChatsComponent = ({ socket, setShowMembers }: Prop) => {
   const [showPicker, setShowPicker] = useState(false)
-  const [message, setMessage] = useState("")
-  const socket = useSocket()
+  const [message, setMessage] = useState<string>("")
+  const [messages, setMessages] = useState<Message[]>([])
+  const { user } = useAuth()
+  const params = useParams()
+  useEffect(() => {
+    socket.on("CREATE_MESSAGE", (message: Message) => {
+      if (message.roomId == Number(params.id)) {
+        setMessages((prevMessages) => [...prevMessages, message])
+        messagesStore.set(message.id, message)
+      }
+    })
+    return () => {
+      socket.off("CREATE_MESSAGE")
+    }
+  }, [socket])
+
+  useEffect(() => {
+    fetchMessages(Number(params.id), 1).then((resp) => setMessages(resp.data.reverse()))
+  }, [])
 
   const handleEmojiSelect = (emoji: any) => {
     setMessage((prevMessage) => prevMessage + emoji.native)
+  }
+
+  const sendMsg = () => {
+    socket.emit("CREATE_MESSAGE", {
+      content: message,
+      replyId: null,
+      roomId: Number(params.id),
+    })
+    setMessage("")
   }
   return (
     <section className="lg:border-l border-slate-100 border-2 w-11/12 sm:w-3/5 lg:w-80 px-6 py-5 h-full xl:w-96 m-auto">
@@ -41,31 +57,38 @@ const ChatsComponent = (props: Prop) => {
         <div className="flex justify-between items-center mb-5 border-b border-gray-100 pb-3">
           <h2 className="text-lg font-semibold">Chats</h2>
           <AiOutlineUser
-            onClick={() => props.setShowMembers(true)}
+            onClick={() => setShowMembers(true)}
             className="lg:hidden"
             size={24}
           />
         </div>
       </div>
       <div className="space-y-5 h-[calc(100%-129px)] overflow-y-auto">
-        {CHATS.map((item, index) => (
-          <div key={index} className="mr-2">
-            <div className="flex">
-              <img
-                className="w-9 rounded-full border border-gray-200"
-                src="https://xsgames.co/randomusers/avatar.php?g=pixel"
-              />
-              <div className="flex items-center justify-between w-full">
-                <h4 className="ml-3 -mb-1.5">{item.user}</h4>
-                <DropdownMenu />
+        {messages.length > 0 &&
+          messages.map((item, index) => (
+            <div key={index} className="mr-2">
+              <div className="flex">
+                <img
+                  className="w-9 rounded-full border border-gray-200"
+                  src="https://xsgames.co/randomusers/avatar.php?g=pixel"
+                />
+                <div className="flex items-center justify-between w-full">
+                  <h4 className="ml-3 ">
+                    {item.authorId == user?.userId && "[you]"}{" "}
+                    {item.author?.nickname || item.author.user.username}
+                  </h4>
+                  <DropdownMenu />
+                </div>
+              </div>
+
+              <div className="ml-12 text-sm bg-gray-100 px-4 py-2 rounded-tl-none rounded-2xl border">
+                {item.content}
+                <div className="text-xs text-gray-500 mt-1">
+                  {new Date(item.createdAt).toLocaleString()}
+                </div>
               </div>
             </div>
-
-            <div className="ml-12 text-sm bg-gray-100 px-4 py-2 rounded-tl-none rounded-2xl border">
-              {item.content}
-            </div>
-          </div>
-        ))}
+          ))}
       </div>
       <div className="w-full h-12 mt-5 border rounded-full overflow-hidden">
         <div className="relative w-full h-full" dir={"auto"}>
@@ -82,10 +105,13 @@ const ChatsComponent = (props: Prop) => {
             className="absolute top-1/2 -translate-y-1/2 z-10 right-10"
           >
             <span role="img" aria-label="smiley-face">
-              😀
+              <BsEmojiSmile />
             </span>
           </button>
-          <button className="absolute top-1/2 -translate-y-1/2 z-10 right-4">
+          <button
+            className="absolute top-1/2 -translate-y-1/2 z-10 right-2"
+            onClick={sendMsg}
+          >
             <IconComponent name="send" size={22} />
           </button>
         </div>

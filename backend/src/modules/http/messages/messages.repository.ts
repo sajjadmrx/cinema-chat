@@ -9,6 +9,19 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class MessagesRepository {
+  private readonly defaultInclude = {
+    author: {
+      select: {
+        nickname: true,
+        user: {
+          select: {
+            username: true,
+            userId: true,
+          },
+        },
+      },
+    },
+  };
   constructor(private db: PrismaService) {}
 
   create(input: Omit<MessageCreateInput, 'messageId'>): Promise<Message> {
@@ -26,19 +39,7 @@ export class MessagesRepository {
         content: input.content,
         replyId: input.replyId,
       },
-      include: {
-        author: {
-          select: {
-            nickname: true,
-            user: {
-              select: {
-                username: true,
-                userId: true,
-              },
-            },
-          },
-        },
-      },
+      include: this.defaultInclude,
     });
   }
 
@@ -67,6 +68,7 @@ export class MessagesRepository {
       },
       take: limit,
       skip: (page - 1) * limit,
+      include: this.defaultInclude,
     });
   }
 

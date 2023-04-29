@@ -1,29 +1,33 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import io, { Socket } from "socket.io-client"
 
 const useSocket = (): Socket => {
-  const [socket, setSocket] = useState<Socket>()
+  const socketRef = useRef<Socket>()
 
   useEffect(() => {
-    if (!socket) {
+    if (!socketRef.current || socketRef.current.disconnected) {
       const socketInstance = io(import.meta.env.VITE_WEBSOCKET, {
         transports: ["websocket"],
         auth: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
+        rejectUnauthorized: true,
       })
-      setSocket(socketInstance)
+      socketRef.current = socketInstance
       socketInstance.on("error", (data) => {
         console.log(data)
       })
+    }
 
-      return () => {
-        //socketInstance.disconnect()
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect()
       }
     }
   }, [])
+
   // @ts-ignore
-  return socket
+  return socketRef.current
 }
 
 export default useSocket

@@ -44,7 +44,6 @@ export class ConnectionService {
       const userSocket = await this.userSocketManager.findOneSocketByUserId(
         userId,
       );
-
       if (userSocket) {
         this.disconnect(
           client,
@@ -52,7 +51,7 @@ export class ConnectionService {
         ); // only 1 device
         return;
       }
-
+      client.data.userId = userId;
       await this.userSocketManager.saveUserIdBySocketId(client.id, userId);
       const members: Member[] = await this.membersRepo.findByUserId(userId);
 
@@ -89,6 +88,7 @@ export class ConnectionService {
       });
     }
     await this.userSocketManager.removeUserId(client.id);
+    client.disconnect(true);
   }
 
   private disconnect(socket: Socket, error: HttpException) {

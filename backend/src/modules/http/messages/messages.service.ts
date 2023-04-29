@@ -31,12 +31,12 @@ export class MessagesService {
   async getRoomMessages(
     roomId: number,
     page: number,
-    limit: number,
+    limit: number = 50,
   ): Promise<ResponseFormat<Message[]>> {
     try {
       if (!Number(roomId)) throw new BadRequestException();
 
-      const maxLimit = 10;
+      const maxLimit = 100;
       if (!page || !limit || Number(page) < 1 || Number(limit) < 1) {
         page = 1;
         limit = maxLimit;

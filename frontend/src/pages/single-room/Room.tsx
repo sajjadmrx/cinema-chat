@@ -14,14 +14,14 @@ import useSocket from "../../hooks/useSocket"
 
 export const RoomPage = (): any => {
   const playerRef = useRef(null)
-  const params = useParams()
   const navigate = useNavigate()
   const [isValidMember, setIsValidMember] = useState(false)
   const [isLoadingValidate, setIsLoadingValidate] = useState(true)
   const [showMembers, setShowMembers] = useState<boolean>(false)
   const [room, setRoom] = useState<Omit<Room, "_count">>()
   const { user } = useAuth()
-
+  const params = useParams()
+  const socket = useSocket()
   useEffect(() => {
     if (!user) return navigate("/rooms")
     const fetchCurrentMember = async () => {
@@ -103,7 +103,7 @@ export const RoomPage = (): any => {
             <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
           </div>
         </div>
-        <ChatsComponent setShowMembers={setShowMembers} />
+        {socket && <ChatsComponent setShowMembers={setShowMembers} socket={socket} />}
       </section>
     </Layout>
   )
