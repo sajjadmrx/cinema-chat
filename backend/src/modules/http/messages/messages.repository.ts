@@ -14,11 +14,30 @@ export class MessagesRepository {
   create(input: Omit<MessageCreateInput, 'messageId'>): Promise<Message> {
     return this.db.message.create({
       data: {
-        roomId: input.roomId,
+        author: {
+          connect: {
+            roomId_userId: {
+              userId: input.authorId,
+              roomId: input.roomId,
+            },
+          },
+        },
         messageId: getRandomNumber(11),
-        authorId: input.authorId,
         content: input.content,
         replyId: input.replyId,
+      },
+      include: {
+        author: {
+          select: {
+            nickname: true,
+            user: {
+              select: {
+                username: true,
+                userId: true,
+              },
+            },
+          },
+        },
       },
     });
   }
