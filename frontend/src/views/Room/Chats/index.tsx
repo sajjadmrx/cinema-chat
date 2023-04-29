@@ -1,7 +1,9 @@
-import React from "react"
+import React, { useState } from "react"
 import { IconComponent } from "../../../components/Shared"
 import { AiOutlineUser } from "react-icons/ai"
 import DropdownMenu from "./DropdownMenu"
+import data from "@emoji-mart/data"
+import Picker from "@emoji-mart/react"
 
 const CHATS = [
   { user: "Dedy Gunawan", content: "Hi, are we going on new year's holiday?" },
@@ -24,7 +26,13 @@ interface Prop {
   setShowMembers: any
 }
 
-const Chats = (props: Prop) => {
+const ChatsComponent = (props: Prop) => {
+  const [showPicker, setShowPicker] = useState(false)
+  const [message, setMessage] = useState("")
+
+  const handleEmojiSelect = (emoji: any) => {
+    setMessage((prevMessage) => prevMessage + emoji.native)
+  }
   return (
     <section className="lg:border-l border-slate-100 border-2 w-11/12 sm:w-3/5 lg:w-80 px-6 py-5 h-full xl:w-96 m-auto">
       <div className="flex flex-col">
@@ -58,19 +66,33 @@ const Chats = (props: Prop) => {
         ))}
       </div>
       <div className="w-full h-12 mt-5 border rounded-full overflow-hidden">
-        <div className="relative w-full h-full">
+        <div className="relative w-full h-full" dir={"auto"}>
           <input
             type="text"
             placeholder="Your message..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
             className="absolute top-0 left-0 rounded-full w-full h-full pl-4 text-sm"
+            onClick={() => setShowPicker(false)}
           />
+          <button
+            onClick={() => setShowPicker(!showPicker)}
+            className="absolute top-1/2 -translate-y-1/2 z-10 right-10"
+          >
+            <span role="img" aria-label="smiley-face">
+              😀
+            </span>
+          </button>
           <button className="absolute top-1/2 -translate-y-1/2 z-10 right-4">
             <IconComponent name="send" size={22} />
           </button>
+        </div>
+        <div className="absolute" style={{ bottom: 83, right: 26 }} hidden={!showPicker}>
+          <Picker data={data} onEmojiSelect={handleEmojiSelect} />
         </div>
       </div>
     </section>
   )
 }
 
-export default Chats
+export default ChatsComponent

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import Layout from "../../components/Layout"
 import Navbar from "../../components/Layout/Navbar"
 import VideoPlayer from "../../components/VideoPlayer"
-import Chats from "../../views/Room/Chats"
+import ChatsComponent from "../../views/Room/Chats"
 import MembersComponent from "../../views/Room/Members"
 import videojs from "video.js"
 import React from "react"
@@ -17,7 +17,7 @@ export const RoomPage = (): any => {
   const navigate = useNavigate()
   const [isValidMember, setIsValidMember] = useState(false)
   const [isLoadingValidate, setIsLoadingValidate] = useState(true)
-  const [showMembers,setShowMembers] = useState<boolean>(false)
+  const [showMembers, setShowMembers] = useState<boolean>(false)
   const [room, setRoom] = useState<Omit<Room, "_count">>()
   const { user } = useAuth()
   useEffect(() => {
@@ -60,7 +60,7 @@ export const RoomPage = (): any => {
     fluid: true,
     sources: [
       {
-        src:  "https://hajifirouz15.asset.aparat.com/aparat-video/8c822a5d9edf7b9d01b5b7618199f2fb51781965-360p.apt/chunk.m3u8?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjUwNWJkNGEzZDIwMTFjNDFjODJkMDVkYzJmMTA4YTQ0IiwiZXhwIjoxNjgyNzE1MjE5LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.2ZwFvs7CFIlnlqY-PNrjTrP2mlGlMcis9utrrW3Uo-8",
+        src: "https://hajifirouz15.asset.aparat.com/aparat-video/8c822a5d9edf7b9d01b5b7618199f2fb51781965-360p.apt/chunk.m3u8?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjUwNWJkNGEzZDIwMTFjNDFjODJkMDVkYzJmMTA4YTQ0IiwiZXhwIjoxNjgyNzE1MjE5LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.2ZwFvs7CFIlnlqY-PNrjTrP2mlGlMcis9utrrW3Uo-8",
         type: "application/x-mpegURL",
       },
     ],
@@ -82,7 +82,11 @@ export const RoomPage = (): any => {
     <Layout>
       <Navbar />
       <section className="flex h-[calc(100vh-72px)] lg:flex-row flex-col">
-        <MembersComponent roomId={Number(params.id)} showMembers={showMembers} setShowMembers={setShowMembers} />
+        <MembersComponent
+          roomId={Number(params.id)}
+          showMembers={showMembers}
+          setShowMembers={setShowMembers}
+        />
         <div className="flex-1 px-6 py-5">
           <div className="flex items-center border-b pb-5 border-b-gray-100">
             <img
@@ -97,7 +101,7 @@ export const RoomPage = (): any => {
             <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
           </div>
         </div>
-        <Chats setShowMembers={setShowMembers} />
+        <ChatsComponent setShowMembers={setShowMembers} />
       </section>
     </Layout>
   )
