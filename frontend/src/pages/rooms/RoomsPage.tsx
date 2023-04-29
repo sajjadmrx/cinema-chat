@@ -12,10 +12,12 @@ import {
 } from "../../services/rooms.service"
 import { MdOutlinePublic } from "react-icons/md"
 import { Link } from "react-router-dom"
+import useSocket from "../../hooks/useSocket"
 
 const RoomsPage = () => {
   const [publicRooms, setPublicRooms] = useState<Array<Room>>([])
   const [currentRooms, setCurrentRooms] = useState<Array<Room>>([])
+  const socket = useSocket()
   useEffect(() => {
     async function fetch() {
       const [responsePublic, responseCurrent] = await Promise.all([

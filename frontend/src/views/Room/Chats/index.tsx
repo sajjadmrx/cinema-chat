@@ -1,9 +1,10 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { IconComponent } from "../../../components/Shared"
 import { AiOutlineUser } from "react-icons/ai"
 import DropdownMenu from "./DropdownMenu"
 import data from "@emoji-mart/data"
 import Picker from "@emoji-mart/react"
+import useSocket from "../../../hooks/useSocket"
 
 const CHATS = [
   { user: "Dedy Gunawan", content: "Hi, are we going on new year's holiday?" },
@@ -29,6 +30,7 @@ interface Prop {
 const ChatsComponent = (props: Prop) => {
   const [showPicker, setShowPicker] = useState(false)
   const [message, setMessage] = useState("")
+  const socket = useSocket()
 
   const handleEmojiSelect = (emoji: any) => {
     setMessage((prevMessage) => prevMessage + emoji.native)

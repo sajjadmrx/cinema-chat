@@ -10,6 +10,7 @@ import { getMemberByMemberId } from "../../services/members.service"
 import { useAuth } from "../../context/auth/AuthProvider"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Room } from "@interfaces/schemas/Room.interface"
+import useSocket from "../../hooks/useSocket"
 
 export const RoomPage = (): any => {
   const playerRef = useRef(null)
@@ -20,6 +21,7 @@ export const RoomPage = (): any => {
   const [showMembers, setShowMembers] = useState<boolean>(false)
   const [room, setRoom] = useState<Omit<Room, "_count">>()
   const { user } = useAuth()
+
   useEffect(() => {
     if (!user) return navigate("/rooms")
     const fetchCurrentMember = async () => {
@@ -60,7 +62,7 @@ export const RoomPage = (): any => {
     fluid: true,
     sources: [
       {
-        src: "https://hajifirouz15.asset.aparat.com/aparat-video/8c822a5d9edf7b9d01b5b7618199f2fb51781965-360p.apt/chunk.m3u8?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjUwNWJkNGEzZDIwMTFjNDFjODJkMDVkYzJmMTA4YTQ0IiwiZXhwIjoxNjgyNzE1MjE5LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.2ZwFvs7CFIlnlqY-PNrjTrP2mlGlMcis9utrrW3Uo-8",
+        src: "", //"https://hajifirouz15.asset.aparat.com/aparat-video/8c822a5d9edf7b9d01b5b7618199f2fb51781965-360p.apt/chunk.m3u8?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjUwNWJkNGEzZDIwMTFjNDFjODJkMDVkYzJmMTA4YTQ0IiwiZXhwIjoxNjgyNzE1MjE5LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.2ZwFvs7CFIlnlqY-PNrjTrP2mlGlMcis9utrrW3Uo-8",
         type: "application/x-mpegURL",
       },
     ],
