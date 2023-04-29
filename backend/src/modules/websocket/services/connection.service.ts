@@ -32,7 +32,6 @@ export class ConnectionService {
 
   async handleConnection(client: Socket) {
     try {
-      this.logger.log(`Connected ${client.id}`);
       const authorization: string | null =
         client.handshake.auth.Authorization ||
         client.handshake.headers['authorization'];
@@ -45,6 +44,7 @@ export class ConnectionService {
       const userSocket = await this.userSocketManager.findOneSocketByUserId(
         userId,
       );
+
       if (userSocket) {
         this.disconnect(
           client,
@@ -53,7 +53,7 @@ export class ConnectionService {
         return;
       }
 
-      client.data.userId = userId;
+      await this.userSocketManager.saveUserIdBySocketId(client.id, userId);
       const members: Member[] = await this.membersRepo.findByUserId(userId);
 
       members.map((member: Member) => {
@@ -65,30 +65,34 @@ export class ConnectionService {
           MemberStatusConstant.ONLINE,
         );
       });
+      this.logger.log(`Connected ${client.id}`);
     } catch (e) {
+      console.log(e);
       this.disconnect(client, new UnauthorizedException());
     }
   }
 
   async handleDisconnect(client: Socket): Promise<void> {
-    this.logger.log(`IOClient disconnected: ${client.id}`);
-    const userId: number = client.data.userId;
-    const members: Member[] = await this.membersRepo.findByUserId(userId);
-
-    members.map((member: Member) => {
-      client.join(member.roomId.toString());
-      // update User Status
-      this.chatEmits.updateMemberStatus(
-        member.roomId,
-        member.userId,
-        MemberStatusConstant.OFFLINE,
-      );
-    });
+    this.logger.log(` disconnected: ${client.id}`);
+    const userId: number | null =
+      await this.userSocketManager.findOneUserIdBySocketId(client.id);
+    if (userId) {
+      const members: Member[] = await this.membersRepo.findByUserId(userId);
+      members.map((member: Member) => {
+        client.join(member.roomId.toString());
+        // update User Status
+        this.chatEmits.updateMemberStatus(
+          member.roomId,
+          member.userId,
+          MemberStatusConstant.OFFLINE,
+        );
+      });
+    }
+    await this.userSocketManager.removeUserId(client.id);
   }
 
   private disconnect(socket: Socket, error: HttpException) {
     socket.emit('error', error);
     socket.disconnect();
-    socket.rooms.clear();
   }
 }
