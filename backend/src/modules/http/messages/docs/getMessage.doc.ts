@@ -17,15 +17,21 @@ export function ApiGetMessage() {
         example: {
           statusCode: HttpStatus.OK,
           data: {
-            id: '6309cedd240c517af3430124',
-            messageId: 99411667148,
-            authorId: 925674628193,
-            roomId: 44117771,
+            id: '644d74959a24d4f89413f711',
+            messageId: 38953544752,
+            authorId: 953983315865,
+            roomId: 16144573,
             content: 'Hello',
             replyId: null,
             type: 'TEXT',
-            createdAt: '2022-08-27T07:59:25.391Z',
-            updatedAt: '2022-08-27T07:59:25.391Z',
+            createdAt: '2023-04-29T19:48:37.116Z',
+            updatedAt: '2023-04-29T19:48:37.116Z',
+            author: {
+              nickname: null,
+              user: {
+                username: 'sajjadmrx',
+              },
+            },
           },
         },
       },
