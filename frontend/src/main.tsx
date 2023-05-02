@@ -4,8 +4,10 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 
 import Login from "./pages/login"
 import Signup from "./pages/signup"
-import Rooms from "./pages/rooms/Rooms"
-import Room from "./pages/single-room/Room"
+import RoomsPage from "./pages/rooms/RoomsPage"
+import { RoomPage } from "./pages/single-room/Room"
+
+import { AuthProvider } from "./context/auth/AuthProvider"
 
 import "./styles/globals.css"
 
@@ -13,14 +15,16 @@ export const routes = [
   { path: "/", element: <div>home page</div> },
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <Signup /> },
-  { path: "/rooms", element: <Rooms /> },
-  { path: "/rooms/:id", element: <Room /> },
+  { path: "/rooms", element: <RoomsPage /> },
+  { path: "/rooms/:id", element: <RoomPage key={1} /> },
 ]
 
 const router = createBrowserRouter(routes)
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>,
 )

@@ -1,12 +1,15 @@
+import React from "react"
+
+import AuthLayout from "../../components/Layout/AuthLayout"
 import { IconComponent } from "../../components/Shared"
 import LoginForm from "../../components/Forms/LoginForm"
+
 // @ts-ignore
 import styles from "./styles.module.css"
-import React from "react"
 
 const SignUpPage = () => {
   return (
-    <>
+    <AuthLayout>
       <div className={styles.Wrapper}>
         <LoginForm />
         <div className={styles.Right}>
@@ -30,7 +33,7 @@ const SignUpPage = () => {
           </div>
         </div>
       </div>
-    </>
+    </AuthLayout>
   )
 }
 

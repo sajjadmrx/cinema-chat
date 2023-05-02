@@ -9,17 +9,37 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class MessagesRepository {
+  private readonly defaultInclude = {
+    author: {
+      select: {
+        nickname: true,
+        user: {
+          select: {
+            username: true,
+            userId: true,
+          },
+        },
+      },
+    },
+  };
   constructor(private db: PrismaService) {}
 
   create(input: Omit<MessageCreateInput, 'messageId'>): Promise<Message> {
     return this.db.message.create({
       data: {
-        roomId: input.roomId,
+        author: {
+          connect: {
+            roomId_userId: {
+              userId: input.authorId,
+              roomId: input.roomId,
+            },
+          },
+        },
         messageId: getRandomNumber(11),
-        authorId: input.authorId,
         content: input.content,
         replyId: input.replyId,
       },
+      include: this.defaultInclude,
     });
   }
 
@@ -48,6 +68,7 @@ export class MessagesRepository {
       },
       take: limit,
       skip: (page - 1) * limit,
+      include: this.defaultInclude,
     });
   }
 

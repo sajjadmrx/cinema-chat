@@ -1,11 +1,13 @@
 import * as Yup from "yup"
 import { useFormik } from "formik"
 import { useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import toast, { Toaster } from "react-hot-toast"
 
-import * as authService from "../../services/auth.service"
+import { signupService } from "../../services/auth.service"
 import { ButtonComponent, IconComponent, InputComponent } from "../Shared"
 import React from "react"
+import { errorHandling } from "../../shared/lib/error-handling"
 
 let timer: any
 
@@ -25,8 +27,21 @@ const validationSchema = Yup.object({
 
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
-  const onSubmit = async (values: any) => {}
+  const onSubmit = async (values: any) => {
+    setIsLoading(true)
+    try {
+      const res = await signupService(values)
+      localStorage.setItem("token", res.data)
+      toast.success("Signup was successful!")
+      timer = setInterval(() => navigate("/rooms"), 2000)
+    } catch (e) {
+      toast.error(errorHandling(e))
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const formik = useFormik({
     initialValues,
@@ -102,9 +117,9 @@ const SignUp = () => {
 
             <p className="mt-4 mb-2 text-sm text-left">
               Do you have an account before?{" "}
-              {/* <Link href="/login" className="text-primary hover:text-primaryActive">
+              <Link to="/login" className="text-primary hover:text-primaryActive">
                 Login
-              </Link> */}
+              </Link>
             </p>
           </form>
         </div>

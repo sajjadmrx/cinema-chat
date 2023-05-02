@@ -60,7 +60,8 @@ export class ChatService {
       const roomId: number = data.roomId;
       if (!socket.rooms.has(roomId.toString()))
         throw new NotFoundException(ResponseMessages.ROOM_NOT_FOUND);
-      const memberId: number = socket.data.userId;
+      const memberId: number =
+        await this.userSocketManager.findOneUserIdBySocketId(socket.id);
       const message: Message = await this.messageService.create(
         roomId,
         memberId,

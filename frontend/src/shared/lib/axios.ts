@@ -1,12 +1,13 @@
-import axios from "axios";
+/// <reference types="vite/client" />
 
-const BASE_URL = "http://193.36.85.124:4000";
+import axios from "axios"
 
+const BASE_URL = import.meta.env.VITE_API
 export const api = axios.create({
   baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
-});
+})
 export const axiosAuth = axios.create({
   baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
-});
+})

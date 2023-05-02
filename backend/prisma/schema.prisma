@@ -19,6 +19,7 @@ model User {
   permissions UserPermission[] @default([USER])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  members Member[]
 }
 
 model Room {
@@ -51,18 +52,21 @@ model Member {
   id          String              @id @default(auto()) @map("_id") @db.ObjectId
   room        Room                @relation(fields: [roomId], references: [roomId])
   roomId      Int
-  userId      Int //member id or userId
+  userId      Int
+  user        User                @relation(fields: [userId], references: [userId])
   inviteId    Int?
   permissions MemberPermissions[] @default([DEFAULT])
+  messages    Message[]
   nickname    String?
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
+  @@unique([roomId, userId])
 }
-
 model Message {
   id        String      @id @default(auto()) @map("_id") @db.ObjectId
   messageId Int         @unique
   authorId  Int
+  author Member @relation(fields: [authorId,roomId],references: [userId,roomId])
   roomId    Int
   content   String?
   replyId   Int?

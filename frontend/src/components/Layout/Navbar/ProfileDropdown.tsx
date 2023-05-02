@@ -5,6 +5,7 @@ import { classNames } from "../../../utils"
 import { useOnClickOutside } from "../../../hooks/useOnClickOutside"
 import { IconComponent } from "../../Shared"
 import React from "react"
+import { useAuth } from "../../../context/auth/AuthProvider"
 
 const ProfileDropdown = () => {
   const [open, setOpen] = useState(false)
@@ -13,7 +14,8 @@ const ProfileDropdown = () => {
 
   const ref = useRef(null)
   useOnClickOutside(ref, onClose)
-
+  const { user } = useAuth()
+  if (!user) return <div>loading</div>
   return (
     <div className="relative z-30">
       <div
@@ -23,11 +25,12 @@ const ProfileDropdown = () => {
           open && "pointer-events-none",
         )}
       >
-        <span className="mr-3 font-semi-bold">Johne Doe</span>
+        <span className="mr-3 font-semibold">{user.username || ""}</span>
         <img
           className="w-12 h-12 object-cover rounded-full border border-gray-200"
-          src="https://xsgames.co/randomusers/avatar.php?g=pixel"
-         alt={""}/>
+          src="/assets/images/avatar.jpg"
+          alt={`${user.username} avatar`}
+        />
       </div>
 
       <motion.div

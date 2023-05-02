@@ -1,9 +1,10 @@
 import axios from "axios"
 
-const getToken = () => localStorage.getItem("token")
+const getToken = () => localStorage.getItem("token") || import.meta.env.VITE_TOKEN
+const BASE_URL = import.meta.env.VITE_API || ""
 
 const http = axios.create({
-  baseURL: "http://193.36.85.124:4000",
+  baseURL: BASE_URL,
 })
 
 http.interceptors.request.use(async (config: any) => {

@@ -1,10 +1,5 @@
-export enum types {
-  SIGNIN_PENDING = "SIGNIN_PENDING",
-  SIGNIN_REJECT = "SIGNIN_REJECT",
-  SIGNIN_SUCCESS = "SIGNIN_SUCCESS",
-
-  LOAD_USER = "LOAD_USER",
-  SIGNOUT = "SIGNOUT",
+export enum Types {
+  SET_USER = "SET_USER",
 }
 
 export interface ActionProps {

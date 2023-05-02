@@ -82,7 +82,7 @@ export class RoomsService {
     return {
       statusCode: HttpStatus.OK,
       data: {
-        totalRooms,
+        totalDoc: totalRooms,
         totalPages,
         nextPage,
         rooms,
@@ -109,7 +109,7 @@ export class RoomsService {
     return {
       statusCode: HttpStatus.OK,
       data: {
-        totalRooms,
+        totalDoc: totalRooms,
         totalPages,
         nextPage,
         rooms,

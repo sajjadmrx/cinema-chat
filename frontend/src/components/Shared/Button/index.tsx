@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "react-router-dom"
 
-import { Button } from "../../../shared/interfaces/components/Button.interface"
+import { Button } from "@interfaces/components/Button.interface"
 import { classNames } from "../../../utils"
 
 export const ButtonComponent = ({
