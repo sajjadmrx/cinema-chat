@@ -12,6 +12,7 @@ import { BsEmojiSmile } from "react-icons/bs"
 import { fetchMessages } from "../../../services/message.service"
 import { socketContext, SocketContext } from "../../../context/socket/socketContext"
 import { socket } from "../../../hooks/useSocket"
+import { Textarea } from "react-daisyui"
 
 interface Prop {
   setShowMembers: any
@@ -102,11 +103,11 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
       </div>
       <div className="w-full h-12 mt-5 border rounded-full overflow-hidden">
         <div className="relative w-full h-full" dir={"auto"}>
-          <textarea
+          <Textarea
             placeholder="Your message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="absolute top-3 left-0 rounded-full w-full h-full pl-4 text-sm  focus:outline-none focus:border-indigo-500"
+            className="absolute top-0 left-0 rounded-full w-full h-full pl-4 text-sm  focus:outline-none focus:border-gray-500 bg-white "
             onClick={() => setShowPicker(false)}
           />
           <button
