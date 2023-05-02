@@ -14,12 +14,11 @@ import {
   Inject,
   Logger,
   UseFilters,
-  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { WebsocketExceptionsFilter } from '../../shared/filters/WebsocketExceptions.filter';
-import { AsyncApiPub, AsyncApiService } from 'nestjs-asyncapi';
+import { AsyncApiService } from 'nestjs-asyncapi';
 import { SocketKeys } from '../../shared/constants/socket.keys';
 import { MessageCreateDto } from '../http/messages/dtos/creates.dto';
 import { MessageUpdateDto } from '../http/messages/dtos/update.dto';
@@ -32,8 +31,20 @@ import {
 import { ConnectionService } from './services/connection.service';
 import { StreamEventService } from './services/stream.service';
 import { MoviesRepository } from '../http/movies/movies.repository';
-import { UpdateMemberStatusPayload } from './payloads/member.payload';
-import { PickType } from '@nestjs/swagger';
+import {
+  FetchOnlineMembersPayload,
+  UpdateMemberStatusPayload,
+} from './payloads/member.payload';
+import {
+  WsEventCallbackCurrentPlaying,
+  WsEventCreateMessage,
+  WsEventFetchOnlineMembers,
+  WsEventGetCurrentPlaying,
+  WsEventStreamPlay,
+  WsEventStreamSeek,
+  WsEventStreamTogglePlay,
+  WsEventUpdateMessage,
+} from './docs/events.doc';
 
 @AsyncApiService()
 @UsePipes(new ValidationPipe())
@@ -67,12 +78,7 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
     return this.connectionService.handleDisconnect(client);
   }
 
-  @AsyncApiPub({
-    channel: SocketKeys.CREATE_MESSAGE,
-    message: { name: 'test', payload: { type: MessageCreateDto } },
-    tags: [{ name: 'message', description: 'Messages on room' }],
-    description: 'call event create Message',
-  })
+  @WsEventCreateMessage()
   @SubscribeMessage(SocketKeys.CREATE_MESSAGE)
   onCreateMessage(
     @MessageBody() data: MessageCreateDto,
@@ -81,11 +87,7 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
     return this.chatService.sendMessageRoom(data, socket);
   }
 
-  @AsyncApiPub({
-    channel: SocketKeys.UPDATE_MESSAGE,
-    message: { name: 'UPDATE_MESSAGE', payload: { type: MessageUpdateDto } },
-    tags: [{ name: 'message' }],
-  })
+  @WsEventUpdateMessage()
   @SubscribeMessage(SocketKeys.UPDATE_MESSAGE)
   onUpdateMessage(
     @MessageBody() data: MessageUpdateDto,
@@ -94,15 +96,7 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
     return this.chatService.updateMessageRoom(data, socket);
   }
 
-  @AsyncApiPub({
-    channel: SocketKeys.STREAM_GET_CURRENT_PLAYING,
-    message: {
-      name: SocketKeys.STREAM_GET_CURRENT_PLAYING,
-      payload: { type: GetCurrentPlayingDto },
-    },
-    tags: [{ name: 'stream' }],
-    summary: `Get the current stream with response in the event: ${SocketKeys.STREAM_CB_CURRENT_PLAYING}`,
-  })
+  @WsEventGetCurrentPlaying()
   @SubscribeMessage(SocketKeys.STREAM_GET_CURRENT_PLAYING)
   onGetCurrentPlaying(
     @MessageBody() data: GetCurrentPlayingDto,
@@ -111,14 +105,7 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
     return this.streamEventService.getCurrentPlaying(data, socket);
   }
 
-  @AsyncApiPub({
-    channel: SocketKeys.STREAM_CB_CURRENT_PLAYING,
-    message: {
-      name: SocketKeys.STREAM_CB_CURRENT_PLAYING,
-      payload: { type: StreamNowPlayingDto },
-    },
-    summary: `Send the current playing stream to the specified target`,
-  })
+  @WsEventCallbackCurrentPlaying()
   @SubscribeMessage(SocketKeys.STREAM_CB_CURRENT_PLAYING)
   onStreamCbCurrentPlaying(
     @MessageBody() data: StreamNowPlayingDto,
@@ -127,14 +114,7 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
     return this.streamEventService.cbCurrentPlaying(data, socket);
   }
 
-  @AsyncApiPub({
-    channel: SocketKeys.STREAM_PLAY,
-    message: {
-      name: SocketKeys.STREAM_PLAY,
-      payload: { type: StreamPlayDto },
-    },
-    tags: [{ name: 'stream' }],
-  })
+  @WsEventStreamPlay()
   @SubscribeMessage(SocketKeys.STREAM_PLAY)
   onStreamPlay(
     @MessageBody() data: StreamPlayDto,
@@ -143,14 +123,7 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
     return this.streamEventService.play(data, socket, this.movieRepository);
   }
 
-  @AsyncApiPub({
-    channel: SocketKeys.STREAM_TOGGLE_PLAY,
-    message: {
-      name: SocketKeys.STREAM_TOGGLE_PLAY,
-      payload: { type: StreamTogglePlay },
-    },
-    tags: [{ name: 'stream' }],
-  })
+  @WsEventStreamTogglePlay()
   @SubscribeMessage(SocketKeys.STREAM_TOGGLE_PLAY)
   onTogglePlay(
     @MessageBody() data: StreamTogglePlay,
@@ -159,14 +132,7 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
     return this.streamEventService.onTogglePlay(data, socket);
   }
 
-  @AsyncApiPub({
-    channel: SocketKeys.STREAM_SEEK,
-    message: {
-      name: SocketKeys.STREAM_SEEK,
-      payload: { type: StreamTogglePlay },
-    },
-    tags: [{ name: 'stream' }],
-  })
+  @WsEventStreamSeek()
   @SubscribeMessage(SocketKeys.STREAM_SEEK)
   onSeek(
     @MessageBody() data: StreamTogglePlay,
@@ -175,18 +141,10 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
     return this.streamEventService.seek(data as any, socket);
   }
 
-  @AsyncApiPub({
-    channel: SocketKeys.FETCH_ONLINE_MEMBERS,
-    message: {
-      name: SocketKeys.FETCH_ONLINE_MEMBERS,
-      payload: { type: PickType<UpdateMemberStatusPayload, 'roomId'> },
-    },
-    summary: 'fetch online members',
-    tags: [{ name: 'Member' }],
-  })
+  @WsEventFetchOnlineMembers()
   @SubscribeMessage(SocketKeys.FETCH_ONLINE_MEMBERS)
   onFetchMembersStatus(
-    @MessageBody() data: Pick<UpdateMemberStatusPayload, 'roomId'>,
+    @MessageBody() data: FetchOnlineMembersPayload,
     @ConnectedSocket() socket: Socket,
   ) {
     return this.chatService.fetchOnlineMembers(data.roomId.toString(), socket);

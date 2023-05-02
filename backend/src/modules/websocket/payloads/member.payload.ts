@@ -30,12 +30,17 @@ export class UpdateMemberPayload {
 
 export class UpdateMemberStatusPayload {
   @ApiProperty()
-  readonly roomId: 44117771;
+  readonly roomId: number;
   @ApiProperty()
   readonly memberId: number;
 
   @ApiProperty({
     enum: MemberStatusConstant,
   })
-  readonly status: 'OFFLINE';
+  readonly status: MemberStatusConstant;
+}
+
+export class FetchOnlineMembersPayload {
+  @ApiProperty({})
+  readonly roomId: number;
 }
