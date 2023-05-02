@@ -3,6 +3,10 @@ import { FetchMembers, Member } from "@interfaces/schemas/member.interface"
 import { fetchMembersService } from "../../../services/members.service"
 import { AiOutlineCloseCircle } from "react-icons/ai"
 import { Pagination } from "@interfaces/schemas/api.interface"
+import { useNavigate } from "react-router-dom"
+import { Socket } from "socket.io-client"
+import { socket } from "../../../hooks/useSocket"
+import { Avatar } from "react-daisyui"
 
 interface Prop {
   roomId: number
@@ -11,11 +15,36 @@ interface Prop {
 }
 const MembersComponent = (prop: Prop) => {
   const [members, setMembers] = useState<Array<Member>>([])
+  const [onlineMembers, setOnlineMembers] = useState<Array<number>>([])
   const [pagination, setPagination] = useState<Pagination>({
     nextPage: 2,
     totalPages: 0,
     totalDoc: 0,
   })
+
+  useEffect(() => {
+    if (!onlineMembers.length) {
+      socket.emit("FETCH_ONLINE_MEMBERS", { roomId: prop.roomId })
+      socket.on("FETCH_ONLINE_MEMBERS", (data) => setOnlineMembers(data))
+      socket.on("UPDATE_MEMBER_STATUS", (data) => {
+        if (data.roomId == prop.roomId) {
+          if (data.status == "ONLINE") {
+            onlineMembers.push(data.memberId)
+            setOnlineMembers((prev) => [...prev, data.memberId])
+          } else {
+            const newOnlineMembers = onlineMembers.filter(
+              (memberId) => memberId != data.memberId,
+            )
+            setOnlineMembers(newOnlineMembers)
+          }
+        }
+      })
+    }
+    return () => {
+      socket?.off("FETCH_ONLINE_MEMBERS")
+    }
+  }, [onlineMembers])
+
   useEffect(() => {
     fetchMembers(prop.roomId, pagination.nextPage--).then((data) => {
       const filteredData = data.members.filter(
@@ -49,10 +78,12 @@ const MembersComponent = (prop: Prop) => {
       <div className="space-y-3  h-[calc(100%-61px)] overflow-y-auto">
         {members.map((member, index) => (
           <div key={index} className="flex items-center">
-            <img
-              className="w-12 rounded-full border border-gray-200"
+            <Avatar
+              size={"sm"}
+              shape={"circle"}
               src="/assets/images/avatar.jpg"
-              alt={"xx"}
+              online={onlineMembers.includes(member.userId)}
+              offline={!onlineMembers.includes(member.userId)}
             />
             <div>
               <h4 className="ml-2.5 -mb-1.5">

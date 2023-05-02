@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { IconComponent } from "../../../components/Shared"
 import { AiOutlineUser } from "react-icons/ai"
 import DropdownMenu from "./DropdownMenu"
@@ -10,14 +10,16 @@ import { useAuth } from "../../../context/auth/AuthProvider"
 import { useParams } from "react-router-dom"
 import { BsEmojiSmile } from "react-icons/bs"
 import { fetchMessages } from "../../../services/message.service"
+import { socketContext, SocketContext } from "../../../context/socket/socketContext"
+import { socket } from "../../../hooks/useSocket"
 
 interface Prop {
   setShowMembers: any
-  socket: Socket
 }
 const messagesStore = new Map<string, Message>()
 
-const ChatsComponent = ({ socket, setShowMembers }: Prop) => {
+const ChatsComponent = ({ setShowMembers }: Prop) => {
+  const {} = useContext<SocketContext>(socketContext)
   const [showPicker, setShowPicker] = useState(false)
   const [message, setMessage] = useState<string>("")
   const [messages, setMessages] = useState<Message[]>([])

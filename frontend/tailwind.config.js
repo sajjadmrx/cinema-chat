@@ -6,6 +6,8 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
+    "node_modules/daisyui/dist/**/*.js",
+    "node_modules/react-daisyui/dist/**/*.js",
   ],
   theme: {
     colors: {
@@ -15,11 +17,11 @@ export default {
       primaryActive: "#081CDE",
       secondary: "#e60000",
       secondaryHover: "#d60000",
-      secondaryActive: "#cc0000"
+      secondaryActive: "#cc0000",
     },
     fontFamily: {
-      sans: ["shabnam", "rancho", "poppins"]
-    }
+      sans: ["shabnam", "rancho", "poppins"],
+    },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
 }

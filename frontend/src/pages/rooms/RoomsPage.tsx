@@ -5,19 +5,17 @@ import { ButtonComponent, IconComponent } from "../../components/Shared"
 import { VscLock, VscUnlock } from "react-icons/vsc"
 import { HiOutlineUserGroup } from "react-icons/hi"
 import React, { useEffect, useState } from "react"
-import { Room } from "../../shared/interfaces/schemas/Room.interface"
+import { Room } from "@interfaces/schemas/Room.interface"
 import {
   getCurrentRoomsService,
   getPublicRoomsService,
 } from "../../services/rooms.service"
 import { MdOutlinePublic } from "react-icons/md"
 import { Link } from "react-router-dom"
-import useSocket from "../../hooks/useSocket"
 
 const RoomsPage = () => {
   const [publicRooms, setPublicRooms] = useState<Array<Room>>([])
   const [currentRooms, setCurrentRooms] = useState<Array<Room>>([])
-  const socket = useSocket()
   useEffect(() => {
     async function fetch() {
       const [responsePublic, responseCurrent] = await Promise.all([
