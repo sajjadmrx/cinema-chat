@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
@@ -7,7 +8,7 @@ import {
 import { Gateway } from '../gateway';
 import { MessageCreateDto } from '../../http/messages/dtos/creates.dto';
 import { ResponseMessages } from '../../../shared/constants/response-messages.constant';
-import { Socket } from 'socket.io';
+import { RemoteSocket, Socket } from 'socket.io';
 import { MessagesService } from '../../http/messages/messages.service';
 import { ChatEmit } from '../emits/chat.emit';
 import {
@@ -91,5 +92,21 @@ export class ChatService {
     } catch (e) {
       throw e;
     }
+  }
+
+  async fetchOnlineMembers(roomId: string, socket: Socket) {
+    const sockets: RemoteSocket<any, any>[] =
+      await this.userSocketManager.getRoomSockets(roomId);
+
+    if (!socket.rooms.has(roomId))
+      throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
+
+    const membersId: Array<number> = [];
+
+    for (const socketMember of sockets) {
+      membersId.push(socketMember.data.userId);
+    }
+
+    this.chatEmits.callbackFetchOnlineMembers(socket, membersId);
   }
 }

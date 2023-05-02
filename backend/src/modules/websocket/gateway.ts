@@ -32,6 +32,8 @@ import {
 import { ConnectionService } from './services/connection.service';
 import { StreamEventService } from './services/stream.service';
 import { MoviesRepository } from '../http/movies/movies.repository';
+import { UpdateMemberStatusPayload } from './payloads/member.payload';
+import { PickType } from '@nestjs/swagger';
 
 @AsyncApiService()
 @UsePipes(new ValidationPipe())
@@ -171,5 +173,22 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() socket: Socket,
   ) {
     return this.streamEventService.seek(data as any, socket);
+  }
+
+  @AsyncApiPub({
+    channel: SocketKeys.FETCH_ONLINE_MEMBERS,
+    message: {
+      name: SocketKeys.FETCH_ONLINE_MEMBERS,
+      payload: { type: PickType<UpdateMemberStatusPayload, 'roomId'> },
+    },
+    summary: 'fetch online members',
+    tags: [{ name: 'Member' }],
+  })
+  @SubscribeMessage(SocketKeys.FETCH_ONLINE_MEMBERS)
+  onFetchMembersStatus(
+    @MessageBody() data: Pick<UpdateMemberStatusPayload, 'roomId'>,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    return this.chatService.fetchOnlineMembers(data.roomId.toString(), socket);
   }
 }

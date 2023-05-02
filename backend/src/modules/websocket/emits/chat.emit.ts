@@ -17,6 +17,8 @@ import {
 } from '../payloads/message.payload';
 import { MemberStatusConstant } from '../../../shared/constants/member.constant';
 import { forwardRef, Inject } from '@nestjs/common';
+import { Socket } from 'socket.io';
+import { PickType } from '@nestjs/swagger';
 
 @AsyncApiService()
 export class ChatEmit {
@@ -153,5 +155,18 @@ export class ChatEmit {
         memberId,
         status,
       });
+  }
+
+  @AsyncApiSub({
+    channel: SocketKeys.FETCH_ONLINE_MEMBERS,
+    tags: [{ name: 'Member' }],
+    message: {
+      name: SocketKeys.FETCH_ONLINE_MEMBERS,
+      payload: { type: PickType<UpdateMemberStatusPayload, 'roomId'> },
+    },
+    description: 'callback Fetch online Members',
+  })
+  callbackFetchOnlineMembers(socket: Socket, membersId: Array<number>): void {
+    socket.emit(SocketKeys.FETCH_ONLINE_MEMBERS, membersId);
   }
 }

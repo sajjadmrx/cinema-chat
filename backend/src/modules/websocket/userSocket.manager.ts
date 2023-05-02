@@ -1,7 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Gateway } from './gateway';
 import { RedisService } from '../redis/redis.service';
-import { Socket } from 'socket.io';
+import { RemoteSocket, Socket } from 'socket.io';
 
 @Injectable()
 export class UserSocketManager {
@@ -30,5 +30,9 @@ export class UserSocketManager {
 
   async removeUserId(socketId: string) {
     await this.redisService.del(`ws:client:${socketId}`);
+  }
+
+  async getRoomSockets(roomId: string): Promise<RemoteSocket<any, any>[]> {
+    return this.gateway.server.in(roomId.toString()).fetchSockets();
   }
 }
