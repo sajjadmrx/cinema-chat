@@ -8,15 +8,6 @@ import { ApiTags } from '@nestjs/swagger';
 export class StreamController {
   constructor(private readonly streamService: StreamService) {}
 
-  @Get('/:segmentPath')
-  async segment(
-    @Param('segmentPath') segmentPath: string,
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
-    await this.streamService.segment(segmentPath, res, req);
-  }
-
   @Get('/:hls/:folder/:file')
   async stream(
     @Param('hls') hls: string,
