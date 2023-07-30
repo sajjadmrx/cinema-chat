@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Movie } from '../../../shared/interfaces/movie.interface';
-import { IsBoolean, IsNumber, IsObject } from 'class-validator';
+import { IsBoolean, IsNumber, IsObject, IsString } from 'class-validator';
 import { SocketKeys } from '../../../shared/constants/socket.keys';
 
 export class GetCurrentPlayingDto {
@@ -9,10 +8,6 @@ export class GetCurrentPlayingDto {
   roomId: number;
 }
 export class StreamNowPlayingDto extends GetCurrentPlayingDto {
-  @IsNumber({ allowNaN: false })
-  @ApiProperty()
-  mediaId: number;
-
   @IsNumber({ allowNaN: true })
   @ApiProperty()
   currentTime: number | null;
@@ -46,6 +41,6 @@ export class StreamPlayDto {
   roomId: number;
 
   @ApiProperty()
-  @IsNumber()
-  mediaId: number;
+  @IsString()
+  src: string;
 }

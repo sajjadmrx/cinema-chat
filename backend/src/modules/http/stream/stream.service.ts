@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { FileService } from '../../file/file.service';
-import { MoviesRepository } from '../movies/movies.repository';
 import * as path from 'path';
 import { createReadStream } from 'fs';
 
 @Injectable()
 export class StreamService {
-  constructor(
-    private fileService: FileService,
-    private moviesRepository: MoviesRepository,
-  ) {}
+  constructor(private fileService: FileService) {}
 
   async movie(src: string, res: Response, req: Request): Promise<void> {
     const filePath: string = path.join(path.resolve(), src);

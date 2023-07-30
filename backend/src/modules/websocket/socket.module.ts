@@ -10,7 +10,6 @@ import { MembersModule } from '../http/members/members.module';
 import { StreamEventService } from './services/stream.service';
 import { ConnectionService } from './services/connection.service';
 import { UserSocketManager } from './userSocket.manager';
-import { MoviesModule } from '../http/movies/movies.module';
 import { StreamEmit } from './emits/stream.emit';
 
 const providersAndExports = [
@@ -28,7 +27,6 @@ const providersAndExports = [
     forwardRef(() => RoomsModule),
     UsersModule,
     MessagesModule,
-    MoviesModule,
     forwardRef(() => MembersModule),
   ],
   providers: [...providersAndExports, StreamEmit],

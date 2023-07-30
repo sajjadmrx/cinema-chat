@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import Layout from "../../components/Layout"
 import Navbar from "../../components/Layout/Navbar"
-import VideoPlayer from "../../components/VideoPlayer"
+import MediaPlayer from "../../components/VideoPlayer"
 import ChatsComponent from "../../views/Room/Chats"
 import MembersComponent from "../../views/Room/Members"
 import videojs from "video.js"
@@ -12,9 +12,8 @@ import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Room } from "@interfaces/schemas/Room.interface"
 import { socketContext } from "../../context/socket/socketContext"
 import { socket } from "../../hooks/useSocket"
-import { Select } from "react-daisyui"
-import { fetchMedia } from "../../services/media.service"
-import { BASE_URL } from "../../shared/lib/axios"
+import { Button, Input, Select } from "react-daisyui"
+
 let currentMediaId: number | null = null
 export const RoomPage = (): any => {
   const playerRef = useRef(null)
@@ -24,9 +23,14 @@ export const RoomPage = (): any => {
   const [showMembers, setShowMembers] = useState<boolean>(false)
   const [room, setRoom] = useState<Omit<Room, "_count">>()
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected)
-  const [movies, setMovies] = useState<any[]>([])
-  const [selectMedia, setSelectMedia] = useState<any>()
-  const [videoJsOptions, setVideoJsOptions] = useState<any>()
+  const [src, setSrc] = useState<string>(
+    "https://cdnmrtehran.ir/media/mp3s/01/e52db2c108_8f9b6cb5cf1b09a839ccb542b7597798.mp3",
+  )
+  const [videoJsOptions, setVideoJsOptions] = useState<any>({
+    src: "",
+    currentTime: 0,
+    paused: false,
+  })
 
   const { user } = useAuth()
   const params = useParams()
@@ -39,12 +43,26 @@ export const RoomPage = (): any => {
     function onDisconnect() {
       setIsConnected(false)
     }
+
+    function onStreamPlay(src: string) {
+      playHandling(src, { currentTime: 0, paused: false })
+    }
+
     socket.on("connect", onConnect)
     socket.on("disconnect", onDisconnect)
-
+    socket.on("STREAM_PLAY", onStreamPlay)
+    socket.emit("GET_CURRENT_PLAYING", { roomId: Number(params.id) })
+    socket.on("CB_CURRENT_PLAYING", (data) => {
+      console.log(56)
+      playHandling(data.src, {
+        currentTime: data.currentTime,
+        paused: data.paused,
+      })
+    })
     return () => {
       socket.off("connect", onConnect)
       socket.off("disconnect", onDisconnect)
+      socket.on("STREAM_PLAY", onStreamPlay)
     }
   }, [])
 
@@ -69,37 +87,23 @@ export const RoomPage = (): any => {
     }
   }, [])
 
-  useEffect(() => {
-    if (isValidMember) {
+  function playHandling(src: string, items: { currentTime: number; paused: boolean }) {
+    console.log(items)
+    const options = {
+      currentTime: items.currentTime,
+      paused: items.paused,
+      src: src,
+      type: "video/mp4",
     }
-  }, [isValidMember])
 
-  useEffect(() => {
-    function fetchMovies() {
-      fetchMedia(1, 10).then((res) => setMovies(res.data))
-    }
-    fetchMovies()
-  }, [])
-  useEffect(() => {
-    if (selectMedia) {
-      const media = movies.find((m) => m.movieId == selectMedia)
-      currentMediaId = selectMedia
-      let options = {
-        autoplay: true,
-        controls: true,
-        responsive: true,
-        fluid: true,
-        sources: [
-          {
-            src: `${BASE_URL}/stream/${media.hlsPlaylistPath}`,
-            type: "application/x-mpegURL",
-          },
-        ],
-      }
-
-      setVideoJsOptions(options)
-    }
-  }, [selectMedia])
+    setVideoJsOptions(options)
+  }
+  function playBtnHandling(src: string) {
+    socket.emit("STREAM_PLAY", {
+      roomId: Number(params.id),
+      src,
+    })
+  }
 
   if (!isValidMember && isLoadingValidate) {
     return <h1 className={"text-center"}>waiting...</h1>
@@ -108,34 +112,6 @@ export const RoomPage = (): any => {
   if (!isValidMember && !isLoadingValidate) {
     return navigate("/rooms")
   }
-
-  const handlePlayerReady = (player: any) => {
-    playerRef.current = player
-
-    // You can handle player events here, for example:
-    player.on("waiting", () => {
-      videojs.log("player is waiting")
-    })
-
-    player.on("dispose", () => {
-      videojs.log("player will dispose")
-    })
-
-    socket.on("FETCH_CURRENT_PLAYING", function (data) {
-      if (player) {
-        const currentTime = player?.currentTime() || 0
-        const paused = player.paused() || true
-        socket.emit(data.cbEvent, {
-          cbTarget: data.cbTarget,
-          mediaId: Number(currentMediaId),
-          currentTime,
-          paused,
-          roomId: room?.roomId,
-        })
-      }
-    })
-  }
-
   return (
     <Layout>
       <Navbar />
@@ -165,25 +141,28 @@ export const RoomPage = (): any => {
               </div>
               <div className={""}>
                 select movie:
-                <Select
-                  color={"ghost"}
-                  onChange={(event) => setSelectMedia(event.target.value)}
-                >
-                  <Select.Option value={"default"} selected={true} disabled>
-                    Pick your favorite movie
-                  </Select.Option>
-                  {movies.map((movie) => (
-                    <Select.Option value={movie.movieId}>
-                      {movie.description}
-                    </Select.Option>
-                  ))}
-                </Select>
+                <div className={"flex flex-row gap-11"}>
+                  <Input
+                    type={"url"}
+                    placeholder={"enter your url"}
+                    color={"ghost"}
+                    className={"w-80"}
+                    value={src}
+                    onChange={(event) => setSrc(event.target.value)}
+                  ></Input>
+                  <Button onClick={() => playBtnHandling(src)}>Play</Button>
+                </div>
               </div>
             </div>
 
             {/*<div className="bg-gray-200 w-full h-96 rounded-2xl mt-6 grid place-items-center border border-gray-300">*/}
             <div>
-              <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
+              <MediaPlayer
+                src={videoJsOptions?.src}
+                roomId={Number(params.id)}
+                paused={videoJsOptions.paused}
+                currentTime={videoJsOptions.currentTime}
+              />
             </div>
           </div>
           {socket.connected && <ChatsComponent setShowMembers={setShowMembers} />}

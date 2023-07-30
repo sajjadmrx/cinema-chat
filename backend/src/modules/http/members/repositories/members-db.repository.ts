@@ -48,11 +48,11 @@ export class MembersDbRepository {
     roomId: number,
     userId: number,
   ): Promise<MemberWithRoom | null> {
-    return this.db.member.findFirst({
+    return this.db.member.findUnique({
       where: {
-        AND: {
-          roomId,
-          userId,
+        roomId_userId: {
+          roomId: roomId,
+          userId: Number(userId),
         },
       },
       include: {

@@ -38,8 +38,8 @@ export class MembersRepository {
     userId: number,
   ): Promise<MemberWithRoom | null> {
     try {
-      const memberCache = await this.membersCacheRepo.getMember(roomId, userId);
-      if (memberCache) return memberCache;
+      // const memberCache = await this.membersCacheRepo.getMember(roomId, userId);
+      // if (memberCache) return memberCache;
       const memberDB = await this.membersDbRepo.getByRoomIdAndUserId(
         roomId,
         userId,

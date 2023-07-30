@@ -5,7 +5,6 @@ import {
   Inject,
   Injectable,
   NotFoundException,
-  Res,
 } from '@nestjs/common';
 import { Gateway } from '../gateway';
 import {
@@ -19,14 +18,13 @@ import { MembersRepository } from '../../http/members/repositories/members.repos
 import { MemberWithRoom } from '../../../shared/interfaces/member.interface';
 import { ResponseMessages } from '../../../shared/constants/response-messages.constant';
 import { UserSocketManager } from '../userSocket.manager';
-import { Movie } from '../../../shared/interfaces/movie.interface';
-import { MoviesRepository } from '../../http/movies/movies.repository';
+
 import { StreamEmit } from '../emits/stream.emit';
 import { PlayerPayload } from '../payloads/player.payload';
 
 @Injectable()
 export class StreamEventService {
-  private currentPlaying = new Map<string, Movie>();
+  private currentPlaying = new Map<string, string>();
   constructor(
     @Inject(forwardRef(() => Gateway))
     private gateway: Gateway,
@@ -52,7 +50,7 @@ export class StreamEventService {
       );
       if (!ownerSocket)
         throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
-
+      console.log(`Send to Owner`);
       return this.streamEmit.fetchCurrentPlaying(ownerSocket as any, member);
     } catch (e) {
       throw e;
@@ -63,7 +61,6 @@ export class StreamEventService {
     try {
       const userId = socket.data.userId;
       const targetId = data.cbTarget;
-
       const member: MemberWithRoom | null =
         await this.membersRepository.getByRoomIdAndUserId(data.roomId, userId);
 
@@ -74,37 +71,33 @@ export class StreamEventService {
       const targetSocket = await this.userSocketManager.findOneSocketByUserId(
         targetId,
       );
+      console.log(targetSocket.id, 'T Id');
       if (!targetSocket) return;
       delete data.cbTarget;
-      delete data.mediaId;
-      const movie = this.currentPlaying.get(`${data.roomId}:playing`) || null;
+
+      const src = this.currentPlaying.get(`${data.roomId}:playing`) || null;
       return this.streamEmit.cbFetchCurrentPlaying(targetSocket as any, {
         ...data,
-        movie,
+        src,
       });
     } catch (e) {
       throw e;
     }
   }
 
-  async play(data: StreamPlayDto, socket: Socket, movieRepo: MoviesRepository) {
+  async play(socket: Socket, data: StreamPlayDto) {
     try {
-      const ownerId: number = socket.data.userId;
+      const userId: number =
+        await this.userSocketManager.findOneUserIdBySocketId(socket.id); //socket.data.userId;
+      if (!userId) throw new BadRequestException(ResponseMessages.INVALID_ID);
       const owner: MemberWithRoom | null =
-        await this.membersRepository.getByRoomIdAndUserId(data.roomId, ownerId);
+        await this.membersRepository.getByRoomIdAndUserId(data.roomId, userId);
 
       if (!owner || owner.userId !== owner.room.ownerId)
         throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
 
-      const movie: Movie = await movieRepo.getByMovieId(data.mediaId);
-
-      if (!movie) throw new NotFoundException(ResponseMessages.INVALID_SRC);
-
-      this.currentPlaying.set(`${data.roomId}:playing`, movie);
-      return this.streamEmit.play(socket, data.roomId.toString(), {
-        movie,
-        roomId: data.roomId,
-      });
+      this.currentPlaying.set(`${data.roomId}:playing`, data.src);
+      return this.streamEmit.play(socket, data.roomId.toString(), data.src);
     } catch (e) {
       throw e;
     }
@@ -117,8 +110,8 @@ export class StreamEventService {
     if (!member || ownerId !== member.room.ownerId)
       throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
 
-    const movie = this.currentPlaying.get(`${data.roomId}:playing`);
-    if (!movie) throw new NotFoundException(ResponseMessages.INVALID_SRC);
+    const src = this.currentPlaying.get(`${data.roomId}:playing`);
+    if (!src) throw new NotFoundException(ResponseMessages.INVALID_SRC);
     return this.streamEmit.togglePlay(
       socket,
       member.roomId.toString(),
@@ -133,8 +126,8 @@ export class StreamEventService {
     if (!member || ownerId !== member.room.ownerId)
       throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
 
-    const movie = this.currentPlaying.get(`${data.roomId}:playing`);
-    if (!movie) throw new NotFoundException(ResponseMessages.INVALID_SRC);
+    const src = this.currentPlaying.get(`${data.roomId}:playing`);
+    if (!src) throw new NotFoundException(ResponseMessages.INVALID_SRC);
 
     return this.streamEmit.seek(
       socket,

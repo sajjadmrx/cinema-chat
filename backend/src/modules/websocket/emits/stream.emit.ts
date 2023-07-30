@@ -30,6 +30,7 @@ export class StreamEmit {
 
   @WsEmitCallbackCurrentPlaying()
   cbFetchCurrentPlaying(targetSocket: Socket, data: any) {
+    console.log('GET_CURRENT_PLAYING');
     targetSocket.emit(SocketKeys.STREAM_CB_CURRENT_PLAYING, {
       ...data,
     });
@@ -41,8 +42,8 @@ export class StreamEmit {
   }
 
   @WsEmitStreamPlay()
-  play(socket: Socket, roomId: string, movie: any) {
-    socket.to(roomId).emit(SocketKeys.STREAM_PLAY, movie);
+  play(socket: Socket, roomId: string, src: string) {
+    this.chatGateway.server.to(roomId).emit(SocketKeys.STREAM_PLAY, src);
   }
 
   @WsEmitStreamSeek()

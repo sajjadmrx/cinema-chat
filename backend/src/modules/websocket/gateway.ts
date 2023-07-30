@@ -30,7 +30,6 @@ import {
 } from './dtos/stream.dto';
 import { ConnectionService } from './services/connection.service';
 import { StreamEventService } from './services/stream.service';
-import { MoviesRepository } from '../http/movies/movies.repository';
 import {
   FetchOnlineMembersPayload,
   UpdateMemberStatusPayload,
@@ -67,7 +66,6 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     private connectionService: ConnectionService,
     private streamEventService: StreamEventService,
-    private movieRepository: MoviesRepository,
   ) {}
 
   async handleConnection(client: Socket) {
@@ -76,15 +74,6 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleDisconnect(client: Socket): Promise<void> {
     return this.connectionService.handleDisconnect(client);
-  }
-
-  @WsEventCreateMessage()
-  @SubscribeMessage(SocketKeys.CREATE_MESSAGE)
-  onCreateMessage(
-    @MessageBody() data: MessageCreateDto,
-    @ConnectedSocket() socket: Socket,
-  ) {
-    return this.chatService.sendMessageRoom(data, socket);
   }
 
   @WsEventUpdateMessage()
@@ -111,6 +100,7 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() data: StreamNowPlayingDto,
     @ConnectedSocket() socket: Socket,
   ) {
+    console.log('103');
     return this.streamEventService.cbCurrentPlaying(data, socket);
   }
 
@@ -120,7 +110,7 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() data: StreamPlayDto,
     @ConnectedSocket() socket: Socket,
   ) {
-    return this.streamEventService.play(data, socket, this.movieRepository);
+    return this.streamEventService.play(socket, data);
   }
 
   @WsEventStreamTogglePlay()

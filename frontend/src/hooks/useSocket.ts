@@ -11,3 +11,7 @@ export const socket = io(import.meta.env.VITE_WEBSOCKET, {
 socket.on("error", (data) => {
   console.log(data)
 })
+
+socket.emit("test", "world", (response: any) => {
+  console.log(response) // "got it"
+})

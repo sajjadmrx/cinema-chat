@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import Chatbox from "../../components/Chatbox"
-import VideoPlayer from "../../components/VideoPlayer"
+import MediaPlayer from "../../components/VideoPlayer"
 import videojs from "video.js"
 import React from "react"
 
@@ -36,7 +36,7 @@ const MainPage = () => {
   return (
     <div>
       <Chatbox />
-      <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
+      <MediaPlayer options={videoJsOptions} onReady={handlePlayerReady} />
     </div>
   )
 }

@@ -7,19 +7,19 @@ datasource db {
 }
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    Int      @unique
-  email     String   @unique
-  username  String   @unique
-  password  String
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId      Int              @unique
+  email       String           @unique
+  username    String           @unique
+  password    String
   permissions UserPermission[] @default([USER])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  members Member[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  members     Member[]
 }
 
 model Room {
@@ -42,7 +42,7 @@ model Invite {
   inviterId  Int
   expires_at DateTime
   isForEver  Boolean  @default(false)
-  max_use    Int //0 == no limit
+  max_use    Int // 0 == no limit
   uses       Int      @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -60,13 +60,15 @@ model Member {
   nickname    String?
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
+
   @@unique([roomId, userId])
 }
+
 model Message {
   id        String      @id @default(auto()) @map("_id") @db.ObjectId
   messageId Int         @unique
   authorId  Int
-  author Member @relation(fields: [authorId,roomId],references: [userId,roomId])
+  author    Member      @relation(fields: [authorId, roomId], references: [userId, roomId])
   roomId    Int
   content   String?
   replyId   Int?
@@ -75,32 +77,30 @@ model Message {
   updatedAt DateTime    @updatedAt
 }
 
-model Movie {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  movieId     Int      @unique
-  //TODO add type
-  mediaSrc         String  @unique
-  hlsSrc        String   @unique
-  hlsPlaylistPath String
-  description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model Media {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  src       String
+  addedById Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum MemberPermissions {
-  ADMINISTRATOR //All Perm
+  ADMINISTRATOR // All Perm
   MANAGE_MEMBERS
   MANAGE_ROOM
   MANAGE_INVITE
   MANAGE_STREAM
   DEFAULT
 }
+
 enum UserPermission {
-ADMINISTRATOR
-MANAGE_MOVIE
-MANAGE_ROOMS
-USER
+  ADMINISTRATOR
+  MANAGE_MOVIE
+  MANAGE_ROOMS
+  USER
 }
+
 enum messageType {
   TEXT
 }
