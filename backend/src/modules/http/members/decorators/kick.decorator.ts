@@ -1,10 +1,12 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common';
+import { applyDecorators, Delete, HttpStatus, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiOkResponse,
   ApiOperation,
 } from '@nestjs/swagger';
 import { ResponseMessages } from '../../../../shared/constants/response-messages.constant';
+import { CheckMemberPermissions } from '../../../../shared/guards/member-permissions.guard';
+import { CheckCurrentMember } from '../../../../shared/guards/member.guard';
 
 export function ApiKickMember() {
   return applyDecorators(
@@ -37,5 +39,8 @@ export function ApiKickMember() {
         },
       },
     }),
+    UseGuards(CheckMemberPermissions(['ADMINISTRATOR', 'MANAGE_MEMBERS'])),
+    UseGuards(CheckCurrentMember),
+    Delete('/:memberId'),
   );
 }

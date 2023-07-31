@@ -1,12 +1,8 @@
 import {
   Body,
   Controller,
-  Delete,
-  Get,
   Param,
   ParseIntPipe,
-  Patch,
-  Put,
   Query,
   UseFilters,
   UseGuards,
@@ -21,19 +17,21 @@ import { User } from 'src/shared/interfaces/user.interface';
 import { MemberCreateDto } from './dtos/create.dto';
 import { MembersService } from './members.service';
 import { CheckCurrentMember } from '../../../shared/guards/member.guard';
-import { CheckMemberPermissions } from '../../../shared/guards/member-permissions.guard';
 import { UpdateCurrentMemberDto } from './dtos/update.dto';
 import { getMember } from '../../../shared/decorators/member.decorator';
 import {
   Member,
   MemberWithRoom,
 } from '../../../shared/interfaces/member.interface';
-import { ApiGetAllMembers } from './docs/getAll.doc';
-import { ApiLaveMember } from './docs/lave.doc';
-import { ApiKickMember } from './docs/kick.doc';
-import { ApiJoinRoom } from './docs/joinRoom.doc';
-import { ApiUpdateMember } from './docs/updateCurrentMember.doc';
-import { ApiGetMemberById } from './docs/getMemberById.doc';
+import { ApiGetAllMembers } from './decorators/getAll.decorator';
+import { ApiLaveMember } from './decorators/lave.decorator';
+import { ApiKickMember } from './decorators/kick.decorator';
+import { ApiJoinRoom } from './decorators/joinRoom.decorator';
+import {
+  ApiUpdateCurrentMember,
+  ApiUpdateMember,
+} from './decorators/updateCurrentMember.decorator';
+import { ApiGetMemberById } from './decorators/getMemberById.decorator';
 import { HttpExceptionFilter } from '../../../shared/filters/httpException.filter';
 import { getRoom } from '../../../shared/decorators/room.decorator';
 import { Room } from '../../../shared/interfaces/room.interface';
@@ -50,7 +48,6 @@ export class MembersController {
 
   @ApiGetAllMembers()
   @UseGuards(CheckCurrentMember)
-  @Get()
   getAll(
     @Param('roomId', ParseIntPipe) roomId: number,
     @Query('page', ParseIntPipe) page: number,
@@ -60,7 +57,6 @@ export class MembersController {
   }
 
   @ApiJoinRoom()
-  @Put()
   async joinRoom(
     @Param('roomId', ParseIntPipe) roomId: number,
     @Body() input: MemberCreateDto,
@@ -76,7 +72,6 @@ export class MembersController {
   }
 
   @ApiLaveMember()
-  @Put('/lave')
   async lave(
     @Param('roomId', ParseIntPipe) roomId: number,
     @getUser() user: User,
@@ -85,9 +80,6 @@ export class MembersController {
   }
 
   @ApiKickMember()
-  @UseGuards(CheckMemberPermissions(['ADMINISTRATOR', 'MANAGE_MEMBERS']))
-  @UseGuards(CheckCurrentMember)
-  @Delete('/:memberId')
   async kick(
     @Param('roomId', ParseIntPipe) roomId: number,
     @Param('memberId', ParseIntPipe) memberId: number,
@@ -97,8 +89,6 @@ export class MembersController {
   }
 
   @ApiUpdateMember('update current member')
-  @UseGuards(CheckCurrentMember)
-  @Patch()
   async updateCurrentMember(
     @Param('roomId', ParseIntPipe) roomId: number,
     @Body() input: UpdateCurrentMemberDto,
@@ -107,9 +97,7 @@ export class MembersController {
     return this.membersService.updateMember(requester.userId, requester, input);
   }
 
-  @ApiUpdateMember('update a member')
-  @UseGuards(CheckCurrentMember)
-  @Patch(':memberId')
+  @ApiUpdateCurrentMember('update a member')
   async updateMember(
     @Param('roomId', ParseIntPipe) roomId: number,
     @Param('memberId', ParseIntPipe) memberId: number,
@@ -120,8 +108,6 @@ export class MembersController {
   }
 
   @ApiGetMemberById()
-  @UseGuards(CheckCurrentMember)
-  @Get(':memberId')
   async getMemberById(
     @Param('roomId', ParseIntPipe) roomId: number,
     @Param('memberId', ParseIntPipe) memberId: number,

@@ -11,7 +11,7 @@ import {
   WsEmitStreamPlay,
   WsEmitStreamSeek,
   WsEmitToggleStream,
-} from '../docs/stream-emits.doc';
+} from '../decorators/stream-emits.decorator';
 
 @AsyncApiService()
 export class StreamEmit {

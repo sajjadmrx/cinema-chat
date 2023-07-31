@@ -1,4 +1,4 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common';
+import { applyDecorators, Get, HttpStatus } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 
 export function ApiGetMe() {
@@ -22,5 +22,6 @@ export function ApiGetMe() {
         },
       },
     }),
+    Get('/'),
   );
 }

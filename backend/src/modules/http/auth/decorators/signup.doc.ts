@@ -1,17 +1,17 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, Post } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiOperation,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ResponseMessages } from '../../../../shared/constants/response-messages.constant';
 
-export function ApiLogin() {
+export function ApiSignup() {
   return applyDecorators(
     ApiOperation({
-      summary: 'login',
-      description: 'get Jwt Token',
+      summary: 'signup',
+      description: 'create User And get Jwt Token',
     }),
     ApiCreatedResponse({
       schema: {
@@ -21,11 +21,11 @@ export function ApiLogin() {
         },
       },
     }),
-    ApiUnauthorizedResponse({
+    ApiBadRequestResponse({
       schema: {
         example: {
-          statusCode: 401,
-          message: ResponseMessages.INVALID_USERNAME_PASSWORD,
+          statusCode: 400,
+          message: ResponseMessages.USER_EXISTS,
           error: 'Bad Request',
         },
       },
@@ -39,5 +39,6 @@ export function ApiLogin() {
         },
       },
     }),
+    Post('signup'),
   );
 }

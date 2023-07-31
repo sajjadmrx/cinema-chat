@@ -10,8 +10,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { SignUpDto } from './dtos/signup.dto';
 import { SignInDto } from './dtos/signin.dto';
 import { ResponseInterceptor } from '../../../shared/interceptors/response.interceptor';
-import { ApiSignup } from './docs/signup.doc';
-import { ApiLogin } from './docs/login.doc';
+import { ApiSignup } from './decorators/signup.doc';
+import { ApiLogin } from './decorators/login.decorator';
 import { HttpExceptionFilter } from '../../../shared/filters/httpException.filter';
 
 @ApiTags('Auth')
@@ -22,13 +22,11 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @ApiSignup()
-  @Post('signup')
   async signup(@Body() data: SignUpDto) {
     return this.authService.signUp(data);
   }
 
   @ApiLogin()
-  @Post('login')
   async login(@Body() data: SignInDto) {
     return this.authService.login(data);
   }

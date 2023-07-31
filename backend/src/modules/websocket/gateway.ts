@@ -3,7 +3,6 @@ import {
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
@@ -19,7 +18,6 @@ import {
 } from '@nestjs/common';
 import { WebsocketExceptionsFilter } from '../../shared/filters/WebsocketExceptions.filter';
 import { AsyncApiService } from 'nestjs-asyncapi';
-import { SocketKeys } from '../../shared/constants/socket.keys';
 import { MessageCreateDto } from '../http/messages/dtos/creates.dto';
 import { MessageUpdateDto } from '../http/messages/dtos/update.dto';
 import {
@@ -30,10 +28,7 @@ import {
 } from './dtos/stream.dto';
 import { ConnectionService } from './services/connection.service';
 import { StreamEventService } from './services/stream.service';
-import {
-  FetchOnlineMembersPayload,
-  UpdateMemberStatusPayload,
-} from './payloads/member.payload';
+import { FetchOnlineMembersPayload } from './payloads/member.payload';
 import {
   WsEventCallbackCurrentPlaying,
   WsEventCreateMessage,
@@ -43,7 +38,7 @@ import {
   WsEventStreamSeek,
   WsEventStreamTogglePlay,
   WsEventUpdateMessage,
-} from './docs/events.doc';
+} from './decorators/events.decorator';
 
 @AsyncApiService()
 @UsePipes(new ValidationPipe())
@@ -77,16 +72,14 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @WsEventCreateMessage()
-  @SubscribeMessage(SocketKeys.CREATE_MESSAGE)
   onCreateMessage(
-      @MessageBody() data: MessageCreateDto,
-      @ConnectedSocket() socket: Socket,
+    @MessageBody() data: MessageCreateDto,
+    @ConnectedSocket() socket: Socket,
   ) {
     return this.chatService.sendMessageRoom(data, socket);
   }
 
   @WsEventUpdateMessage()
-  @SubscribeMessage(SocketKeys.UPDATE_MESSAGE)
   onUpdateMessage(
     @MessageBody() data: MessageUpdateDto,
     @ConnectedSocket() socket: Socket,
@@ -95,7 +88,6 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @WsEventGetCurrentPlaying()
-  @SubscribeMessage(SocketKeys.STREAM_GET_CURRENT_PLAYING)
   onGetCurrentPlaying(
     @MessageBody() data: GetCurrentPlayingDto,
     @ConnectedSocket() socket: Socket,
@@ -104,7 +96,6 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @WsEventCallbackCurrentPlaying()
-  @SubscribeMessage(SocketKeys.STREAM_CB_CURRENT_PLAYING)
   onStreamCbCurrentPlaying(
     @MessageBody() data: StreamNowPlayingDto,
     @ConnectedSocket() socket: Socket,
@@ -113,7 +104,6 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @WsEventStreamPlay()
-  @SubscribeMessage(SocketKeys.STREAM_PLAY)
   onStreamPlay(
     @MessageBody() data: StreamPlayDto,
     @ConnectedSocket() socket: Socket,
@@ -122,7 +112,6 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @WsEventStreamTogglePlay()
-  @SubscribeMessage(SocketKeys.STREAM_TOGGLE_PLAY)
   onTogglePlay(
     @MessageBody() data: StreamTogglePlay,
     @ConnectedSocket() socket: Socket,
@@ -131,7 +120,6 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @WsEventStreamSeek()
-  @SubscribeMessage(SocketKeys.STREAM_SEEK)
   onSeek(
     @MessageBody() data: StreamTogglePlay,
     @ConnectedSocket() socket: Socket,
@@ -140,7 +128,6 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @WsEventFetchOnlineMembers()
-  @SubscribeMessage(SocketKeys.FETCH_ONLINE_MEMBERS)
   onFetchMembersStatus(
     @MessageBody() data: FetchOnlineMembersPayload,
     @ConnectedSocket() socket: Socket,

@@ -14,6 +14,7 @@ import {
   FetchOnlineMembersPayload,
   UpdateMemberStatusPayload,
 } from '../payloads/member.payload';
+import { SubscribeMessage } from '@nestjs/websockets';
 
 export function WsEventCreateMessage() {
   return applyDecorators(
@@ -23,6 +24,7 @@ export function WsEventCreateMessage() {
       tags: [{ name: 'message', description: 'Messages on room' }],
       description: 'call event create Message',
     }),
+    SubscribeMessage(SocketKeys.CREATE_MESSAGE),
   );
 }
 
@@ -33,6 +35,7 @@ export function WsEventUpdateMessage() {
       message: { name: 'UPDATE_MESSAGE', payload: { type: MessageUpdateDto } },
       tags: [{ name: 'message' }],
     }),
+    SubscribeMessage(SocketKeys.UPDATE_MESSAGE),
   );
 }
 
@@ -47,6 +50,7 @@ export function WsEventGetCurrentPlaying() {
       tags: [{ name: 'stream' }],
       summary: `Get the current stream with response in the event: ${SocketKeys.STREAM_CB_CURRENT_PLAYING}`,
     }),
+    SubscribeMessage(SocketKeys.STREAM_GET_CURRENT_PLAYING),
   );
 }
 
@@ -60,6 +64,7 @@ export function WsEventCallbackCurrentPlaying() {
       },
       summary: `Send the current playing stream to the specified target`,
     }),
+    SubscribeMessage(SocketKeys.STREAM_CB_CURRENT_PLAYING),
   );
 }
 
@@ -73,6 +78,7 @@ export function WsEventStreamPlay() {
       },
       tags: [{ name: 'stream' }],
     }),
+    SubscribeMessage(SocketKeys.STREAM_PLAY),
   );
 }
 
@@ -86,6 +92,7 @@ export function WsEventStreamTogglePlay() {
       },
       tags: [{ name: 'stream' }],
     }),
+    SubscribeMessage(SocketKeys.STREAM_TOGGLE_PLAY),
   );
 }
 
@@ -99,6 +106,7 @@ export function WsEventStreamSeek() {
       },
       tags: [{ name: 'stream' }],
     }),
+    SubscribeMessage(SocketKeys.STREAM_SEEK),
   );
 }
 
@@ -113,5 +121,6 @@ export function WsEventFetchOnlineMembers() {
       summary: 'fetch online members',
       tags: [{ name: 'Member' }],
     }),
+    SubscribeMessage(SocketKeys.FETCH_ONLINE_MEMBERS),
   );
 }

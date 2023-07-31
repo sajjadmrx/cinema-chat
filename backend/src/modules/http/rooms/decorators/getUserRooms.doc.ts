@@ -1,10 +1,11 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, Get, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
   ApiQuery,
 } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 export function ApiGetUserRooms() {
   return applyDecorators(
@@ -48,5 +49,7 @@ export function ApiGetUserRooms() {
       required: false,
       example: 1,
     }),
+    UseGuards(AuthGuard('jwt')),
+    Get('@me'),
   );
 }

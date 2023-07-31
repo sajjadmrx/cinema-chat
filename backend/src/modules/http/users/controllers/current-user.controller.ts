@@ -14,7 +14,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ResponseInterceptor } from '../../../../shared/interceptors/response.interceptor';
 import { ResponseFormat } from '../../../../shared/interfaces/response.interface';
-import { ApiGetMe } from '../docs/getMe.doc';
+import { ApiGetMe } from '../decorators/getMe.decorator';
 import { HttpExceptionFilter } from '../../../../shared/filters/httpException.filter';
 
 @ApiBearerAuth()
@@ -27,7 +27,6 @@ export class CurrentUserController {
   constructor(private usersService: UsersService) {}
 
   @ApiGetMe()
-  @Get('/')
   getMe(@getUser() user: User): ResponseFormat<Omit<User, 'password'>> {
     delete user.password;
     return {

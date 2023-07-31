@@ -1,4 +1,4 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -7,6 +7,7 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { ResponseMessages } from '../../../../shared/constants/response-messages.constant';
+import { AuthGuard } from '@nestjs/passport';
 
 export function ApiCreateRoom() {
   return applyDecorators(
@@ -30,5 +31,7 @@ export function ApiCreateRoom() {
         },
       },
     }),
+    UseGuards(AuthGuard('jwt')),
+    Post(),
   );
 }

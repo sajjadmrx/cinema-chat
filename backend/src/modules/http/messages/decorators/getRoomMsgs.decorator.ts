@@ -1,4 +1,4 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common';
+import { applyDecorators, Get, HttpStatus } from '@nestjs/common';
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -59,5 +59,6 @@ export function ApiGetRoomMessages() {
         },
       },
     }),
+    Get(),
   );
 }

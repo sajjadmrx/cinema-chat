@@ -1,4 +1,4 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, Get } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiOperation,
@@ -50,5 +50,6 @@ export function ApiFindRoomInvite() {
       },
     }),
     ApiParam({ name: 'slug', type: String }),
+    Get(':slug'),
   );
 }

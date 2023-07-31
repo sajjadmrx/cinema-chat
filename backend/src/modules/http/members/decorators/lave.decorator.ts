@@ -1,4 +1,4 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common';
+import { applyDecorators, HttpStatus, Put } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiOkResponse,
@@ -26,5 +26,6 @@ export function ApiLaveMember() {
         },
       },
     }),
+    Put('/lave'),
   );
 }

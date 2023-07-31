@@ -15,8 +15,8 @@ import { InvitesService } from './invites.service';
 import { ResponseInterceptor } from '../../../shared/interceptors/response.interceptor';
 import { InviteCreateDto } from './dtos/create.dto';
 import { getUser } from 'src/shared/decorators/user.decorator';
-import { ApiCreateInvite } from './docs/create.doc';
-import { ApiFindRoomInvite } from './docs/findRoom.doc';
+import { ApiCreateInvite } from './decorators/create.decorator';
+import { ApiFindRoomInvite } from './decorators/findRoom.decorator';
 import { HttpExceptionFilter } from '../../../shared/filters/httpException.filter';
 
 @ApiTags('Invites')
@@ -29,7 +29,6 @@ export class InvitesController {
   constructor(private invitesService: InvitesService) {}
 
   @ApiCreateInvite()
-  @Post(':roomId')
   async create(
     @Param('roomId', ParseIntPipe) roomId: number,
     @Body() data: InviteCreateDto,
@@ -39,7 +38,6 @@ export class InvitesController {
   }
 
   @ApiFindRoomInvite()
-  @Get(':slug')
   async findRoom(@Param('slug') slug: string) {
     return this.invitesService.findRoom(slug);
   }

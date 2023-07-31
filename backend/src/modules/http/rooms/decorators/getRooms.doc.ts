@@ -1,4 +1,4 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiQuery } from '@nestjs/swagger';
 
 export function ApiGetRooms() {
@@ -45,5 +45,6 @@ export function ApiGetRooms() {
       required: false,
       example: 1,
     }),
+    Get(),
   );
 }

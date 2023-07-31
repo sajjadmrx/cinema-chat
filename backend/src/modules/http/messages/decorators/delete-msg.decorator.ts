@@ -1,4 +1,4 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common';
+import { applyDecorators, Delete, HttpStatus } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
@@ -30,5 +30,6 @@ export function ApiDeleteMessage() {
         },
       },
     }),
+    Delete(':messageId'),
   );
 }

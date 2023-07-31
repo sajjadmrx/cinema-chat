@@ -1,4 +1,4 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common';
+import { applyDecorators, HttpStatus, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
@@ -40,5 +40,6 @@ export function ApiCreateInvite() {
         },
       },
     }),
+    Post(':roomId'),
   );
 }

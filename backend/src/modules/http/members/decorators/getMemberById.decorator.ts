@@ -1,4 +1,4 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common';
+import { applyDecorators, Get, HttpStatus, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
@@ -6,6 +6,7 @@ import {
   ApiOperation,
 } from '@nestjs/swagger';
 import { ResponseMessages } from '../../../../shared/constants/response-messages.constant';
+import { CheckCurrentMember } from '../../../../shared/guards/member.guard';
 
 export function ApiGetMemberById() {
   return applyDecorators(
@@ -46,5 +47,7 @@ export function ApiGetMemberById() {
         },
       },
     }),
+    UseGuards(CheckCurrentMember),
+    Get(':memberId'),
   );
 }

@@ -1,4 +1,4 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, Patch, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
@@ -9,6 +9,10 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { ResponseMessages } from '../../../../shared/constants/response-messages.constant';
+import { CheckMemberPermissions } from '../../../../shared/guards/member-permissions.guard';
+import { CheckCurrentMember } from '../../../../shared/guards/member.guard';
+import { CheckRoomId } from '../../../../shared/guards/check-roomId.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 export function ApiUpdateRoom() {
   return applyDecorators(
@@ -45,5 +49,10 @@ export function ApiUpdateRoom() {
       },
     }),
     ApiParam({ name: 'roomId', type: 'string', example: '12345' }),
+    UseGuards(CheckMemberPermissions(['ADMINISTRATOR', 'MANAGE_ROOM'])),
+    UseGuards(CheckCurrentMember),
+    UseGuards(CheckRoomId),
+    UseGuards(AuthGuard('jwt')),
+    Patch(':roomId'),
   );
 }

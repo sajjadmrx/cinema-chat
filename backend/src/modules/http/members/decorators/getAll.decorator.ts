@@ -1,4 +1,4 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, Get } from '@nestjs/common';
 import {
   ApiForbiddenResponse,
   ApiOkResponse,
@@ -61,5 +61,6 @@ export function ApiGetAllMembers() {
       },
     }),
     ApiOperation({ summary: 'Get Members' }),
+    Get(),
   );
 }

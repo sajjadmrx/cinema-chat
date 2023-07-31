@@ -16,7 +16,7 @@ import {
   WsEmitUpdatedMember,
   WsEmitUpdatedMemberStatus,
   WsEmitUpdatedMessage,
-} from '../docs/chat-emits.doc';
+} from '../decorators/chat-emits.decorator';
 
 @AsyncApiService()
 export class ChatEmit {
