@@ -76,6 +76,15 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
     return this.connectionService.handleDisconnect(client);
   }
 
+  @WsEventCreateMessage()
+  @SubscribeMessage(SocketKeys.CREATE_MESSAGE)
+  onCreateMessage(
+      @MessageBody() data: MessageCreateDto,
+      @ConnectedSocket() socket: Socket,
+  ) {
+    return this.chatService.sendMessageRoom(data, socket);
+  }
+
   @WsEventUpdateMessage()
   @SubscribeMessage(SocketKeys.UPDATE_MESSAGE)
   onUpdateMessage(
