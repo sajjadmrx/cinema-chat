@@ -13,12 +13,13 @@ import { Room } from "@interfaces/schemas/Room.interface"
 import { socketContext } from "../../context/socket/socketContext"
 import { socket } from "../../hooks/useSocket"
 import { Button, Input, Select } from "react-daisyui"
+import { MemberWithRoom } from "@interfaces/schemas/member.interface"
 
 let currentMediaId: number | null = null
 export const RoomPage = (): any => {
   const playerRef = useRef(null)
   const navigate = useNavigate()
-  const [isValidMember, setIsValidMember] = useState(false)
+  const [member, setMember] = useState<MemberWithRoom | null>(null)
   const [isLoadingValidate, setIsLoadingValidate] = useState(true)
   const [showMembers, setShowMembers] = useState<boolean>(false)
   const [room, setRoom] = useState<Omit<Room, "_count">>()
@@ -51,9 +52,8 @@ export const RoomPage = (): any => {
     socket.on("connect", onConnect)
     socket.on("disconnect", onDisconnect)
     socket.on("STREAM_PLAY", onStreamPlay)
-    socket.emit("GET_CURRENT_PLAYING", { roomId: Number(params.id) })
+    syncMedia()
     socket.on("CB_CURRENT_PLAYING", (data) => {
-      console.log(56)
       playHandling(data.src, {
         currentTime: data.currentTime,
         paused: data.paused,
@@ -75,7 +75,7 @@ export const RoomPage = (): any => {
           user.userId,
         )
         setRoom(currentMember.room)
-        setIsValidMember(true)
+        setMember(currentMember)
       } catch (e) {
         console.log(e)
       } finally {
@@ -88,12 +88,10 @@ export const RoomPage = (): any => {
   }, [])
 
   function playHandling(src: string, items: { currentTime: number; paused: boolean }) {
-    console.log(items)
     const options = {
       currentTime: items.currentTime,
       paused: items.paused,
       src: src,
-      type: "video/mp4",
     }
 
     setVideoJsOptions(options)
@@ -105,11 +103,15 @@ export const RoomPage = (): any => {
     })
   }
 
-  if (!isValidMember && isLoadingValidate) {
+  function syncMedia() {
+    socket.emit("GET_CURRENT_PLAYING", { roomId: Number(params.id) })
+  }
+
+  if (!member && isLoadingValidate) {
     return <h1 className={"text-center"}>waiting...</h1>
   }
 
-  if (!isValidMember && !isLoadingValidate) {
+  if (!member && !isLoadingValidate) {
     return navigate("/rooms")
   }
   return (
@@ -141,17 +143,23 @@ export const RoomPage = (): any => {
               </div>
               <div className={""}>
                 select movie:
-                <div className={"flex flex-row gap-11"}>
-                  <Input
-                    type={"url"}
-                    placeholder={"enter your url"}
-                    color={"ghost"}
-                    className={"w-80"}
-                    value={src}
-                    onChange={(event) => setSrc(event.target.value)}
-                  ></Input>
-                  <Button onClick={() => playBtnHandling(src)}>Play</Button>
-                </div>
+                {member?.permissions.includes("ADMINISTRATOR") ? (
+                  <div className={"flex flex-row gap-11"}>
+                    <Input
+                      type={"url"}
+                      placeholder={"enter your url"}
+                      color={"ghost"}
+                      className={"w-80"}
+                      value={src}
+                      onChange={(event) => setSrc(event.target.value)}
+                    ></Input>
+                    <Button onClick={() => playBtnHandling(src)}>Play</Button>
+                  </div>
+                ) : (
+                  <div className={"flex flex-row gap-11"}>
+                    <Button onClick={() => syncMedia()}>Sync</Button>
+                  </div>
+                )}
               </div>
             </div>
 

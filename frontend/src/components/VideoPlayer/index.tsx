@@ -74,7 +74,6 @@ export const MediaPlayer: React.FC<Props> = ({ src, roomId, currentTime, paused 
   }
   function onPlay(e: React.SyntheticEvent<HTMLAudioElement, Event>) {
     const target = e.currentTarget
-    console.log(target)
     target.currentTime = currentTime
     paused && target.pause()
   }

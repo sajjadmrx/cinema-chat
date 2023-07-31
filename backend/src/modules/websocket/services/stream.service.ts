@@ -50,7 +50,6 @@ export class StreamEventService {
       );
       if (!ownerSocket)
         throw new ForbiddenException(ResponseMessages.PERMISSION_DENIED);
-      console.log(`Send to Owner`);
       return this.streamEmit.fetchCurrentPlaying(ownerSocket as any, member);
     } catch (e) {
       throw e;
@@ -71,7 +70,6 @@ export class StreamEventService {
       const targetSocket = await this.userSocketManager.findOneSocketByUserId(
         targetId,
       );
-      console.log(targetSocket.id, 'T Id');
       if (!targetSocket) return;
       delete data.cbTarget;
 

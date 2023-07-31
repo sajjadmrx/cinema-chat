@@ -100,7 +100,6 @@ export class Gateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() data: StreamNowPlayingDto,
     @ConnectedSocket() socket: Socket,
   ) {
-    console.log('103');
     return this.streamEventService.cbCurrentPlaying(data, socket);
   }
 

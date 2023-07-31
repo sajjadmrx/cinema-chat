@@ -26,15 +26,15 @@ import { HttpExceptionFilter } from '../../../shared/filters/httpException.filte
 export class UploadsController {
   constructor(private uploadService: UploadsService) {}
 
-  @ApiUploadMedia()
-  @Post('movie')
-  @UseInterceptors(
-    FileInterceptor('movie', {
-      storage: movieStorage(),
-      fileFilter: movieFilter,
-    }),
-  )
-  movie(@UploadedFile() file: ExpressFile) {
-    return this.uploadService.uploadMovie(file);
-  }
+  // @ApiUploadMedia()
+  // @Post('movie')
+  // @UseInterceptors(
+  //   FileInterceptor('movie', {
+  //     storage: movieStorage(),
+  //     fileFilter: movieFilter,
+  //   }),
+  // )
+  // movie(@UploadedFile() file: ExpressFile) {
+  //   return this.uploadService.uploadMovie(file);
+  // }
 }
