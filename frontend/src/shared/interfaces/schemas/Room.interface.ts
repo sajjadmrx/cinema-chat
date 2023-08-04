@@ -18,3 +18,4 @@ export interface FetchRooms extends Pagination {
 export interface RoomCount {
   members: number
 }
+export type InviteCode = string

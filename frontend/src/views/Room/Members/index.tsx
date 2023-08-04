@@ -3,11 +3,26 @@ import { FetchMembers, Member } from "@interfaces/schemas/member.interface"
 import { fetchMembersService } from "../../../services/members.service"
 import { AiOutlineCloseCircle } from "react-icons/ai"
 import { Pagination } from "@interfaces/schemas/api.interface"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { Socket } from "socket.io-client"
 import { socket } from "../../../hooks/useSocket"
 import { Avatar } from "react-daisyui"
-import { Button } from "@material-tailwind/react"
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Checkbox,
+  Dialog,
+  Input,
+  Menu,
+  MenuHandler,
+  MenuItem,
+  MenuList,
+  Typography,
+} from "@material-tailwind/react"
+import { createRoomInvite } from "../../../services/rooms.service"
 
 interface Prop {
   roomId: number
@@ -65,7 +80,7 @@ const MembersComponent = (prop: Prop) => {
       <div className="flex justify-between items-center mb-5 border-b border-gray-100 pb-3">
         <h2 className="text-lg font-semi-bold">اعضاء</h2>
         <div className="flex gap-x-2">
-          <Button className={"normal-case"}>بیشتر</Button>
+          <OptionDivider />
           <AiOutlineCloseCircle
             onClick={() => prop.setShowMembers(false)}
             className={`lg:hidden ${prop.showMembers ? "block" : "hidden"}`}
@@ -99,7 +114,95 @@ const MembersComponent = (prop: Prop) => {
 }
 
 export default MembersComponent
+export function OptionDivider() {
+  const [openDialogInvite, setOpenDialogInvite] = React.useState<boolean>(false)
+  const handleOpenDInvite = () => setOpenDialogInvite((cur) => !cur)
+  const params = useParams()
+  return (
+    <Menu>
+      <MenuHandler>
+        <Button className={"normal-case"}>بیشتر</Button>
+      </MenuHandler>
+      <MenuList>
+        <MenuItem className={"normal-case"} onClick={handleOpenDInvite}>
+          ساخت لینک دعوت
+        </MenuItem>
+        <MenuItem className={"normal-case"}>مدیریت کاربران</MenuItem>
+      </MenuList>
+      <DialogInvite
+        open={openDialogInvite}
+        handleOpen={setOpenDialogInvite}
+        roomId={String(params.id)}
+      />
+    </Menu>
+  )
+}
 
+export function DialogInvite({
+  open,
+  handleOpen,
+  roomId,
+}: {
+  open: boolean
+  handleOpen: any
+  roomId: string
+}) {
+  const [max_use, setMax_use] = useState<number>(0)
+  const [inviteCode, setInviteCode] = useState<string>("waiting...")
+  const [isForEver, setIsForEver] = useState<boolean>(false)
+  async function createHandle() {
+    const code = await createRoomInvite({
+      roomId,
+      isForEver,
+      max_use,
+    })
+    setInviteCode(code.data)
+  }
+  return (
+    <>
+      <Dialog
+        size="xs"
+        open={open}
+        handler={handleOpen}
+        className="bg-transparent shadow-none"
+      >
+        <Card className="mx-auto w-full max-w-[24rem]">
+          <CardHeader
+            variant="gradient"
+            color="blue"
+            className="mb-4 grid h-28 place-items-center"
+          >
+            <Typography variant="h3" color="white">
+              ساخت لینک دعـوت
+            </Typography>
+          </CardHeader>
+          <CardBody className="flex flex-col gap-4">
+            <Input
+              label="لینک دعوت:"
+              size="lg"
+              disabled={true}
+              value={`http://localhost:3000/i/${inviteCode}`}
+            />
+            <Input
+              label="تعیین تعداد مجاز استفاده (مقدار پیشفرض بدون محدودیت)"
+              size="lg"
+              type={"number"}
+              value={0}
+            />
+            <div className="-ml-2.5">
+              <Checkbox label="بدون انقضا" />
+            </div>
+          </CardBody>
+          <CardFooter className="pt-0">
+            <Button variant="gradient" onClick={createHandle} fullWidth>
+              ساختن
+            </Button>
+          </CardFooter>
+        </Card>
+      </Dialog>
+    </>
+  )
+}
 async function fetchMembers(roomId: number, page: number): Promise<FetchMembers> {
   const { data } = await fetchMembersService(roomId, page)
   return data

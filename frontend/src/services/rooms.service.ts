@@ -1,6 +1,6 @@
 import http from "../config/http"
-import { FetchRooms, Room } from "@interfaces/schemas/Room.interface"
-import { ReturnFormat } from "@interfaces/schemas/api.interface"
+import { FetchRooms, InviteCode, Room } from "@interfaces/schemas/Room.interface"
+import { ApiResponse, ReturnFormat } from "@interfaces/schemas/api.interface"
 import axios from "axios"
 
 const messages = {
@@ -34,6 +34,25 @@ export async function createRoomService(
 ): Promise<Room> {
   try {
     const { data } = await http.post<Room>("/rooms", roomData)
+    return data
+  } catch (e) {
+    throw e
+  }
+}
+
+export async function createRoomInvite(input: {
+  roomId: string
+  max_use: number
+  isForEver: boolean
+}): Promise<ApiResponse<InviteCode>> {
+  try {
+    const { data } = await http.post<ApiResponse<InviteCode>>(
+      `/invites/${input.roomId}`,
+      {
+        ...input,
+        expires_at: new Date(),
+      },
+    )
     return data
   } catch (e) {
     throw e
