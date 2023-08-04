@@ -1,27 +1,73 @@
-const colors = require("tailwindcss/colors")
+// const colors = require("tailwindcss/colors")
+//
+// /** @type {import('tailwindcss').Config} */
+//
+// export default {
+//   content: [
+//     "./index.html",
+//     "./src/**/*.{js,ts,jsx,tsx}",
+//     "node_modules/daisyui/dist/**/*.js",
+//     "node_modules/react-daisyui/dist/**/*.js",
+//   ],
+//   theme: {
+//     colors: {
+//       ...colors,
+//       primary: "#3346F8",
+//       primaryHover: "#2136F7",
+//       primaryActive: "#081CDE",
+//       secondary: "#e60000",
+//       secondaryHover: "#d60000",
+//       secondaryActive: "#cc0000",
+//     },
+//     fontFamily: {
+//       sans: ["shabnam", "rancho", "poppins"],
+//     },
+//   },
+//   plugins: [require("daisyui")],
+// }
+//
 
-/** @type {import('tailwindcss').Config} */
+const withMT = require("@material-tailwind/react/utils/withMT")
 
-export default {
+module.exports = withMT({
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./node_modules/@material-tailwind/react/components/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx}",
     "node_modules/daisyui/dist/**/*.js",
     "node_modules/react-daisyui/dist/**/*.js",
   ],
+  darkMode: "class",
   theme: {
-    colors: {
-      ...colors,
-      primary: "#3346F8",
-      primaryHover: "#2136F7",
-      primaryActive: "#081CDE",
-      secondary: "#e60000",
-      secondaryHover: "#d60000",
-      secondaryActive: "#cc0000",
-    },
-    fontFamily: {
-      sans: ["shabnam", "rancho", "poppins"],
+    extend: {
+      colors: {},
+      keyframes: {
+        fadeIn: {
+          from: {
+            opacity: "0",
+          },
+          to: {
+            opacity: "1",
+          },
+        },
+      },
+      animation: {
+        fadeIn: "fadeIn 0.3s ease-in-out",
+      },
+      fontFamily: {
+        sans: ["shabnam", "rancho", "poppins"],
+      },
     },
   },
+  daisyui: {
+    styled: true,
+    base: true,
+    utils: true,
+    logs: false,
+    rtl: false,
+
+    themes: ["light", "dark"],
+  },
+
   plugins: [require("daisyui")],
-}
+})
