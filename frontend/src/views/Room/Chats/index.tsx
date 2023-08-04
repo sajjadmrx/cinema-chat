@@ -62,7 +62,7 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
     <section className="lg:border-l border-slate-100 border-2 w-11/12 sm:w-3/5 lg:w-80 px-6 py-5 h-full xl:w-96 m-auto">
       <div className="flex flex-col">
         <div className="flex justify-between items-center mb-5 border-b border-gray-100 pb-3">
-          <h2 className="text-lg font-semibold">Chats</h2>
+          <h2 className="text-lg font-semibold">گفتگو</h2>
           <AiOutlineUser
             onClick={() => setShowMembers(true)}
             className="lg:hidden"
@@ -82,7 +82,7 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
               />
               <div className="flex items-center justify-between w-full">
                 <h4 className="ml-3 ">
-                  {item.authorId == user?.userId && "[you]"}{" "}
+                  {item.authorId == user?.userId && "[شما]"}{" "}
                   {item.author?.nickname || item.author.user.username}
                 </h4>
                 <DropdownMenu />
@@ -104,7 +104,8 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
       <div className="w-full h-12 mt-5 border rounded-full overflow-hidden">
         <div className="relative w-full h-full" dir={"auto"}>
           <Textarea
-            placeholder="Your message..."
+            dir={"auto"}
+            placeholder="چیزی بگوید..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             className="absolute top-0 left-0 rounded-full w-full h-full pl-4 text-sm  focus:outline-none focus:border-gray-500 bg-white "

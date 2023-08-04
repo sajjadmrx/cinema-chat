@@ -12,7 +12,7 @@ import { AuthProvider } from "./context/auth/AuthProvider"
 import "./styles/globals.css"
 
 export const routes = [
-  { path: "/", element: <div>home page</div> },
+  { path: "/", element: <RoomsPage /> },
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <Signup /> },
   { path: "/rooms", element: <RoomsPage /> },

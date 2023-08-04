@@ -139,10 +139,10 @@ export const RoomPage = (): any => {
                   src="https://xsgames.co/randomusers/avatar.php?g=pixel"
                   alt={""}
                 />
-                <h4 className="ml-3 -mb-1.5 font-bold">Call of Duty: World War II</h4>
+                <h4 className="ml-3 -mb-1.5 font-bold">{room?.name}</h4>
               </div>
               <div className={""}>
-                select movie:
+                پخش مدیا
                 {member?.permissions.includes("ADMINISTRATOR") ? (
                   <div className={"flex flex-row gap-11"}>
                     <Input
@@ -153,11 +153,11 @@ export const RoomPage = (): any => {
                       value={src}
                       onChange={(event) => setSrc(event.target.value)}
                     ></Input>
-                    <Button onClick={() => playBtnHandling(src)}>Play</Button>
+                    <Button onClick={() => playBtnHandling(src)}>پخش</Button>
                   </div>
                 ) : (
                   <div className={"flex flex-row gap-11"}>
-                    <Button onClick={() => syncMedia()}>Sync</Button>
+                    <Button onClick={() => syncMedia()}>رفرش</Button>
                   </div>
                 )}
               </div>
