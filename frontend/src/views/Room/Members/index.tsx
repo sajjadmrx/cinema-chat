@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom"
 import { Socket } from "socket.io-client"
 import { socket } from "../../../hooks/useSocket"
 import { Avatar } from "react-daisyui"
+import { Button } from "@material-tailwind/react"
 
 interface Prop {
   roomId: number
@@ -64,9 +65,8 @@ const MembersComponent = (prop: Prop) => {
       <div className="flex justify-between items-center mb-5 border-b border-gray-100 pb-3">
         <h2 className="text-lg font-semi-bold">Members</h2>
         <div className="flex gap-x-2">
-          <span className="rounded-full bg-primary grid place-items-center leading-[25px] w-6 h-6 text-white text-sm">
-            {pagination.totalDoc || 0}
-          </span>
+          <Button className={"normal-case"}>invite link</Button>
+          <Button className={"normal-case"}>Manage Room</Button>
           <AiOutlineCloseCircle
             onClick={() => prop.setShowMembers(false)}
             className={`lg:hidden ${prop.showMembers ? "block" : "hidden"}`}

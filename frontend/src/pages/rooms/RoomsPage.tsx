@@ -35,6 +35,7 @@ const RoomsPage = () => {
         return !newPublicRooms.some((newRoom) => newRoom.id === room.id)
       })
       setCurrentRooms(newCurrentRooms)
+      console.log(currentRoomsMap)
     }
     return () => {
       fetch()
@@ -68,9 +69,9 @@ const RoomsPage = () => {
                   alt={""}
                 />
                 <div className="ml-2 mt-4">
-                  <h4 className="font-semi-bold flex gap-1">
-                    {room.isPublic ? <VscUnlock /> : <VscLock />}
-                    {room.name}
+                  <h4 className="font-semi-bold flex gap-2">
+                    <p>{room.name}</p>
+                    <span>{room.isPublic ? "🔐" : "🔓"}</span>
                   </h4>
 
                   <div className="mt-2 flex items-center space-x-3 text-[#60637B]">
