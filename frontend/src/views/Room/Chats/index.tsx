@@ -1,13 +1,13 @@
 import data from "@emoji-mart/data"
 import Picker from "@emoji-mart/react"
 import { Message } from "@interfaces/schemas/message.interface"
+import { IoSendSharp } from "react-icons/io5"
+// import { IconComponent } from "components/Shared"
 import React, { useContext, useEffect, useRef, useState } from "react"
 import { Textarea } from "react-daisyui"
 import { AiOutlineUser } from "react-icons/ai"
 import { BsEmojiSmile } from "react-icons/bs"
-import { IoSendSharp } from "react-icons/io5"
 import { useParams } from "react-router-dom"
-import { IconComponent } from "../../../components/Shared"
 import { useAuth } from "../../../context/auth/AuthProvider"
 import { SocketContext, socketContext } from "../../../context/socket/socketContext"
 import { socket } from "../../../hooks/useSocket"
@@ -111,7 +111,7 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
             placeholder="Write a message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="absolute top-0 left-0 flex items-center justify-center w-full h-full pl-4 text-sm bg-white rounded-full focus:outline-none focus:border-gray-500 "
+            className="absolute top-0 left-0 flex items-center justify-center w-full h-full !pt-3 pl-4 text-sm bg-white rounded-full focus:outline-none focus:border-gray-500 "
             onClick={() => setShowPicker(false)}
           />
           <button
@@ -126,8 +126,8 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
             className="absolute z-10 -translate-y-1/2 top-1/2 right-2"
             onClick={sendMsg}
           >
-            <IconComponent name="send" color="blue" size={22} />
-            <IoSendSharp className={"text-primary"} />
+            {/* <IconComponent name="send" color="blue" size={22} /> */}
+            <IoSendSharp className={"text-primary text-xl"} />
           </button>
         </div>
         <div className="absolute" style={{ bottom: 83, right: 26 }} hidden={!showPicker}>
