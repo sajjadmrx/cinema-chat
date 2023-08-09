@@ -1,5 +1,4 @@
-import React from "react"
-import { useState } from "react"
+import React, { useState } from "react"
 
 import { Input } from "../../../shared/interfaces/components/input.interface"
 import { classNames } from "../../../utils"
@@ -50,7 +49,7 @@ export function InputComponent({
           <button
             type="button"
             style={{ transform: "translateY(-50%)" }}
-            className="absolute top-1/2 right-3 transform -translate-y-1/2"
+            className="absolute transform -translate-y-1/2 top-1/2 right-3"
             onClick={onTogglePassword}
           >
             {showPassword ? (
@@ -62,9 +61,7 @@ export function InputComponent({
         )}
       </div>
       {formik?.errors[name] && formik?.touched[name] && (
-        <div className="text-xs text-secondary mt-1 !text-left">
-          {formik.errors[name]}
-        </div>
+        <div className="text-xs text-red-500 mt-1 !text-left">{formik.errors[name]}</div>
       )}
     </div>
   )

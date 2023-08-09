@@ -30,7 +30,7 @@ export const ButtonComponent = ({
     onClick: handleClickButton,
     disabled: disabled,
     className: classNames(
-      "appearance-none flex relative text-center inline-block overflow-hidden cursor-pointer select-none transition duration-150 ease-in-out transform border",
+      "appearance-none flex relative text-center inline-block overflow-hidden cursor-pointer select-none transition center duration-150 ease-in-out transform border w-max h-max px-40 font-bold scale-100 hover:scale-110 delay-150",
 
       typeof rounded === "number" && rounded,
       rounded === "full" && "rounded-full",
@@ -40,11 +40,11 @@ export const ButtonComponent = ({
       leftIcon || (rightIcon && "space-x-2 space-x-reverse"),
 
       variant === "primary" &&
-        "text-white bg-primary hover:bg-primaryHover active:bg-primaryActive",
+        "text-white  text-center bg-primary hover:bg-primaryHover active:bg-primaryActive",
       variant === "danger" &&
-        "text-white bg-secondary hover:bg-secondaryHover active:bg-secondaryActive",
+        "text-white text-center bg-secondary hover:bg-secondaryHover active:bg-secondaryActive",
       variant === "secondary" &&
-        "text-gray-600 bg-white border-gray-200 hover:bg-gray-50 active:bg-gray-100",
+        "text-gray-600 bg-white text-center border-gray-200 hover:bg-gray-50 active:bg-gray-100",
       variant === "outline-primary" &&
         "text-primary border-primary hover:bg-primary/5 active:bg-primary/10",
       variant === "outline-danger" &&
@@ -53,7 +53,6 @@ export const ButtonComponent = ({
       size === "large" && "px-6 py-3.5",
       size === "medium" && "px-4 py-2",
       size === "small" && "px-4 py-2 text-sm",
-
       className,
     ),
   }
@@ -65,22 +64,22 @@ export const ButtonComponent = ({
       <span
         style={{ margin: 0 }}
         className={classNames(
-          "absolute inset-0 grid place-items-center",
-          variant === "primary" ? "bg-primary" : "bg-white",
+          "absolute inset-0 grid place-items-center text-center",
+          variant === "primary" ? "bg-primary" : "bg-white text-center",
         )}
       >
         <svg
           fill="none"
           viewBox="0 0 24 24"
           className={classNames(
-            "animate-spin h-5 w-5",
-            variant === "primary" && "text-white",
+            "animate-spin h-5 w-5 text-center",
+            variant === "primary" && "text-white text-center",
             variant === "secondary" && "text-primary",
             variant === "outline-primary" && "text-primaryActive",
           )}
         >
           <circle
-            className="opacity-25"
+            className="text-center opacity-25"
             cx="12"
             cy="12"
             r="10"
@@ -107,11 +106,11 @@ export const ButtonComponent = ({
   )
 
   return href ? (
-    <Link href={href} {...elementProps}>
+    <Link href={href} className="text-center" {...elementProps}>
       {elementChildren}
     </Link>
   ) : (
-    <button role="button" {...elementProps}>
+    <button role="button" className="text-center" {...elementProps}>
       {elementChildren}
     </button>
   )

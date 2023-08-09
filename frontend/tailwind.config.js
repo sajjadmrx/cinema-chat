@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // const colors = require("tailwindcss/colors")
 //
 // /** @type {import('tailwindcss').Config} */
@@ -26,9 +27,8 @@
 //   plugins: [require("daisyui")],
 // }
 //
-
+// @ts-ignore
 const withMT = require("@material-tailwind/react/utils/withMT")
-
 module.exports = withMT({
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",

@@ -1,12 +1,12 @@
-import * as Yup from "yup"
-import React, { useState, useEffect } from "react"
 import { useFormik } from "formik"
-import { Link, useNavigate } from "react-router-dom"
+import React, { useEffect, useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
+import { Link, useNavigate } from "react-router-dom"
+import * as Yup from "yup"
 
 import { loginService } from "../../services/auth.service"
-import { ButtonComponent, IconComponent, InputComponent } from "../Shared"
 import { errorHandling } from "../../shared/lib/error-handling"
+import { ButtonComponent, IconComponent, InputComponent } from "../Shared"
 
 type loginUser = { username: string; password: string }
 
@@ -57,12 +57,12 @@ const LoginForm = () => {
 
   return (
     <>
-      <div className="p-16 pb-32 w-full lg:w-1/3 rounded-l-2xl bg-white z-10 lg:max-w-xl text-center grid place-items-center">
+      <div className="z-10 grid w-full p-16 pb-32 text-center bg-white lg:w-1/3 rounded-l-2xl lg:max-w-xl place-items-center">
         <div className="w-full">
           <h1 className="mb-2 text-2xl font-bold">
             Log in <span className="text-primaryHover">Cinema Chat</span>
           </h1>
-          <p className="text-sm text-gray-500 mb-8">
+          <p className="mb-8 text-sm text-gray-500">
             Welcome back! Please enter your details
           </p>
           <form className="flex flex-col gap-2" onSubmit={formik.handleSubmit}>
@@ -75,7 +75,7 @@ const LoginForm = () => {
                 <IconComponent
                   name="user"
                   size={20}
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2"
+                  className="absolute transform -translate-y-1/2 left-3 top-1/2"
                 />
               }
             />
@@ -88,7 +88,7 @@ const LoginForm = () => {
                 <IconComponent
                   name="lock"
                   size={20}
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2"
+                  className="absolute transform -translate-y-1/2 left-3 top-1/2"
                 />
               }
             />
@@ -96,15 +96,18 @@ const LoginForm = () => {
             <ButtonComponent
               type="submit"
               variant="primary"
-              className="mt-5"
+              className="mt-5 text-center"
               loading={isLoading}
             >
               Login
             </ButtonComponent>
 
-            <p className="mt-4 mb-2 text-sm text-left">
+            <p className="mt-4 mb-2 text-sm text-center">
               Don't have an account?{" "}
-              <Link to="/signup" className="text-primary hover:text-primaryActive">
+              <Link
+                to="/signup"
+                className="text-center text-primary hover:text-primaryActive"
+              >
                 Sign up
               </Link>
             </p>
