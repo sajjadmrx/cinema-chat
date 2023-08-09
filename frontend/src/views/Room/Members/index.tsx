@@ -1,12 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { FetchMembers, Member } from "@interfaces/schemas/member.interface"
-import { fetchMembersService } from "../../../services/members.service"
-import { AiOutlineCloseCircle } from "react-icons/ai"
 import { Pagination } from "@interfaces/schemas/api.interface"
-import { useNavigate, useParams } from "react-router-dom"
-import { Socket } from "socket.io-client"
-import { socket } from "../../../hooks/useSocket"
-import { Avatar } from "react-daisyui"
+import { FetchMembers, Member } from "@interfaces/schemas/member.interface"
 import {
   Button,
   Card,
@@ -22,6 +15,12 @@ import {
   MenuList,
   Typography,
 } from "@material-tailwind/react"
+import React, { useEffect, useState } from "react"
+import { Avatar } from "react-daisyui"
+import { AiOutlineCloseCircle } from "react-icons/ai"
+import { useParams } from "react-router-dom"
+import { socket } from "../../../hooks/useSocket"
+import { fetchMembersService } from "../../../services/members.service"
 import { createRoomInvite } from "../../../services/rooms.service"
 
 interface Prop {
@@ -77,8 +76,8 @@ const MembersComponent = (prop: Prop) => {
         prop.showMembers ? "fixed" : "hidden"
       } top-0 bottom-0 left-0 right-0 lg:border-r lg:w-72 px-6 py-5 lg:h-full lg:relative lg:block bg-white z-50`}
     >
-      <div className="flex justify-between items-center mb-5 border-b border-gray-100 pb-3">
-        <h2 className="text-lg font-semi-bold">اعضاء</h2>
+      <div className="flex items-center justify-between pb-3 mb-5 border-b border-gray-100">
+        <h2 className="text-lg font-semi-bold">Members</h2>
         <div className="flex gap-x-2">
           <OptionDivider />
           <AiOutlineCloseCircle
@@ -121,13 +120,13 @@ export function OptionDivider() {
   return (
     <Menu>
       <MenuHandler>
-        <Button className={"normal-case"}>بیشتر</Button>
+        <Button className={"normal-case"}>More</Button>
       </MenuHandler>
       <MenuList>
         <MenuItem className={"normal-case"} onClick={handleOpenDInvite}>
-          ساخت لینک دعوت
+          Create Invite Link
         </MenuItem>
-        <MenuItem className={"normal-case"}>مدیریت کاربران</MenuItem>
+        <MenuItem className={"normal-case"}>Member Managment</MenuItem>
       </MenuList>
       <DialogInvite
         open={openDialogInvite}
@@ -170,7 +169,7 @@ export function DialogInvite({
           <CardHeader
             variant="gradient"
             color="blue"
-            className="mb-4 grid h-28 place-items-center"
+            className="grid mb-4 h-28 place-items-center"
           >
             <Typography variant="h3" color="white">
               ساخت لینک دعـوت

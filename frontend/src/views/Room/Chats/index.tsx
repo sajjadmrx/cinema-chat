@@ -1,32 +1,32 @@
-import React, { useContext, useEffect, useRef, useState } from "react"
-import { IconComponent } from "../../../components/Shared"
-import { AiOutlineUser } from "react-icons/ai"
-import DropdownMenu from "./DropdownMenu"
 import data from "@emoji-mart/data"
 import Picker from "@emoji-mart/react"
 import { Message } from "@interfaces/schemas/message.interface"
-import { Socket } from "socket.io-client"
-import { useAuth } from "../../../context/auth/AuthProvider"
-import { useParams } from "react-router-dom"
-import { BsEmojiSmile } from "react-icons/bs"
-import { fetchMessages } from "../../../services/message.service"
-import { socketContext, SocketContext } from "../../../context/socket/socketContext"
-import { socket } from "../../../hooks/useSocket"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { Textarea } from "react-daisyui"
-
+import { AiOutlineUser } from "react-icons/ai"
+import { BsEmojiSmile } from "react-icons/bs"
+import { IoSendSharp } from "react-icons/io5"
+import { useParams } from "react-router-dom"
+import { IconComponent } from "../../../components/Shared"
+import { useAuth } from "../../../context/auth/AuthProvider"
+import { SocketContext, socketContext } from "../../../context/socket/socketContext"
+import { socket } from "../../../hooks/useSocket"
+import { fetchMessages } from "../../../services/message.service"
+import DropdownMenu from "./DropdownMenu"
 interface Prop {
   setShowMembers: any
 }
 const messagesStore = new Map<string, Message>()
 
 const ChatsComponent = ({ setShowMembers }: Prop) => {
+  // eslint-disable-next-line no-empty-pattern
   const {} = useContext<SocketContext>(socketContext)
   const [showPicker, setShowPicker] = useState(false)
   const [message, setMessage] = useState<string>("")
   const [messages, setMessages] = useState<Message[]>([])
   const { user } = useAuth()
   const params = useParams()
-  let scrollRef = useRef<any>()
+  const scrollRef = useRef<any>()
 
   useEffect(() => {
     socket.on("CREATE_MESSAGE", (message: Message) => {
@@ -59,10 +59,10 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
   }
 
   return (
-    <section className="lg:border-l border-slate-100 border-2 w-11/12 sm:w-3/5 lg:w-80 px-6 py-5 h-full xl:w-96 m-auto">
+    <section className="w-11/12 h-full px-6 py-5 m-auto border-2 lg:border-l border-slate-100 sm:w-3/5 lg:w-80 xl:w-96">
       <div className="flex flex-col">
-        <div className="flex justify-between items-center mb-5 border-b border-gray-100 pb-3">
-          <h2 className="text-lg font-semibold">گفتگو</h2>
+        <div className="flex items-center justify-between pb-3 mb-5 border-b border-gray-100">
+          <h2 className="text-lg font-semibold">Chat</h2>
           <AiOutlineUser
             onClick={() => setShowMembers(true)}
             className="lg:hidden"
@@ -76,13 +76,13 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
           <div key={index} className="mr-2">
             <div className="flex">
               <img
-                className="w-9 rounded-full border border-gray-200"
+                className="border border-gray-200 rounded-full w-9"
                 src="/assets/images/avatar.jpg"
                 alt={"avatar"}
               />
               <div className="flex items-center justify-between w-full">
                 <h4 className="ml-3 ">
-                  {item.authorId == user?.userId && "[شما]"}{" "}
+                  {item.authorId == user?.userId}{" "}
                   {item.author?.nickname || item.author.user.username}
                 </h4>
                 <DropdownMenu />
@@ -90,40 +90,44 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
             </div>
 
             <div
-              className="ml-12 text-sm bg-gray-100 px-4 py-2 rounded-tl-none rounded-2xl border"
+              className="px-4 py-2 ml-12 text-sm bg-gray-100 border rounded-tl-none rounded-2xl"
               style={{ wordBreak: "break-word" }}
             >
               {item.content}
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="mt-1 text-xs text-gray-500">
                 {new Date(item.createdAt).toLocaleString()}
               </div>
             </div>
           </div>
         ))}
       </div>
-      <div className="w-full h-12 mt-5 border rounded-full overflow-hidden">
-        <div className="relative w-full h-full" dir={"auto"}>
+      <div className="w-full h-12 mt-5 overflow-hidden border rounded-full">
+        <div
+          className="relative flex items-center justify-center w-full h-full"
+          dir={"auto"}
+        >
           <Textarea
             dir={"auto"}
-            placeholder="چیزی بگوید..."
+            placeholder="Write a message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="absolute top-0 left-0 rounded-full w-full h-full pl-4 text-sm  focus:outline-none focus:border-gray-500 bg-white "
+            className="absolute top-0 left-0 flex items-center justify-center w-full h-full pl-4 text-sm bg-white rounded-full focus:outline-none focus:border-gray-500 "
             onClick={() => setShowPicker(false)}
           />
           <button
             onClick={() => setShowPicker(!showPicker)}
-            className="absolute top-1/2 -translate-y-1/2 z-10 right-10"
+            className="absolute z-10 -translate-y-1/2 top-1/2 right-10"
           >
             <span role="img" aria-label="smiley-face">
               <BsEmojiSmile />
             </span>
           </button>
           <button
-            className="absolute top-1/2 -translate-y-1/2 z-10 right-2"
+            className="absolute z-10 -translate-y-1/2 top-1/2 right-2"
             onClick={sendMsg}
           >
-            <IconComponent name="send" size={22} />
+            <IconComponent name="send" color="blue" size={22} />
+            <IoSendSharp className={"text-primary"} />
           </button>
         </div>
         <div className="absolute" style={{ bottom: 83, right: 26 }} hidden={!showPicker}>

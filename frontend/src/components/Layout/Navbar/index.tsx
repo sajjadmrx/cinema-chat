@@ -1,28 +1,33 @@
-import React, { useState } from "react"
-import { ButtonComponent } from "../../Shared"
-import ProfileDropdown from "./ProfileDropdown"
 import {
+  Button,
   Card,
   CardBody,
-  CardHeader,
-  Dialog,
-  Typography,
-  Button,
-  Input,
-  Checkbox,
   CardFooter,
+  CardHeader,
+  Checkbox,
+  Dialog,
+  Input,
+  Typography,
 } from "@material-tailwind/react"
-import { createRoomService } from "../../../services/rooms.service"
+import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { createRoomService } from "../../../services/rooms.service"
+import { ButtonComponent } from "../../Shared"
+import ProfileDropdown from "./ProfileDropdown"
 
 const Navbar = () => {
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => setOpen((cur) => !cur)
 
   return (
-    <nav className="flex items-center justify-between bg-white shadow-sm py-3 px-4">
-      <ButtonComponent variant="secondary" onClick={handleOpen}>
-        ایجاد اتاق
+    <nav className="flex items-center justify-between px-4 py-3 bg-white shadow-sm">
+      <ButtonComponent
+        variant="primary"
+        className="!px-4 !mx-3 flex"
+        onClick={handleOpen}
+      >
+        Create Room
+        {/* <BsFillHouseAddFill className={"mt-1"} /> */}
       </ButtonComponent>
       <ProfileDropdown />
       <DialogWithForm open={open} handler={handleOpen} />
@@ -79,7 +84,7 @@ export function DialogWithForm(prop: DProp) {
           <CardHeader
             variant="gradient"
             color="blue"
-            className="mb-4 grid h-28 place-items-center"
+            className="grid mb-4 h-28 place-items-center"
           >
             <Typography variant="h3" color="white">
               ایجاد اتاق

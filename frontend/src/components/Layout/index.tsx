@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { isAuthenticated } from "../../utils"
 import { useAuth } from "../../context/auth/AuthProvider"
+import { isAuthenticated } from "../../utils"
 
 export default function Layout({ children }: any) {
   const [loading, setLoading] = useState(true)

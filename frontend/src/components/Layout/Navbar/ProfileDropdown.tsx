@@ -1,17 +1,20 @@
-import { useRef, useState } from "react"
 import { motion } from "framer-motion"
+import { useRef, useState } from "react"
 
-import { classNames } from "../../../utils"
-import { useOnClickOutside } from "../../../hooks/useOnClickOutside"
-import { IconComponent } from "../../Shared"
 import React from "react"
 import { useAuth } from "../../../context/auth/AuthProvider"
+import { useOnClickOutside } from "../../../hooks/useOnClickOutside"
+import { classNames } from "../../../utils"
+import { IconComponent } from "../../Shared"
 
 const ProfileDropdown = () => {
   const [open, setOpen] = useState(false)
   const onOpen = () => setOpen(true)
   const onClose = () => setOpen(false)
-
+  const logout = () => {
+    localStorage.removeItem("token")
+    location.reload()
+  }
   const ref = useRef(null)
   useOnClickOutside(ref, onClose)
   const { user } = useAuth()
@@ -27,14 +30,14 @@ const ProfileDropdown = () => {
       >
         <span className="mr-3 font-semibold">{user.username || ""}</span>
         <img
-          className="w-12 h-12 object-cover rounded-full border border-gray-200"
+          className="object-cover w-12 h-12 border border-gray-200 rounded-full"
           src="/assets/images/avatar.jpg"
           alt={`${user.username} avatar`}
         />
       </div>
 
       <motion.div
-        className="absolute border right-3 overflow-hidden w-44 py-2 z-50 mt-2 rounded-xl select-none bg-white dark:bg-dark-gray700 dark:text-white"
+        className="absolute z-50 py-2 mt-2 overflow-hidden bg-white border select-none right-3 w-44 rounded-xl dark:bg-dark-gray700 dark:text-white"
         initial="hide"
         ref={ref}
         animate={open ? "show" : "hide"}
@@ -49,8 +52,10 @@ const ProfileDropdown = () => {
             onClick={onClose}
             className="w-full flex px-3 py-2 text-xs rounded-[4px] transition-colors text-[#37352fa6] hover:bg-[#ebebea]"
           >
-            <IconComponent name="logout" size={22} />
-            <span className="text-base ml-2">Log out</span>
+            <button className="flex" onClick={logout}>
+              <IconComponent name="logout" size={22} />
+              <span className="ml-2 text-base">Log out</span>
+            </button>
           </button>
         </div>
       </motion.div>

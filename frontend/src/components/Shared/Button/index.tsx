@@ -106,11 +106,11 @@ export const ButtonComponent = ({
   )
 
   return href ? (
-    <Link href={href} className="text-center" {...elementProps}>
+    <Link href={href} className="flex text-center" {...elementProps}>
       {elementChildren}
     </Link>
   ) : (
-    <button role="button" className="text-center" {...elementProps}>
+    <button role="button" className="flex text-center" {...elementProps}>
       {elementChildren}
     </button>
   )
