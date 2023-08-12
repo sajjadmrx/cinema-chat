@@ -27,7 +27,6 @@ const Navbar = () => {
         onClick={handleOpen}
       >
         Create Room
-        {/* <BsFillHouseAddFill className={"mt-1"} /> */}
       </ButtonComponent>
       <ProfileDropdown />
       <DialogWithForm open={open} handler={handleOpen} />

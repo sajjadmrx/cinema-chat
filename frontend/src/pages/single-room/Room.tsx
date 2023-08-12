@@ -1,9 +1,11 @@
 import { Room } from "@interfaces/schemas/Room.interface"
 import { MemberWithRoom } from "@interfaces/schemas/member.interface"
+import { Avatar, Textarea } from "@nextui-org/react"
 import React, { useEffect, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import Layout from "../../components/Layout"
 import Navbar from "../../components/Layout/Navbar"
+import MediaPlayer from "../../components/VideoPlayer/index"
 import { useAuth } from "../../context/auth/AuthProvider"
 import { socketContext } from "../../context/socket/socketContext"
 import { socket } from "../../hooks/useSocket"
@@ -126,48 +128,37 @@ export const RoomPage = (): any => {
               setShowMembers={setShowMembers}
             />
           )} */}
-          {/* <div className="flex-1 px-6 py-5">
+          <div className="flex items-end justify-center w-full h-full px-6 py-5 bg-red-50">
             <div className={"flex flex-row gap-40"}>
-              {/* <div className="flex items-center pb-5 border-b border-b-gray-100">
-                <img
-                  className="w-16 h-16 rounded-full border-[6px] border-gray-200"
-                  src="https://xsgames.co/randomusers/avatar.php?g=pixel"
-                  alt={""}
-                />
-                <h4 className="ml-3 -mb-1.5 font-bold">{room?.name}</h4>
-              </div> */}
-          {/* <div className={""}>  
+              <Avatar src="https://github.com/shadcn.png"></Avatar>
+              <div className={""}>
                 Play Media
                 {member?.permissions.includes("ADMINISTRATOR") ? (
                   <div className={"flex flex-row gap-11"}>
-                    <Input
-                      type={"url"}
+                    <Textarea
                       placeholder={"enter your url"}
-                      color={"ghost"}
                       className={"w-80"}
                       value={src}
                       onChange={(event) => setSrc(event.target.value)}
-                    ></Input>
-                    <Button onClick={() => playBtnHandling(src)}>Play</Button>
+                    ></Textarea>
+                    <button onClick={() => playBtnHandling(src)}>Play</button>
                   </div>
                 ) : (
                   <div className={"flex flex-row gap-11"}>
-                    <Button onClick={() => syncMedia()}>Refresh</Button>
+                    <button onClick={() => syncMedia()}>Refresh</button>
                   </div>
                 )}
               </div>
-            </div> */}
-
-          {/*<div className="grid w-full mt-6 bg-gray-200 border border-gray-300 h-96 rounded-2xl place-items-center">*/}
-          {/* <div>
-            <MediaPlayer
-              src={videoJsOptions?.src}
-              roomId={Number(params.id)}
-              paused={videoJsOptions.paused}
-              currentTime={videoJsOptions.currentTime}
-            />
-          </div> */}
-          {/* </div> */}
+            </div>
+            <div>
+              <MediaPlayer
+                src={videoJsOptions?.src}
+                roomId={Number(params.id)}
+                paused={videoJsOptions.paused}
+                currentTime={videoJsOptions.currentTime}
+              />
+            </div>
+          </div>
           {socket.connected && <ChatsComponent setShowMembers={setShowMembers} />}
         </section>
       </socketContext.Provider>

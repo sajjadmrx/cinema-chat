@@ -14,10 +14,8 @@ const colors = {
 }
 
 export const IconComponent = ({ name, size = 24, color = "gray", className }: Icon) => {
-  // @ts-ignore
   const IconElement = icons[name]
 
-  // @ts-ignore
   if (!icons[name]) {
     throw new Error(`Icon ${name} not found`)
   }

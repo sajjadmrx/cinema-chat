@@ -1,12 +1,10 @@
 import data from "@emoji-mart/data"
 import Picker from "@emoji-mart/react"
 import { Message } from "@interfaces/schemas/message.interface"
-import { IoSendSharp } from "react-icons/io5"
-// import { IconComponent } from "components/Shared"
 import React, { useContext, useEffect, useRef, useState } from "react"
-import { Textarea } from "react-daisyui"
 import { AiOutlineUser } from "react-icons/ai"
 import { BsEmojiSmile } from "react-icons/bs"
+import { IoSendSharp } from "react-icons/io5"
 import { useParams } from "react-router-dom"
 import { useAuth } from "../../../context/auth/AuthProvider"
 import { SocketContext, socketContext } from "../../../context/socket/socketContext"
@@ -59,7 +57,7 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
   }
 
   return (
-    <section className="w-11/12 h-full px-6 py-5 m-auto border-2 lg:border-l border-slate-100 sm:w-3/5 lg:w-80 xl:w-96">
+    <section className="w-11/12 h-full px-3 py-5 m-auto border-2 lg:border-l border-slate-100 sm:w-3/5 lg:w-80 xl:w-96">
       <div className="flex flex-col">
         <div className="flex items-center justify-between pb-3 mb-5 border-b border-gray-100">
           <h2 className="text-lg font-semibold">Chat</h2>
@@ -70,7 +68,6 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
           />
         </div>
       </div>
-      {/* @ts-ignore*/}
       <div className="space-y-5 h-[calc(100%-129px)] overflow-y-auto" ref={scrollRef}>
         {messages.map((item, index) => (
           <div key={index} className="mr-2">
@@ -94,8 +91,12 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
               style={{ wordBreak: "break-word" }}
             >
               {item.content}
-              <div className="mt-1 text-xs text-gray-500">
-                {new Date(item.createdAt).toLocaleString()}
+              <div className="flex justify-end mt-1 text-xs text-gray-500">
+                <i>
+                  {new Date(item.createdAt).getHours().toLocaleString()}:
+                  {new Date(item.createdAt).getMinutes().toLocaleString()}{" "}
+                  {new Date(item.createdAt).getHours() < 14 ? "AM" : "PM"}
+                </i>
               </div>
             </div>
           </div>
@@ -106,12 +107,12 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
           className="relative flex items-center justify-center w-full h-full"
           dir={"auto"}
         >
-          <Textarea
+          <textarea
             dir={"auto"}
             placeholder="Write a message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="absolute top-0 left-0 flex items-center justify-center w-full h-full !pt-3 pl-4 text-sm bg-white rounded-full focus:outline-none focus:border-gray-500 "
+            className="absolute border border-ghost top-0 left-0 flex items-center justify-center w-full h-full !pt-3 pl-4 text-sm bg-white rounded-full focus:outline-none focus:border-gray-500 "
             onClick={() => setShowPicker(false)}
           />
           <button

@@ -1,3 +1,5 @@
+import { config } from 'dotenv';
+config();
 const configs = {
   port: Number(process.env.PORT) || 3000,
   APP_MODE: process.env.APP_MODE,

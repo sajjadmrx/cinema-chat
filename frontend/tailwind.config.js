@@ -28,14 +28,14 @@
 // }
 //
 // @ts-ignore
+const { nextui } = require("@nextui-org/react")
 const withMT = require("@material-tailwind/react/utils/withMT")
 module.exports = withMT({
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
     "./node_modules/@material-tailwind/react/components/**/*.{js,ts,jsx,tsx}",
     "./node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx}",
-    "node_modules/daisyui/dist/**/*.js",
-    "node_modules/react-daisyui/dist/**/*.js",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: "class",
   theme: {
@@ -59,15 +59,5 @@ module.exports = withMT({
       },
     },
   },
-  daisyui: {
-    styled: true,
-    base: true,
-    utils: true,
-    logs: false,
-    rtl: false,
-
-    themes: ["light", "dark"],
-  },
-
-  plugins: [require("daisyui")],
+  plugins: [nextui()],
 })

@@ -15,8 +15,8 @@ import {
   MenuList,
   Typography,
 } from "@material-tailwind/react"
+import { Avatar } from "@nextui-org/react"
 import React, { useEffect, useState } from "react"
-import { Avatar } from "react-daisyui"
 import { AiOutlineCloseCircle } from "react-icons/ai"
 import { useParams } from "react-router-dom"
 import { socket } from "../../../hooks/useSocket"
@@ -91,18 +91,18 @@ const MembersComponent = (prop: Prop) => {
       <div className="space-y-3  h-[calc(100%-61px)] overflow-y-auto">
         {members.map((member, index) => (
           <div key={index} className="flex items-center">
-            <Avatar
+            {/* <Avatar
               size={"sm"}
               shape={"circle"}
               src="/assets/images/avatar.jpg"
               online={onlineMembers.includes(member.userId)}
               offline={!onlineMembers.includes(member.userId)}
-            />
+            /> */}
+            <Avatar src="https://github.com/shadcn.png"></Avatar>
             <div>
               <h4 className="ml-2.5 -mb-1.5">
                 {member.nickname || member.user.username}
               </h4>
-              {/* @ts-ignore*/}
               <span className="ml-2.5 text-xs text-gray-400">{member.user.username}</span>
             </div>
           </div>
