@@ -7,7 +7,6 @@ import { useAuth } from "../../../context/auth/AuthProvider"
 import { useOnClickOutside } from "../../../hooks/useOnClickOutside"
 import { classNames } from "../../../utils"
 import { IconComponent } from "../../Shared"
-
 const ProfileDropdown = () => {
   const [open, setOpen] = useState(false)
   const onOpen = () => setOpen(true)
@@ -29,13 +28,8 @@ const ProfileDropdown = () => {
           open && "pointer-events-none",
         )}
       >
-        {/* <span className="mr-3 font-semibold">{user.username || ""}</span> */}
-        {/* <img
-          // className="object-cover w-12 h-12 border border-gray-200 rounded-full"
-          // src="/assets/images/avatar.jpg"
-          // alt={`${user.username} avatar`}
-        // /> */}
         <User
+          dir="rtl"
           name={user.username || ""}
           description={user.userId}
           avatarProps={{
@@ -68,13 +62,22 @@ const ProfileDropdown = () => {
           </button>
         </div>
         <div className="w-full">
+          {/* <Button
+            color="danger"
+            onClick={logout}
+            variant="bordered"
+            className="w-full flex justify-start items-center  rounded-[4px] transition-colors hover:bg-[#ebebea]"
+            startContent={<IconComponent name="logout" color="red" size={22} />}
+          >
+            Log out
+          </Button> */}
           <button
             onClick={onClose}
             className="w-full flex px-3 py-2 text-xs rounded-[4px] transition-colors text-[#37352fa6] hover:bg-[#ebebea]"
           >
             <button className="flex" onClick={logout}>
-              <IconComponent name="logout" size={22} />
-              <span className="ml-2 text-base">Log out</span>
+              <IconComponent name="logout" color="red" size={22} />
+              <span className="ml-2 text-base text-danger-400">Log out</span>
             </button>
           </button>
         </div>

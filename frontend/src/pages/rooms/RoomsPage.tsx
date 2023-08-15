@@ -58,58 +58,14 @@ const RoomsPage = () => {
 
         <section className="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
           {currentRooms.map((room) => (
-            // <div
-            //   key={room.id}
-            //   className="flex flex-col items-center justify-center w-full bg-white shadow-sm h-max rounded-3xl px-7 py-7"
-            // >
-            //   <div className="flex flex-col items-start">
-            //     <div className="flex ">
-            //       <img
-            //         className="w-20 rounded-full border-[6px] border-gray-200"
-            //         src="https://marketplace.canva.com/EAFEits4-uw/1/0/800w/canva-boy-cartoon-gamer-animated-twitch-profile-photo-r0bPCSjUqg0.jpg"
-            //         alt={""}
-            //       />
-            //       {/* room details */}
-            //       <div className="flex flex-col mt-4 ml-3 ">
-            //         <h1 className="flex gap-2 text-xl font-semi-bold">
-            //           <p>{room.name}</p>
-            //           <span>{room.isPublic ? "🔐" : "🔓"}</span>
-            //         </h1>
-            //         <div className="flex text-sm">
-            //           <HiOutlineUserGroup size={16} color="gray" className="mr-1" />
-            //           <span className="leading-[23px]"> {room._count.members}/10 </span>
-            //         </div>
-            //         <div className="flex">
-            //           <IconComponent
-            //             name="radar"
-            //             size={18}
-            //             color="green"
-            //             className="mr-1 delay-75 animate-pulse"
-            //           />
-            //           <span className="text-sm">Live</span>
-            //         </div>
-            //       </div>
-            //     </div>
-            //     <div className="mt-2 flex items-center space-x-3 text-[#60637B]"></div>
-            //     <Link to={`/rooms/${room.roomId}`}>
-            //       <ButtonComponent
-            //         variant={"primary"}
-            //         size="small"
-            //         className="mt-2 !px-14"
-            //       >
-            //         open room
-            //       </ButtonComponent>
-            //     </Link>
-            //   </div>
-            // </div>
             <Card className="max-w-[340px]">
               <CardHeader className="justify-between">
                 <div className="flex gap-5">
                   <Avatar
-                    isBordered
+                    // isBordered
                     radius="full"
-                    size="md"
-                    src="https://avatars.githubusercontent.com/u/30373425?v=4"
+                    size="lg"
+                    src="https://marketplace.canva.com/EAFEits4-uw/1/0/800w/canva-boy-cartoon-gamer-animated-twitch-profile-photo-r0bPCSjUqg0.jpg"
                   />
                   <div className="flex flex-col items-start justify-center gap-1">
                     <h2 className="font-semibold leading-none text-small text-default-600">
@@ -117,7 +73,7 @@ const RoomsPage = () => {
                       <span>{room.isPublic ? "🔐" : "🔓"}</span>
                     </h2>
                     <h5 className="tracking-tight text-small text-default-400">
-                      {/* {room.id} */}
+                      @{room.roomId}
                     </h5>
                   </div>
                 </div>
@@ -133,16 +89,18 @@ const RoomsPage = () => {
                   </span>
                 </span> */}
               {/* </CardBody> */}
-              <CardFooter className="gap-3">
+              <CardFooter className="flex items-center justify-between gap-3">
                 <div className="flex gap-1">
                   <HiOutlineUserGroup size={19} color="gray" className="mt-px mr-1" />
                   <p className="mt-1 font-semibold text-default-400 text-small">
                     {room._count.members}/10{" "}
                   </p>
-                  <p className="mt-1 text-default-400 text-small">Followers</p>
+                  <p className="mt-1 text-default-400 text-small">Members</p>
                 </div>
                 <Button
-                  className={"bg-primary text-foreground border-default-200"}
+                  className={
+                    "bg-primary text-white scale-100 font-semibold text-sm hover:scale-110 border-default-200"
+                  }
                   color="primary"
                   radius="full"
                   size="sm"
