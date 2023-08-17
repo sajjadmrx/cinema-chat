@@ -57,7 +57,7 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
   }
 
   return (
-    <section className="w-11/12 h-full px-3 py-5 m-auto border-2 lg:border-l border-slate-100 sm:w-3/5 lg:w-80 xl:w-96">
+    <section className="w-1/4 h-full px-3 py-5 m-auto text-white border-l-2 bg-dark lg:border-l border-slate-100 sm:w-3/5 lg:w-80 xl:w-96">
       <div className="flex flex-col">
         <div className="flex items-center justify-between pb-3 mb-5 border-b border-gray-100">
           <h2 className="text-lg font-semibold">Chat</h2>
@@ -68,7 +68,10 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
           />
         </div>
       </div>
-      <div className="space-y-5 h-[calc(100%-129px)] overflow-y-auto" ref={scrollRef}>
+      <div
+        className="space-y-5 text-dark h-[calc(100%-129px)] overflow-y-auto"
+        ref={scrollRef}
+      >
         {messages.map((item, index) => (
           <div key={index} className="mr-2">
             <div className="flex">

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/auth/AuthProvider"
 import { isAuthenticated } from "../../utils"
+import Loading from "../Loading/index"
 
 export default function Layout({ children }: any) {
   const [loading, setLoading] = useState(true)
@@ -23,9 +24,9 @@ export default function Layout({ children }: any) {
   }, [navigate])
 
   return loading ? (
-    <div>Loading...</div>
+    <Loading />
   ) : (
-    <section className="min-h-screen">
+    <section className="min-h-screen bg-dark">
       <section>{children}</section>
     </section>
   )

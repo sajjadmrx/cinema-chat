@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react"
+import { User } from "@interfaces/schemas/User.interface"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { isAuthenticated } from "../../utils"
-import { User } from "@interfaces/schemas/User.interface"
+import Loading from "../Loading/index"
 
 type Props = { children: React.ReactNode }
 
@@ -20,11 +21,7 @@ const AuthLayout = ({ children }: Props) => {
     }
   }, [navigate])
 
-  return isLoading ? (
-    <div>Loading...</div>
-  ) : (
-    <div className="max-h-screen">{children}</div>
-  )
+  return isLoading ? <Loading /> : <div className="max-h-screen bg-dark">{children}</div>
 }
 
 export default AuthLayout

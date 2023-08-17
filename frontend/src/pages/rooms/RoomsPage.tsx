@@ -45,7 +45,7 @@ const RoomsPage = () => {
 
   return (
     <Layout>
-      <div className="bg-[#f8f7fa] min-h-screen">
+      <div className="min-h-screen bg-dark">
         <Navbar />
         <div className="relative my-12 mt-10">
           <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center">
@@ -62,7 +62,7 @@ const RoomsPage = () => {
               <CardHeader className="justify-between">
                 <div className="flex gap-5">
                   <Avatar
-                    // isBordered
+                    isBordered
                     radius="full"
                     size="lg"
                     src="https://marketplace.canva.com/EAFEits4-uw/1/0/800w/canva-boy-cartoon-gamer-animated-twitch-profile-photo-r0bPCSjUqg0.jpg"

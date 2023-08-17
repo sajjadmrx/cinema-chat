@@ -18,6 +18,7 @@ import {
 import { Avatar } from "@nextui-org/react"
 import React, { useEffect, useState } from "react"
 import { AiOutlineCloseCircle } from "react-icons/ai"
+import { FiMoreHorizontal } from "react-icons/fi"
 import { useParams } from "react-router-dom"
 import { socket } from "../../../hooks/useSocket"
 import { fetchMembersService } from "../../../services/members.service"
@@ -74,7 +75,7 @@ const MembersComponent = (prop: Prop) => {
     <section
       className={`${
         prop.showMembers ? "fixed" : "hidden"
-      } top-0 bottom-0 left-0 right-0 lg:border-r lg:w-72 px-6 py-5 lg:h-full lg:relative lg:block bg-white z-50`}
+      } top-0 bg-dark text-white bottom-0 left-0 right-0 lg:border-r lg:w-72 px-6 py-5 lg:h-full lg:relative lg:block z-50`}
     >
       <div className="flex items-center justify-between pb-3 mb-5 border-b border-gray-100">
         <h2 className="text-lg font-semi-bold">Members</h2>
@@ -120,7 +121,11 @@ export function OptionDivider() {
   return (
     <Menu>
       <MenuHandler>
-        <Button className={"normal-case"}>More</Button>
+        {/* <Button className={"normal-case"}>More</Button> */}
+        <button className="flex flex-col items-center justify-center">
+          <span>More</span>
+          <FiMoreHorizontal className={"text-2xl"} />
+        </button>
       </MenuHandler>
       <MenuList>
         <MenuItem className={"normal-case"} onClick={handleOpenDInvite}>

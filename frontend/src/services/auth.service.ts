@@ -1,6 +1,5 @@
-import http from "../config/http"
 import { ReturnFormat } from "@interfaces/schemas/api.interface"
-import { User } from "@interfaces/schemas/User.interface"
+import http from "../config/http"
 
 type signupUser = { username: string; email: string; password: string }
 type loginUser = { username: string; password: string }

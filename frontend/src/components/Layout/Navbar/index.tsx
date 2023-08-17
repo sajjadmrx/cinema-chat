@@ -18,7 +18,6 @@ import ProfileDropdown from "./ProfileDropdown"
 const Navbar = () => {
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => setOpen((cur) => !cur)
-
   return (
     <nav className="flex items-center justify-between px-4 py-3 bg-white shadow-sm">
       <ButtonComponent
@@ -77,7 +76,7 @@ export function DialogWithForm(prop: DProp) {
         size="xs"
         open={prop.open}
         handler={prop.handler}
-        className="bg-transparent shadow-none"
+        className="shadow-none bg-dark"
       >
         <Card className="mx-auto w-full max-w-[24rem]">
           <CardHeader

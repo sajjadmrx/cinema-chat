@@ -1,20 +1,21 @@
 import { Room } from "@interfaces/schemas/Room.interface"
 import { MemberWithRoom } from "@interfaces/schemas/member.interface"
-import { Avatar, Textarea } from "@nextui-org/react"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import Layout from "../../components/Layout"
 import Navbar from "../../components/Layout/Navbar"
+import Loading from "../../components/Loading/index"
 import MediaPlayer from "../../components/VideoPlayer/index"
 import { useAuth } from "../../context/auth/AuthProvider"
 import { socketContext } from "../../context/socket/socketContext"
 import { socket } from "../../hooks/useSocket"
 import { getMemberByMemberId } from "../../services/members.service"
 import ChatsComponent from "../../views/Room/Chats"
+import MembersComponent from "../../views/Room/Members"
 
-const currentMediaId: number | null = null
-export const RoomPage = (): any => {
-  const playerRef = useRef(null)
+// const currentMediaId: number | null = null
+export const RoomPage = (): JSX.Element => {
+  // const playerRef = useRef(null)
   const navigate = useNavigate()
   const [member, setMember] = useState<MemberWithRoom | null>(null)
   const [isLoadingValidate, setIsLoadingValidate] = useState(true)
@@ -104,13 +105,9 @@ export const RoomPage = (): any => {
     socket.emit("GET_CURRENT_PLAYING", { roomId: Number(params.id) })
   }
 
-  if (!member && isLoadingValidate) {
-    return <h1 className={"text-center"}>waiting...</h1>
-  }
+  if (!member && isLoadingValidate) <Loading />
 
-  if (!member && !isLoadingValidate) {
-    return navigate("/rooms")
-  }
+  if (!member && !isLoadingValidate) navigate("/rooms")
   return (
     <Layout>
       <Navbar />
@@ -120,34 +117,43 @@ export const RoomPage = (): any => {
           setIsConnected,
         }}
       >
-        <section className="flex h-[calc(100vh-72px)] lg:flex-row flex-col">
-          {/* {socket.connected && (
+        <section className="flex h-[calc(100vh-72px)] lg:flex-row flex-col w-full justify-between">
+          {socket.connected && (
             <MembersComponent
               roomId={Number(params.id)}
               showMembers={showMembers}
               setShowMembers={setShowMembers}
             />
-          )} */}
-          <div className="flex items-end justify-center w-full h-full px-6 py-5 bg-red-50">
+          )}
+          <div className="flex items-center justify-center h-full px-6 py-5 bg-dark">
             <div className={"flex flex-row gap-40"}>
-              <Avatar src="https://github.com/shadcn.png"></Avatar>
-              <div className={""}>
+              {/* <Avatar src="https://github.com/shadcn.png"></Avatar> */}
+              <div
+                className={
+                  "w-80 h-60 bg-primary text-center flex justify-center items-center text-white text-2xl rounded-2xl"
+                }
+              >
                 Play Media
-                {member?.permissions.includes("ADMINISTRATOR") ? (
+                {/* {member?.permissions.includes("ADMINISTRATOR") ? (
                   <div className={"flex flex-row gap-11"}>
-                    <Textarea
+                    <input
                       placeholder={"enter your url"}
                       className={"w-80"}
                       value={src}
                       onChange={(event) => setSrc(event.target.value)}
-                    ></Textarea>
-                    <button onClick={() => playBtnHandling(src)}>Play</button>
+                    ></input>
+                    <button
+                      className={"bg-primary w-5 h-2 px-10 py-2"}
+                      onClick={() => playBtnHandling(src)}
+                    >
+                      Play
+                    </button>
                   </div>
                 ) : (
-                  <div className={"flex flex-row gap-11"}>
+                  <div className={"flex flex-row gap-11 bg-primary"}>
                     <button onClick={() => syncMedia()}>Refresh</button>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
             <div>

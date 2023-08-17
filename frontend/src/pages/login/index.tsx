@@ -2,7 +2,6 @@ import React from "react"
 import LoginForm from "../../components/Forms/LoginForm"
 import AuthLayout from "../../components/Layout/AuthLayout"
 import { IconComponent } from "../../components/Shared"
-// @ts-ignore
 import styles from "./styles.module.css"
 
 const SignUpPage = () => {
