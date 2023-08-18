@@ -1,6 +1,6 @@
 import { Room } from "@interfaces/schemas/Room.interface"
 import { MemberWithRoom } from "@interfaces/schemas/member.interface"
-import React, { useEffect, useState } from "react"
+import React, { Suspense, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import Layout from "../../components/Layout"
 import Navbar from "../../components/Layout/Navbar"
@@ -10,8 +10,8 @@ import { useAuth } from "../../context/auth/AuthProvider"
 import { socketContext } from "../../context/socket/socketContext"
 import { socket } from "../../hooks/useSocket"
 import { getMemberByMemberId } from "../../services/members.service"
-import ChatsComponent from "../../views/Room/Chats"
-import MembersComponent from "../../views/Room/Members"
+const ChatsComponent = React.lazy(() => import("../../views/Room/Chats"))
+const MembersComponent = React.lazy(() => import("../../views/Room/Members"))
 
 // const currentMediaId: number | null = null
 export const RoomPage = (): JSX.Element => {
@@ -119,15 +119,16 @@ export const RoomPage = (): JSX.Element => {
       >
         <section className="flex h-[calc(100vh-72px)] lg:flex-row flex-col w-full justify-between">
           {socket.connected && (
-            <MembersComponent
-              roomId={Number(params.id)}
-              showMembers={showMembers}
-              setShowMembers={setShowMembers}
-            />
+            <Suspense fallback={<Loading />}>
+              <MembersComponent
+                roomId={Number(params.id)}
+                showMembers={showMembers}
+                setShowMembers={setShowMembers}
+              />
+            </Suspense>
           )}
           <div className="flex items-center justify-center h-full px-6 py-5 bg-dark">
             <div className={"flex flex-row gap-40"}>
-              {/* <Avatar src="https://github.com/shadcn.png"></Avatar> */}
               <div
                 className={
                   "w-80 h-60 bg-primary text-center flex justify-center items-center text-white text-2xl rounded-2xl"
@@ -165,7 +166,11 @@ export const RoomPage = (): JSX.Element => {
               />
             </div>
           </div>
-          {socket.connected && <ChatsComponent setShowMembers={setShowMembers} />}
+          {socket.connected && (
+            <Suspense fallback={<Loading />}>
+              <ChatsComponent setShowMembers={setShowMembers} />
+            </Suspense>
+          )}
         </section>
       </socketContext.Provider>
     </Layout>

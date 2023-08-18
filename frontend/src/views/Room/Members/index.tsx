@@ -59,7 +59,7 @@ const MembersComponent = (prop: Prop) => {
     return () => {
       socket?.off("FETCH_ONLINE_MEMBERS")
     }
-  }, [onlineMembers])
+  }, [onlineMembers, prop.roomId])
 
   useEffect(() => {
     fetchMembers(prop.roomId, pagination.nextPage--).then((data) => {
@@ -92,13 +92,6 @@ const MembersComponent = (prop: Prop) => {
       <div className="space-y-3  h-[calc(100%-61px)] overflow-y-auto">
         {members.map((member, index) => (
           <div key={index} className="flex items-center">
-            {/* <Avatar
-              size={"sm"}
-              shape={"circle"}
-              src="/assets/images/avatar.jpg"
-              online={onlineMembers.includes(member.userId)}
-              offline={!onlineMembers.includes(member.userId)}
-            /> */}
             <Avatar src="https://github.com/shadcn.png"></Avatar>
             <div>
               <h4 className="ml-2.5 -mb-1.5">
