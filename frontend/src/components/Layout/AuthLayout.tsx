@@ -21,7 +21,7 @@ const AuthLayout = ({ children }: Props) => {
     }
   }, [navigate])
 
-  return isLoading ? <Loading /> : <div className="max-h-screen bg-dark">{children}</div>
+  return isLoading ? <Loading /> : <div className="max-h-screen bg-light">{children}</div>
 }
 
 export default AuthLayout

@@ -57,9 +57,10 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
   }
 
   return (
-    <section className="w-1/4 h-full px-3 py-5 m-auto text-white border-l-2 bg-dark lg:border-l border-slate-100 sm:w-3/5 lg:w-80 xl:w-96">
-      <div className="flex flex-col">
+    <section className="hidden w-2/5 px-6 py-5 border-l-2 border-gray-300 lg:block lg:h-full bg-dark lg:border-l rounded-xl">
+      <div className="flex flex-col text-white">
         <div className="flex items-center justify-between pb-3 mb-5 border-b border-gray-100">
+          {" "}
           <h2 className="text-lg font-semibold">Chat</h2>
           <AiOutlineUser
             onClick={() => setShowMembers(true)}
@@ -69,7 +70,7 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
         </div>
       </div>
       <div
-        className="space-y-5 text-dark h-[calc(100%-129px)] overflow-y-auto"
+        className="space-y-5 h-[calc(100%-129px)] text-white overflow-y-auto"
         ref={scrollRef}
       >
         {messages.map((item, index) => (
@@ -82,7 +83,7 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
               />
               <div className="flex items-center justify-between w-full">
                 <h4 className="ml-3 ">
-                  {item.authorId == user?.userId}{" "}
+                  {item.authorId == user?.userId}
                   {item.author?.nickname || item.author.user.username}
                 </h4>
                 <DropdownMenu />
@@ -90,7 +91,7 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
             </div>
 
             <div
-              className="px-4 py-2 ml-12 text-sm bg-gray-100 border rounded-tl-none rounded-2xl"
+              className="px-4 py-2 ml-12 text-sm bg-gray-100 border rounded-tl-none text-dark rounded-2xl"
               style={{ wordBreak: "break-word" }}
             >
               {item.content}
@@ -106,16 +107,13 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
         ))}
       </div>
       <div className="w-full h-12 mt-5 overflow-hidden border rounded-full">
-        <div
-          className="relative flex items-center justify-center w-full h-full"
-          dir={"auto"}
-        >
+        <div className="relative w-full h-full" dir={"auto"}>
           <textarea
             dir={"auto"}
             placeholder="Write a message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="absolute border border-ghost top-0 left-0 flex items-center justify-center w-full h-full !pt-3 pl-4 text-sm bg-white rounded-full focus:outline-none focus:border-gray-500 "
+            className="absolute border text-black border-primary   top-0 left-0 flex items-center justify-center w-full h-full !pt-3.5 pl-4 text-sm bg-white rounded-full focus:outline-none focus:border-gray-500 "
             onClick={() => setShowPicker(false)}
           />
           <button
@@ -123,15 +121,14 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
             className="absolute z-10 -translate-y-1/2 top-1/2 right-10"
           >
             <span role="img" aria-label="smiley-face">
-              <BsEmojiSmile />
+              <BsEmojiSmile className={"text-black text-2xl"} />
             </span>
           </button>
           <button
             className="absolute z-10 -translate-y-1/2 top-1/2 right-2"
             onClick={sendMsg}
           >
-            {/* <IconComponent name="send" color="blue" size={22} /> */}
-            <IoSendSharp className={"text-primary text-xl"} />
+            <IoSendSharp className={"text-primary text-2xl"} />
           </button>
         </div>
         <div className="absolute" style={{ bottom: 83, right: 26 }} hidden={!showPicker}>

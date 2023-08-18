@@ -15,6 +15,7 @@ module.exports = withMT({
         secondary: "#E90064",
         light: "#FF5F9E",
         dark: "#001731",
+        // dark: "#ffff",
       },
       keyframes: {
         fadeIn: {

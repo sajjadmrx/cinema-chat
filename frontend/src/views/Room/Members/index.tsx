@@ -16,10 +16,11 @@ import {
   Typography,
 } from "@material-tailwind/react"
 import { Avatar } from "@nextui-org/react"
-import React, { useEffect, useState } from "react"
+import React, { Suspense, useEffect, useState } from "react"
 import { AiOutlineCloseCircle } from "react-icons/ai"
-import { FiMoreHorizontal } from "react-icons/fi"
+import { CgMoreVertical } from "react-icons/cg"
 import { useParams } from "react-router-dom"
+import Loading from "../../../components/Loading/index"
 import { socket } from "../../../hooks/useSocket"
 import { fetchMembersService } from "../../../services/members.service"
 import { createRoomInvite } from "../../../services/rooms.service"
@@ -72,37 +73,43 @@ const MembersComponent = (prop: Prop) => {
   }, [])
 
   return (
-    <section
-      className={`${
-        prop.showMembers ? "fixed" : "hidden"
-      } top-0 bg-dark text-white bottom-0 left-0 right-0 lg:border-r lg:w-72 px-6 py-5 lg:h-full lg:relative lg:block z-50`}
-    >
-      <div className="flex items-center justify-between pb-3 mb-5 border-b border-gray-100">
-        <h2 className="text-lg font-semi-bold">Members</h2>
-        <div className="flex gap-x-2">
-          <OptionDivider />
-          <AiOutlineCloseCircle
-            onClick={() => prop.setShowMembers(false)}
-            className={`lg:hidden ${prop.showMembers ? "block" : "hidden"}`}
-            size={24}
-          />
-        </div>
-      </div>
-
-      <div className="space-y-3  h-[calc(100%-61px)] overflow-y-auto">
-        {members.map((member, index) => (
-          <div key={index} className="flex items-center">
-            <Avatar src="https://github.com/shadcn.png"></Avatar>
-            <div>
-              <h4 className="ml-2.5 -mb-1.5">
-                {member.nickname || member.user.username}
-              </h4>
-              <span className="ml-2.5 text-xs text-gray-400">{member.user.username}</span>
-            </div>
+    <Suspense fallback={<div>Loading.....</div>}>
+      <section
+        className={`${
+          prop.showMembers ? "fixed" : "hidden"
+        } top-0 bg-dark text-white bottom-0 left-0 right-0 lg:border-r border-gray-300 rounded-xl lg:w-80   px-6 py-5 lg:h-full lg:relative lg:block z-50`}
+      >
+        <div className="flex items-center justify-between pb-3 mb-5 border-b border-gray-300">
+          <h2 className="text-lg font-bold">Members</h2>
+          <div className="flex px-2 py-1 gap-x-2">
+            <OptionDivider />
+            <AiOutlineCloseCircle
+              onClick={() => prop.setShowMembers(false)}
+              className={`lg:hidden ${prop.showMembers ? "block" : "hidden"}`}
+              size={24}
+            />
           </div>
-        ))}
-      </div>
-    </section>
+        </div>
+
+        <div className="space-y-3  h-[calc(100%-61px)] overflow-y-auto">
+          <Suspense fallback={<Loading />}>
+            {members.map((member, index) => (
+              <div key={index} className="flex items-center">
+                <Avatar src="https://github.com/shadcn.png"></Avatar>
+                <div>
+                  <h4 className="ml-2.5 -mb-1.5">
+                    {member.nickname || member.user.username}
+                  </h4>
+                  <span className="ml-2.5 text-xs text-gray-400">
+                    @{member.user.userId}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </Suspense>
+        </div>
+      </section>
+    </Suspense>
   )
 }
 
@@ -114,10 +121,8 @@ export function OptionDivider() {
   return (
     <Menu>
       <MenuHandler>
-        {/* <Button className={"normal-case"}>More</Button> */}
         <button className="flex flex-col items-center justify-center">
-          <span>More</span>
-          <FiMoreHorizontal className={"text-2xl"} />
+          <CgMoreVertical className={"text-2xl"} />
         </button>
       </MenuHandler>
       <MenuList>

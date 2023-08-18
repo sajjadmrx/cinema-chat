@@ -31,8 +31,8 @@ const ProfileDropdown = () => {
               // isBordered: true,
               src: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
             }}
-            className="transition-transform"
-            description={user.userId}
+            className="text-white transition-transform"
+            description={user.userId + "@"}
             name={user.username}
           />
         </DropdownTrigger>

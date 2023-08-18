@@ -111,13 +111,13 @@ export const RoomPage = (): JSX.Element => {
   return (
     <Layout>
       <Navbar />
-      <socketContext.Provider
-        value={{
-          isConnected,
-          setIsConnected,
-        }}
-      >
-        <section className="flex h-[calc(100vh-72px)] lg:flex-row flex-col w-full justify-between">
+      <section className="flex w-full h-[calc(100vh-72px)] flex-row justify-between items-center">
+        <socketContext.Provider
+          value={{
+            isConnected,
+            setIsConnected,
+          }}
+        >
           {socket.connected && (
             <Suspense fallback={<Loading />}>
               <MembersComponent
@@ -127,7 +127,7 @@ export const RoomPage = (): JSX.Element => {
               />
             </Suspense>
           )}
-          <div className="flex items-center justify-center h-full px-6 py-5 bg-dark">
+          <div className="flex items-center justify-center w-full h-full px-6 py-5 bg-dark">
             <div className={"flex flex-row gap-40"}>
               <div
                 className={
@@ -166,13 +166,9 @@ export const RoomPage = (): JSX.Element => {
               />
             </div>
           </div>
-          {socket.connected && (
-            <Suspense fallback={<Loading />}>
-              <ChatsComponent setShowMembers={setShowMembers} />
-            </Suspense>
-          )}
-        </section>
-      </socketContext.Provider>
+          {socket.connected && <ChatsComponent setShowMembers={setShowMembers} />}
+        </socketContext.Provider>
+      </section>
     </Layout>
   )
 }

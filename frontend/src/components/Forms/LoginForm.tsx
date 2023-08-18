@@ -57,7 +57,7 @@ const LoginForm = () => {
 
   return (
     <>
-      <div className="z-10 grid w-full p-16 pb-32 text-center bg-white lg:w-1/3 rounded-l-2xl lg:max-w-xl place-items-center">
+      <div className="z-10 grid items-center justify-center w-full p-16 pb-32 text-center bg-white shadow-2xl shadow-primary lg:w-1/3 rounded-2xl lg:rounded-r-none lg:max-w-xl place-items-center">
         <div className="w-full">
           <h1 className="mb-2 text-2xl font-bold">
             Log in <span className="text-primaryHover">Cinema Chat</span>

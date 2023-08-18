@@ -1,10 +1,10 @@
-import { useContext, useRef, useState } from "react"
 import { motion } from "framer-motion"
+import { useRef, useState } from "react"
 
-import { classNames } from "../../../utils"
-import { useOnClickOutside } from "../../../hooks/useOnClickOutside"
-import { IconComponent } from "../../../components/Shared"
 import React from "react"
+import { IconComponent } from "../../../components/Shared"
+import { useOnClickOutside } from "../../../hooks/useOnClickOutside"
+import { classNames } from "../../../utils"
 
 const DropdownMenu = () => {
   const [open, setOpen] = useState(false)
@@ -27,7 +27,7 @@ const DropdownMenu = () => {
       </div>
 
       <motion.div
-        className="absolute border right-3 overflow-hidden w-44 py-2 z-50 mt-2 rounded-xl select-none bg-white dark:bg-dark-gray700 dark:text-white"
+        className="absolute z-50 py-2 mt-2 overflow-hidden bg-white border select-none right-3 w-44 rounded-xl dark:bg-dark-gray700 dark:text-white"
         initial="hide"
         ref={ref}
         animate={open ? "show" : "hide"}
@@ -43,21 +43,21 @@ const DropdownMenu = () => {
             className="w-full flex px-3 py-2 text-xs rounded-[4px] transition-colors text-[#37352fa6] hover:bg-[#ebebea]"
           >
             <IconComponent name="undo" size={18} />
-            <span className="text-sm ml-2">Replay</span>
+            <span className="ml-2 text-sm">Replay</span>
           </button>
           <button
             onClick={onClose}
             className="w-full flex px-3 py-2 text-xs rounded-[4px] transition-colors text-[#37352fa6] hover:bg-[#ebebea]"
           >
             <IconComponent name="copy" size={18} />
-            <span className="text-sm ml-2">Copy</span>
+            <span className="ml-2 text-sm">Copy</span>
           </button>
           <button
             onClick={onClose}
             className="w-full flex px-3 py-2 text-xs rounded-[4px] transition-colors text-[#37352fa6] hover:bg-[#ebebea]"
           >
             <IconComponent name="trash" size={18} />
-            <span className="text-sm ml-2">Delete</span>
+            <span className="ml-2 text-sm">Delete</span>
           </button>
         </div>
       </motion.div>

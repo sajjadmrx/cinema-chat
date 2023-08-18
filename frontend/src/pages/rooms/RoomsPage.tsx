@@ -6,7 +6,6 @@ import { Room } from "@interfaces/schemas/Room.interface"
 import { Avatar, Button, Card, CardFooter, CardHeader } from "@nextui-org/react"
 import React, { useEffect, useState } from "react"
 import { HiOutlineUserGroup } from "react-icons/hi"
-import { MdOutlinePublic } from "react-icons/md"
 import { VscLock, VscUnlock } from "react-icons/vsc"
 import { Link } from "react-router-dom"
 import {
@@ -47,14 +46,6 @@ const RoomsPage = () => {
     <Layout>
       <div className="min-h-screen bg-dark">
         <Navbar />
-        <div className="relative my-12 mt-10">
-          <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center">
-            <span className="bg-[#f8f7fa] px-3 text-lg font-semi-bold text-gray-600 flex  gap-2 ">
-              Your Rooms
-              <HiOutlineUserGroup className={"mt-1"} />
-            </span>
-          </div>
-        </div>
 
         <section className="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
           {currentRooms.map((room) => (
@@ -111,14 +102,14 @@ const RoomsPage = () => {
             </Card>
           ))}
         </section>
-        <div className="relative mt-4 mb-5">
+        {/* <div className="relative mt-4 mb-5">
           <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center">
             <span className="bg-[#f8f7fa] px-3 text-lg font-semi-bold text-gray-600 flex  gap-2 ">
               Public Rooms
               <MdOutlinePublic className={"mt-1"} />
             </span>
           </div>
-        </div>
+        </div> */}
 
         <section className="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
           {publicRooms.map((item) => (
@@ -168,6 +159,14 @@ const RoomsPage = () => {
             </div>
           ))}
         </section>
+        <div className="relative my-12 mt-10">
+          <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center">
+            <span className="bg-[#f8f7fa] rounded-2xl py-0.5 px-3 text-lg font-semi-bold text-gray-600 flex  gap-2 ">
+              Your Rooms
+              <HiOutlineUserGroup className={"mt-1"} />
+            </span>
+          </div>
+        </div>
       </div>
     </Layout>
   )

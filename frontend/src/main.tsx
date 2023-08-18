@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { AuthProvider } from "./context/auth/AuthProvider"
 import Login from "./pages/login"
+import NotFoundPage from "./pages/notFound"
 import RoomsPage from "./pages/rooms/RoomsPage"
 import Signup from "./pages/signup"
 import { RoomPage } from "./pages/single-room/Room"
@@ -15,6 +16,8 @@ export const routes = [
   { path: "/signup", element: <Signup /> },
   { path: "/rooms", element: <RoomsPage /> },
   { path: "/rooms/:id", element: <RoomPage key={1} /> },
+  { path: "*", element: <NotFoundPage /> },
+  // <Route path="*" element={<PageNotFound />} />,
 ]
 
 const router = createBrowserRouter(routes)

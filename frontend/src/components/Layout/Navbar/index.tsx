@@ -7,7 +7,6 @@ import {
   Checkbox,
   Dialog,
   Input,
-  Typography,
 } from "@material-tailwind/react"
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -19,7 +18,7 @@ const Navbar = () => {
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => setOpen((cur) => !cur)
   return (
-    <nav className="flex items-center justify-between px-4 py-3 bg-white shadow-sm">
+    <nav className="flex items-center justify-between px-4 py-3 border-b shadow-sm bg-dark">
       <ButtonComponent
         variant="primary"
         className="!px-4 !mx-3 flex"
@@ -81,22 +80,21 @@ export function DialogWithForm(prop: DProp) {
         <Card className="mx-auto w-full max-w-[24rem]">
           <CardHeader
             variant="gradient"
-            color="blue"
-            className="grid mb-4 h-28 place-items-center"
+            className="grid mb-4 bg-primary h-28 place-items-center"
           >
-            <Typography variant="h3" color="white">
-              ایجاد اتاق
-            </Typography>
+            <h3 className="py-8 text-4xl font-extrabold text-white text-cente">
+              Create Room
+            </h3>
           </CardHeader>
           <CardBody className="flex flex-col gap-4">
             <Input
-              label="اسم اتاق"
+              label="Room Name"
               size="lg"
               value={roomName}
               onChange={(e) => setRoomName(e.target.value)}
             />
             <Input
-              label="رمزعبور"
+              label="Password"
               size="lg"
               type="password"
               disabled={!isPrivate}
@@ -106,7 +104,7 @@ export function DialogWithForm(prop: DProp) {
             {passwordError && <p className="text-red-600">{passwordError}</p>}
             <div className="-ml-2.5">
               <Checkbox
-                label="فقط با رمزعبور(اتاق خصوصی)"
+                label="Pirvate Room"
                 checked={isPrivate}
                 onChange={() => setIsPrivate(!isPrivate)}
               />
@@ -114,12 +112,15 @@ export function DialogWithForm(prop: DProp) {
           </CardBody>
           <CardFooter className="pt-0">
             <Button
-              variant="gradient"
+              // variant="gradient"
               onClick={handleCreateRoom}
               fullWidth
               disabled={!roomName || (isPrivate && !password)}
+              className={
+                !roomName || (isPrivate && !password) ? "bg-light" : "bg-primary"
+              }
             >
-              ساختن
+              Create
             </Button>
           </CardFooter>
         </Card>
