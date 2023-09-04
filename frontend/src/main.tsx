@@ -17,7 +17,6 @@ export const routes = [
   { path: "/rooms", element: <RoomsPage /> },
   { path: "/rooms/:id", element: <RoomPage key={1} /> },
   { path: "*", element: <NotFoundPage /> },
-  // <Route path="*" element={<PageNotFound />} />,
 ]
 
 const router = createBrowserRouter(routes)

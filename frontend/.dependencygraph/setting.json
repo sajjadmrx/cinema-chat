@@ -1,0 +1,12 @@
+{
+  "alias": {},
+  "resolveExtensions": [
+    ".js",
+    ".jsx",
+    ".ts",
+    ".tsx",
+    ".vue",
+    ".scss",
+    ".less"
+  ]
+}

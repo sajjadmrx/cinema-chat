@@ -127,37 +127,38 @@ export const RoomPage = (): JSX.Element => {
               />
             </Suspense>
           )}
-          <div className="flex items-center justify-center w-full h-full px-6 py-5 bg-dark">
-            <div className={"flex flex-row gap-40"}>
-              <div
-                className={
-                  "w-80 h-60 bg-primary text-center flex justify-center items-center text-white text-2xl rounded-2xl"
-                }
-              >
-                Play Media
-                {/* {member?.permissions.includes("ADMINISTRATOR") ? (
-                  <div className={"flex flex-row gap-11"}>
-                    <input
-                      placeholder={"enter your url"}
-                      className={"w-80"}
-                      value={src}
-                      onChange={(event) => setSrc(event.target.value)}
-                    ></input>
-                    <button
-                      className={"bg-primary w-5 h-2 px-10 py-2"}
-                      onClick={() => playBtnHandling(src)}
-                    >
-                      Play
-                    </button>
+          <div className="flex flex-col items-center justify-center w-full h-full px-6 py-5 bg-dark">
+            <div
+              className={
+                "flex flex-col gap-40 bg-red-50 w-full h-full justify-center items-center rounded-2xl"
+              }
+            >
+              {member?.permissions.includes("ADMINISTRATOR") ? (
+                <div className={"flex flex-col gap-11"}>
+                  <div>
+                    <h1 className="text-2xl font-bold text-dark">Play Media</h1>
+                    <p className="text-dark">insert yout content to play it ..</p>
                   </div>
-                ) : (
-                  <div className={"flex flex-row gap-11 bg-primary"}>
-                    <button onClick={() => syncMedia()}>Refresh</button>
-                  </div>
-                )} */}
-              </div>
-            </div>
-            <div>
+                  <input
+                    placeholder={"enter your url"}
+                    className={"w-80 rounded-2xl px-5 py-2 bg-dark text-white"}
+                    value={src}
+                    onChange={(event) => setSrc(event.target.value)}
+                  ></input>
+                  <button
+                    className={
+                      "bg-primary text-white w-max h-max px-10 rounded-2xl font-bold py-2"
+                    }
+                    onClick={() => playBtnHandling(src)}
+                  >
+                    Play
+                  </button>
+                </div>
+              ) : (
+                <div className={"flex flex-row gap-11 bg-primary"}>
+                  <button onClick={() => syncMedia()}>Refresh</button>
+                </div>
+              )}
               <MediaPlayer
                 src={videoJsOptions?.src}
                 roomId={Number(params.id)}
