@@ -77,9 +77,9 @@ const MembersComponent = (prop: Prop) => {
       <section
         className={`${
           prop.showMembers ? "fixed" : "hidden"
-        } top-0 bg-dark text-white bottom-0 left-0 right-0 lg:border-r border-gray-300 rounded-xl lg:w-80   px-6 py-5 lg:h-full lg:relative lg:block z-50`}
+        } top-0 bg-dark text-white bottom-0 left-0 right-0 mx-2 rounded-xl lg:w-80   px-6 py-5 lg:h-full lg:relative lg:block z-50`}
       >
-        <div className="flex items-center justify-between pb-3 mb-5 border-b border-gray-300">
+        <div className="flex items-center justify-between pb-3 mb-5 border-gray-300">
           <h2 className="text-lg font-bold">Members</h2>
           <div className="flex px-2 py-1 gap-x-2">
             <OptionDivider />

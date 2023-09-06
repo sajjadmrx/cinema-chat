@@ -63,7 +63,7 @@ const ChatsComponent = ({ setShowMembers }: Prop) => {
       <button onClick={() => setchatSide(true)}>
         <BsFillChatLeftDotsFill className="text-2xl text-white lg:hidden" />
       </button>
-      <section className="hidden w-2/5 px-6 py-5 border-l-2 border-gray-300 lg:block lg:h-full bg-dark lg:border-l rounded-xl">
+      <section className="hidden w-2/5 px-6 py-5 mx-2 lg:block lg:h-full bg-dark rounded-xl">
         <div className="flex flex-col text-white">
           <div className="flex items-center justify-between pb-3 mb-5 border-b border-gray-100">
             {" "}

@@ -11,11 +11,12 @@ module.exports = withMT({
   theme: {
     extend: {
       colors: {
-        primary: "#B3005E",
-        secondary: "#E90064",
-        light: "#FF5F9E",
-        dark: "#001731",
-        // dark: "#ffff",
+        primary: "#7289DA",
+        secondary: "#191970",
+        semidark: "#2C2F33",
+        dark: "#23272A",
+        // dark: "#404258",
+        //
       },
       keyframes: {
         fadeIn: {

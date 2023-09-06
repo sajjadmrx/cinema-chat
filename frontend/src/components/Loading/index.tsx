@@ -3,7 +3,7 @@ import React from "react"
 
 export default function Loading() {
   return (
-    <div className="flex items-center justify-center w-full h-screen -">
+    <div className="flex flex-col items-center justify-center w-full h-screen bg-dark -">
       <CircularProgress
         classNames={{
           svg: "w-36 h-36 drop-shadow-md",
@@ -14,6 +14,7 @@ export default function Loading() {
         color="danger"
         aria-label="Loading..."
       />
+      <h1 className="mt-2 text-2xl font-extrabold text-primary">Loading ...</h1>
     </div>
   )
 }

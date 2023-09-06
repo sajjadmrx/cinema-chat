@@ -111,64 +111,69 @@ export const RoomPage = (): JSX.Element => {
   return (
     <Layout>
       <Navbar />
-      <section className="flex w-full h-[calc(100vh-72px)] flex-row justify-between items-center">
-        <socketContext.Provider
-          value={{
-            isConnected,
-            setIsConnected,
-          }}
-        >
-          {socket.connected && (
-            <Suspense fallback={<Loading />}>
-              <MembersComponent
-                roomId={Number(params.id)}
-                showMembers={showMembers}
-                setShowMembers={setShowMembers}
-              />
-            </Suspense>
-          )}
-          <div className="flex flex-col items-center justify-center w-full h-full px-6 py-5 bg-dark">
-            <div
-              className={
-                "flex flex-col gap-40 bg-red-50 w-full h-full justify-center items-center rounded-2xl"
-              }
-            >
-              {member?.permissions.includes("ADMINISTRATOR") ? (
-                <div className={"flex flex-col gap-11"}>
-                  <div>
-                    <h1 className="text-2xl font-bold text-dark">Play Media</h1>
-                    <p className="text-dark">insert yout content to play it ..</p>
+      <section className="flex p-5 w-full h-[calc(100vh-72px)]   flex-row justify-between items-center">
+        <div className="flex w-full bg-semidark h-[calc(100vh-100px)] p-5 rounded-xl">
+          <socketContext.Provider
+            value={{
+              isConnected,
+              setIsConnected,
+            }}
+          >
+            {socket.connected && (
+              <Suspense fallback={<Loading />}>
+                <MembersComponent
+                  roomId={Number(params.id)}
+                  showMembers={showMembers}
+                  setShowMembers={setShowMembers}
+                />
+              </Suspense>
+            )}
+            <div className="flex flex-col items-center justify-center w-full h-full px-6 py-5 rounded-xl bg-dark">
+              <div
+                className={
+                  "flex flex-col gap-36 w-full h-full justify-center items-center rounded-2xl"
+                }
+              >
+                {member?.permissions.includes("ADMINISTRATOR") ? (
+                  <div className={"flex flex-col gap-2 mt-10"}>
+                    <div className="flex flex-col gap-2">
+                      <h1 className="text-2xl font-extrabold text-primary">Play Media</h1>
+                      <p className="text-white">insert your content to play it ..</p>
+                      <hr />
+                    </div>
+                    <input
+                      placeholder={"enter your url"}
+                      className={
+                        "w-80 rounded-2xl px-5 py-2 border border-primary text-semidark"
+                      }
+                      value={src}
+                      onChange={(event) => setSrc(event.target.value)}
+                    />
+                    <button
+                      className={
+                        "bg-primary text-white scale-100 hover:scale-125 delay-75 duration-100 w-max h-max px-10 rounded-2xl font-bold py-2"
+                      }
+                      onClick={() => playBtnHandling(src)}
+                    >
+                      Play
+                    </button>
                   </div>
-                  <input
-                    placeholder={"enter your url"}
-                    className={"w-80 rounded-2xl px-5 py-2 bg-dark text-white"}
-                    value={src}
-                    onChange={(event) => setSrc(event.target.value)}
-                  ></input>
-                  <button
-                    className={
-                      "bg-primary text-white w-max h-max px-10 rounded-2xl font-bold py-2"
-                    }
-                    onClick={() => playBtnHandling(src)}
-                  >
-                    Play
-                  </button>
-                </div>
-              ) : (
-                <div className={"flex flex-row gap-11 bg-primary"}>
-                  <button onClick={() => syncMedia()}>Refresh</button>
-                </div>
-              )}
-              <MediaPlayer
-                src={videoJsOptions?.src}
-                roomId={Number(params.id)}
-                paused={videoJsOptions.paused}
-                currentTime={videoJsOptions.currentTime}
-              />
+                ) : (
+                  <div className={"flex flex-row gap-11 bg-primary"}>
+                    <button onClick={() => syncMedia()}>Refresh</button>
+                  </div>
+                )}
+                <MediaPlayer
+                  src={videoJsOptions?.src}
+                  roomId={Number(params.id)}
+                  paused={videoJsOptions.paused}
+                  currentTime={videoJsOptions.currentTime}
+                />
+              </div>
             </div>
-          </div>
-          {socket.connected && <ChatsComponent setShowMembers={setShowMembers} />}
-        </socketContext.Provider>
+            {socket.connected && <ChatsComponent setShowMembers={setShowMembers} />}
+          </socketContext.Provider>
+        </div>
       </section>
     </Layout>
   )

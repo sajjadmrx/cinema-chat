@@ -1,7 +1,7 @@
+import MediaPlayer from "components/VideoPlayer/MediaPlayer"
 import React, { useRef } from "react"
 import videojs from "video.js"
 import Chatbox from "../../components/Chatbox"
-import MediaPlayer from "../../components/VideoPlayer"
 
 const MainPage = () => {
   const playerRef = useRef(null)

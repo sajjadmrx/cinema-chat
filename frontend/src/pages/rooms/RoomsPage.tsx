@@ -49,40 +49,29 @@ const RoomsPage = () => {
         <Navbar />
         <section className="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
           {currentRooms.map((room) => (
-            <Card className="max-w-[340px]">
+            <Card className="max-w-[340px] bg-semidark border-primary border">
               <CardHeader className="justify-between">
                 <div className="flex gap-5">
                   <Avatar
-                    isBordered
+                    // isBordered
                     radius="full"
                     size="lg"
                     src="https://marketplace.canva.com/EAFEits4-uw/1/0/800w/canva-boy-cartoon-gamer-animated-twitch-profile-photo-r0bPCSjUqg0.jpg"
                   />
                   <div className="flex flex-col items-start justify-center gap-1">
-                    <h2 className="font-semibold leading-none text-small text-default-600">
+                    <h3 className="text-base font-semibold leading-none text-white">
                       {room.name}
                       <span>{room.isPublic ? "🔐" : "🔓"}</span>
-                    </h2>
+                    </h3>
                     <h5 className="tracking-tight text-small text-default-400">
                       @{room.roomId}
                     </h5>
                   </div>
                 </div>
               </CardHeader>
-              {/* <CardBody className="px-3 py-0 text-small text-default-400">
-                {/* <p>
-                  Frontend developer and UI/UX enthusiast. Join me on this coding
-                  adventure!
-                </p> */}
-              {/* <span className="pt-2">
-                  <span className="py-2" aria-label="computer" role="img">
-                    💻
-                  </span>
-                </span> */}
-              {/* </CardBody> */}
               <CardFooter className="flex items-center justify-between gap-3">
                 <div className="flex gap-1">
-                  <HiOutlineUserGroup size={19} color="gray" className="mt-px mr-1" />
+                  <HiOutlineUserGroup size={19} className="mt-px mr-1 text-primary" />
                   <p className="mt-1 font-semibold text-default-400 text-small">
                     {room._count.members}/10{" "}
                   </p>
@@ -104,7 +93,7 @@ const RoomsPage = () => {
         </section>
         <div className="relative mt-4 mb-5">
           <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center">
-            <span className="bg-[#f8f7fa] rounded-2xl py-0.5 px-3 text-lg font-semi-bold text-gray-600 flex  gap-2 ">
+            <span className="flex gap-2 px-3 text-md w-max h-max pt-[5px] py-0.5 text-gray-600 bg-white rounded-2xl font-semi-bold ">
               Public Rooms
               <MdOutlinePublic className={"mt-1"} />
             </span>
@@ -115,7 +104,7 @@ const RoomsPage = () => {
           {publicRooms.map((item) => (
             <div
               key={item.id}
-              className="w-full h-40 bg-white shadow-sm rounded-3xl px-7 py-7"
+              className="w-full h-40 shadow-sm bg-semidark rounded-3xl px-7 py-7"
             >
               <div className="flex items-start">
                 <img
@@ -161,7 +150,7 @@ const RoomsPage = () => {
         </section>
         <div className="relative my-12 mt-10">
           <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center">
-            <span className="bg-[#f8f7fa] rounded-2xl py-0.5 px-3 text-lg font-semi-bold text-gray-600 flex  gap-2 ">
+            <span className="flex gap-2 px-3 text-md w-max h-max pt-[5px] py-0.5 text-gray-600 bg-white rounded-2xl font-semi-bold ">
               Your Rooms
               <HiOutlineUserGroup className={"mt-1"} />
             </span>
